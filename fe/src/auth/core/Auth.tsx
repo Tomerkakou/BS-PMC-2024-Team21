@@ -12,7 +12,7 @@ import LayoutSplashScreen from 'layouts/dashboard/common/LayoutSplashScreen'
 import {AuthModel, UserModel} from './_models'
 import * as authHelper from './AuthHelpers'
 import {getUserByToken} from './_requests'
-import {WithChildren} from 'types'
+import {WithChildren} from 'utils/types'
 import {jwtDecode} from 'jwt-decode'
 
 

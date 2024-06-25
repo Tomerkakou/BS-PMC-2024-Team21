@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'layouts/dashboard';
+import AuthLayout from 'layouts/auth';
 
 export const IndexPage = lazy(() => import('pages/app'));
 export const BlogPage = lazy(() => import('pages/blog'));
@@ -28,8 +29,15 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
-      element: <LoginPage />,
+      path: 'auth',
+      element: (
+        <AuthLayout>
+          <Outlet />
+        </AuthLayout>
+      ),
+      children: [
+        { path:'login', element: <LoginPage /> },
+      ],
     },
     {
       path: '404',
