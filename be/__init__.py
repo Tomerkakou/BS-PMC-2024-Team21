@@ -25,11 +25,10 @@ def login():
     if user:
         return jsonify("ok"), 200
 
-        
+    
 
 
-
-
+    
 if __name__ == '__main__':
     with app.app_context():
         print("Creating database tables...")
