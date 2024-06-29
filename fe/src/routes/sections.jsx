@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'layouts/dashboard';
@@ -39,8 +39,9 @@ export default function Router() {
         </AuthLayout>
       ),
       children: [
+        { element: <Navigate to="/auth/login" />, index: true},
         { path:'login', element: <LoginPage /> },
-        {path:'sign-up',element:<RegisterPage/>},
+        { path:'sign-up',element:<RegisterPage/> },
       ],
     },
     {
