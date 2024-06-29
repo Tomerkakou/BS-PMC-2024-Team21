@@ -2,6 +2,8 @@ from sqlalchemy import Enum
 import enum
 from models import db
 from flask_bcrypt import Bcrypt
+from sqlalchemy import event
+import uuid
 
 bcrypt = Bcrypt()
 
@@ -9,6 +11,7 @@ class RoleEnum(enum.Enum):
     Student = 'Student'
     Lecturer = 'Lecturer'
     Admin = 'Admin'
+
 
 class User(db.Model):
     id = db.Column(db.String(50), primary_key=True)
@@ -25,6 +28,11 @@ class User(db.Model):
     def checkPassword(self,password):
         return bcrypt.check_password_hash(self.password,password)
     
-    def hashPassword(self,password):
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+    
+    def hashPassword(self):
+        self.password = bcrypt.generate_password_hash(self.password).decode('utf-8')
 
+@event.listens_for(User, 'before_insert')
+def generate_uuid(mapper, connection, target):
+    if not target.id:
+        target.id = str(uuid.uuid4())[0:49]

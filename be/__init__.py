@@ -19,7 +19,6 @@ bcrypt.init_app(app)
 
 CORS(app)
 
-
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -29,7 +28,7 @@ def login():
     if user:
         return jsonify("ok"), 200
 
-app.register_blueprint(auth_blu, url_prefix='/auth')    
+app.register_blueprint(auth_blu, url_prefix='/api/auth')    
 
 
     
