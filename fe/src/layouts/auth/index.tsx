@@ -27,13 +27,12 @@ const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
       }}
     >
       <Logo
-        
-      />
-        {/*sx={{
+        sx={{
           position: 'fixed',
           top: { xs: 16, md: 24 },
           left: { xs: 16, md: 24 },
-        }} */}
+        }}
+      />
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{

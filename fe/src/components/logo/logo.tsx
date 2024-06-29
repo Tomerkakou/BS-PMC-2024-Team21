@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 
 import Box from '@mui/material/Box';
@@ -8,7 +7,7 @@ import { RouterLink } from 'routes/components';
 
 // ----------------------------------------------------------------------
 
-const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
+const Logo = forwardRef(({ disabledLink = false, sx, ...other }:any, ref) => {
 
   // OR using local (public folder)
   // -------------------------------------------------------
@@ -32,7 +31,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
       }}
       {...other}
     >
-      <img src="/assets/logo.png" fit="contain" alt="LEARNIX"/>
+      <img src="/assets/logo.png" alt="LEARNIX"/>
     </Box>
   );
 
@@ -41,15 +40,10 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   }
 
   return (
-    <Link component={RouterLink} href="/" sx={{ display: 'contents' }}>
+    <Link component={RouterLink} href="" sx={{ display: 'contents' }}>
       {logo}
     </Link>
   );
 });
-
-Logo.propTypes = {
-  disabledLink: PropTypes.bool,
-  sx: PropTypes.object,
-};
 
 export default Logo;
