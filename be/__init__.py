@@ -4,6 +4,7 @@ from models import db
 from flask import jsonify, request
 from dotenv import load_dotenv
 from models.User import User,bcrypt
+from routes.auth import auth_blu
 import os
 
 #env
@@ -28,7 +29,7 @@ def login():
     if user:
         return jsonify("ok"), 200
 
-    
+app.register_blueprint(auth_blu, url_prefix='/auth')    
 
 
     
