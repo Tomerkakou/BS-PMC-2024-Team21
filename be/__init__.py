@@ -1,9 +1,9 @@
-from flask import Flask, redirect
+from flask import Flask
 from flask_cors import CORS
 from models import db
-from models.User import User
 from flask import jsonify, request
 from dotenv import load_dotenv
+from models.User import User,bcrypt
 import os
 
 #env
@@ -12,7 +12,10 @@ load_dotenv()
 #flask app
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 db.init_app(app)
+bcrypt.init_app(app)
+
 CORS(app)
 
 
