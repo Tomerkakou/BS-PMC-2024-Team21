@@ -19,7 +19,9 @@ export default function App() {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ThemeProvider>
         <ToastContainer />
-        <Router />
+        <Suspense>
+          <Router />
+        </Suspense>
       </ThemeProvider>
     </LocalizationProvider>
   );
