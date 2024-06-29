@@ -14,10 +14,6 @@ import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'routes/hooks';
-
-import { bgGradient } from 'theme/css';
-
-import Logo from 'components/logo';
 import Iconify from 'components/iconify';
 import { useNavigate } from 'react-router-dom';
 
