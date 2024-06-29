@@ -19,6 +19,7 @@ import { bgGradient } from 'theme/css';
 
 import Logo from 'components/logo';
 import Iconify from 'components/iconify';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -26,11 +27,11 @@ export default function LoginView() {
   const theme = useTheme();
 
   const router = useRouter();
-
+   const nav=useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = () => {
-    router.push('/dashboard');
+    router.push("/auth/register");
   };
 
   const renderForm = (
@@ -77,7 +78,7 @@ export default function LoginView() {
           <Typography variant="h4">Sign in to LEARNIX</Typography>
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
+            <Link variant="subtitle2" sx={{ ml: 0.5 }} href="/auth/register" >
               Get started
             </Link>
           </Typography>
