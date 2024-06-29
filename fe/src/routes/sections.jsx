@@ -40,7 +40,7 @@ export default function Router() {
       ),
       children: [
         { path:'login', element: <LoginPage /> },
-        {path:'register',element:<RegisterPage/>},
+        {path:'sign-up',element:<RegisterPage/>},
       ],
     },
     {

@@ -15,7 +15,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'routes/hooks';
 import Iconify from 'components/iconify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
+import { RouterLink } from 'routes/components';
 
 // ----------------------------------------------------------------------
 
@@ -74,12 +75,12 @@ export default function LoginView() {
           <Typography variant="h4">Sign in to LEARNIX</Typography>
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }} href="/auth/register" >
+            <Link variant="subtitle2" component={RouterLink} sx={{ ml: 0.5 }} href="/auth/sign-up" >
               Get started
             </Link>
           </Typography>
 
-          <Stack direction="row" spacing={2}>
+          {/* <Stack direction="row" spacing={2}>
             <Button
               fullWidth
               size="large"
@@ -115,7 +116,7 @@ export default function LoginView() {
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               OR
             </Typography>
-          </Divider>
+          </Divider> */}
           {renderForm}
     </>
   );
