@@ -28,7 +28,6 @@ import { useAuth } from 'auth';
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
   const {currentUser}=useAuth();
-  console.log(currentUser);
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
