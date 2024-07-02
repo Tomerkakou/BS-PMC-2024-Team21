@@ -72,7 +72,6 @@ const AuthInit: FC<WithChildren> = ({children}) => {
   // We should request user by authToken (IN OUR EXAMPLE IT'S accessToken) before rendering the application
   useEffect(() => {
     const requestUser = async (apiToken: string) => {
-      console.log('requestUser')
       try {
         if (!didRequest.current) {
           const {data:user} = await getUserByToken()

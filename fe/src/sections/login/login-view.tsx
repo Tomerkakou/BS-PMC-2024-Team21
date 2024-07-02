@@ -33,7 +33,6 @@ export default function LoginView() {
   const onSubmit = async ({email,password}:FormValues) => {
     try{
       const response=await login(email,password);
-      console.log(response);
       saveAuth(response.data);
       const {data:user}= await getUserByToken();
       setCurrentUser(user);
