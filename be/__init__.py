@@ -5,7 +5,7 @@ from flask import jsonify, request
 from dotenv import load_dotenv
 from models.User import User,bcrypt
 from models.Token import Token
-from routes.auth import auth_blu
+from routes.auth import auth_blu, jwt
 import os
 
 #env
@@ -15,19 +15,11 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config['JWT_SECRET_KEY'] = os.getenv("SECRET_KEY")
 db.init_app(app)
 bcrypt.init_app(app)
-
+jwt.init_app(app)
 CORS(app)
-
-@app.route('/api/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    userEmail = data.get('email')
-    userPassword = data.get('password')
-    user = User.query.filter_by(id="Admin").first()
-    if user:
-        return jsonify("ok"), 200
 
 app.register_blueprint(auth_blu, url_prefix='/api/auth')    
 
