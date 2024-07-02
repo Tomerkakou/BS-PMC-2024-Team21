@@ -5,13 +5,14 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "routes/hooks";
-import { CardActions, Link, Tab, Tabs } from "@mui/material";
+import { Avatar, Box, CardActions, FormControlLabel, Grid, Icon, Link, Paper, Radio, RadioGroup, Tab, Tabs } from "@mui/material";
 import { RouterLink } from "routes/components";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { TextInput, SelectInput, DateInput, FileInput } from "components/Inputs";
 import axios, { Axios, AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Iconify from "components/iconify";
+import { da } from "@faker-js/faker";
 
 
 interface FormValues {
@@ -21,6 +22,7 @@ interface FormValues {
   lastName: string;
   confirmPassword: string;
   image:File;
+  avatar:string;
   role: string;
 }
 
@@ -34,6 +36,9 @@ export const Register = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
+      if (data.image) {
+        data.avatar = await fileToBase64(data.image) as string;
+      }
       const response = await axios.post("/auth/sign-up", data);
       router.push("/auth/login");
     } catch (error: any) {
@@ -47,6 +52,7 @@ export const Register = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
+    console.log(newValue);
   };
 
   const ConfirmPassword = (cpassword: string) => {
@@ -134,6 +140,36 @@ export const Register = () => {
         {tab === 0 && 
           <FileInput control={control} placeholder="Upload Image" fieldName="image" accept="image/*" icon={<Iconify icon="eva:cloud-upload-outline" />}/>
         }
+        {tab === 1 && 
+          <Box sx={{maxHeight:"15vh", overflow:'auto'}}>
+          <Controller
+            name="avatar"
+            control={control}
+            defaultValue="/assets/images/avatars/avatar_1.jpg"
+            render={({ field }) => (
+              <RadioGroup {...field}>
+                <Grid container spacing={1}>
+                {Array.from({length:25}).map((_,index) => (
+                  <Grid item xs={4} key={index}>
+                      <FormControlLabel
+                        value={`/assets/images/avatars/avatar_${index+1}.jpg`}
+                        control={<Radio sx={{display:'none'}} />}
+                        label={
+                          <Box sx={{opacity: field.value===`/assets/images/avatars/avatar_${index+1}.jpg` ?"50%" : undefined}}>
+                            {/* <Box sx={{position:"absolute",left:50,top:50,zIndex:99999}}><Iconify icon="eva:checkmark-fill" /></Box> */}
+                            <Avatar src={`/assets/images/avatars/avatar_${index+1}.jpg`} alt={`Avatar ${index+1}}`} />
+                          </Box>
+                        }
+                        labelPlacement="top"
+                      />
+                  </Grid>
+                ))}
+              </Grid>
+              </RadioGroup>
+            )}
+          />
+        </Box>
+        }
       </Stack>
       <CardActions sx={{mt:2}}>
         <LoadingButton
@@ -149,4 +185,13 @@ export const Register = () => {
       </CardActions>
     </>
   );
+};
+
+const fileToBase64 = (file:File) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 };

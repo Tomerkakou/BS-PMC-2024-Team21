@@ -39,6 +39,8 @@ const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
             p: 5,
             width: 1,
             maxWidth: 420,
+            maxHeight: 0.75,
+            overflow: 'auto',
           }}
         >
           {children}
