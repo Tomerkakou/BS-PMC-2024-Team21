@@ -1,3 +1,4 @@
+import base64
 from flask import Blueprint, request, jsonify, abort
 from models.User import User
 from models.User import RoleEnum
@@ -15,10 +16,10 @@ def signUp():
     firstName=data.get("firstName")
     lastName=data.get("lastName")
     role=data.get("role")
-
-    newUser = User(email = email, password = password, firstName = firstName, lastName = lastName, role= role)
+    avatar = data.get('avatar')
+    print(avatar)
+    newUser = User(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
     newUser.hashPassword()
-
     try:
         db.session.add(newUser)
         db.session.commit()
