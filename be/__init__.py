@@ -4,6 +4,7 @@ from models import db
 from flask import jsonify, request
 from dotenv import load_dotenv
 from models.User import User,bcrypt
+from models.Token import Token
 from routes.auth import auth_blu
 import os
 
