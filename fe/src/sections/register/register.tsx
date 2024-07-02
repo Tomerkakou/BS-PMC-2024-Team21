@@ -5,12 +5,14 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "routes/hooks";
-import { Link } from "@mui/material";
+import { CardActions, Link, Tab, Tabs } from "@mui/material";
 import { RouterLink } from "routes/components";
 import { useForm } from "react-hook-form";
-import { TextInput, SelectInput, DateInput } from "components/Inputs";
+import { TextInput, SelectInput, DateInput, FileInput } from "components/Inputs";
 import axios, { Axios, AxiosError } from "axios";
 import { toast } from "react-toastify";
+import Iconify from "components/iconify";
+
 
 interface FormValues {
   email: string;
@@ -18,6 +20,7 @@ interface FormValues {
   firstName: string;
   lastName: string;
   confirmPassword: string;
+  image:File;
   role: string;
 }
 
@@ -40,7 +43,11 @@ export const Register = () => {
     }
   };
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [tab, setTab] = useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
 
   const ConfirmPassword = (cpassword: string) => {
     const password = getValues().password;
@@ -120,6 +127,15 @@ export const Register = () => {
             required: "Role is required!",
           }}
         />
+        <Tabs value={tab} onChange={handleChange} aria-label="icon label tabs example">
+          <Tab label="Upload image" />
+          <Tab label="Choose avatar" />
+        </Tabs>
+        {tab === 0 && 
+          <FileInput control={control} placeholder="Upload Image" fieldName="image" accept="image/*" icon={<Iconify icon="eva:cloud-upload-outline" />}/>
+        }
+      </Stack>
+      <CardActions sx={{mt:2}}>
         <LoadingButton
           fullWidth
           size="large"
@@ -130,7 +146,7 @@ export const Register = () => {
         >
           Sign Up
         </LoadingButton>
-      </Stack>
+      </CardActions>
     </>
   );
 };
