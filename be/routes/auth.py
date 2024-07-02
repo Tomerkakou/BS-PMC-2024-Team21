@@ -109,6 +109,5 @@ def refreshToken():
 @auth_blu.get('/get-user')
 @jwt_required()
 def getUser():
-    print("useeeeeeerrrrr")
     return jsonify({'id': current_user.id, 'email': current_user.email, 'firstName': current_user.firstName, 'lastName': current_user.lastName, 'role': str(current_user.role), 'avatar': current_user.avatar})
     
