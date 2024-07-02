@@ -23,7 +23,7 @@ class User(db.Model):
     verifiedEmail=db.Column(db.Boolean,nullable=False,default=False)
     active = db.Column(db.Boolean,nullable=False,default=False)
     refresh_token = db.Column(db.String(256),nullable=True)
-    avatar = db.Column(db.String(256),nullable=True)
+    avatar = db.Column(db.Text,nullable=True)
 
     def checkPassword(self,password):
         return bcrypt.check_password_hash(self.password,password)
