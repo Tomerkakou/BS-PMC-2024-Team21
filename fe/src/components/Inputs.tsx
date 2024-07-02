@@ -1,5 +1,6 @@
 import { Autocomplete, Checkbox, CircularProgress, createFilterOptions, darken, FilterOptionsState, FormControlLabel, InputProps, lighten, styled, SxProps, TextField, TextFieldVariants } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+import { MuiFileInput } from 'mui-file-input';
 import React, { useEffect } from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
 
@@ -273,6 +274,45 @@ const DateInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
 
 }
 
+interface MuiFileInputProps {
+    placeholder: string;
+    control: Control<any>;
+    rules?: RegisterOptions<any>;
+    accept?:string;
+    icon?:React.ReactNode;
+    fieldName:string;
+}
+const FileInput:React.FC<MuiFileInputProps> = ({
+    placeholder,
+    control,
+    rules,
+    accept,
+    icon,
+    fieldName
+}) => {
+    return (
+        <Controller
+            name={fieldName}
+            control={control}
+            rules={rules}
+            render={({ field, fieldState }) => (
+              <MuiFileInput
+                placeholder={placeholder}
+                {...field}
+                helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                error={fieldState.invalid}
+                InputProps={{
+                  inputProps: {
+                    accept: accept,
+                  },
+                  startAdornment: icon,
+                }}
+              />
+            )}
+          />
+    );
+}
 
-export { CheckBoxInput, DateInput, SelectInput, TextInput };
+
+export { CheckBoxInput, DateInput, SelectInput, TextInput,FileInput };
 
