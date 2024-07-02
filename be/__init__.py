@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from models.User import User,bcrypt
 from models.Token import Token
 from routes.auth import auth_blu, jwt
+from routes.statistics import stats_blu
 import os
 
 #env
@@ -22,6 +23,7 @@ jwt.init_app(app)
 CORS(app)
 
 app.register_blueprint(auth_blu, url_prefix='/api/auth')    
+app.register_blueprint(stats_blu, url_prefix='/api/statistics')    
 
 
     

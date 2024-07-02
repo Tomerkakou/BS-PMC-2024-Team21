@@ -76,9 +76,9 @@ def login():
 
     if user and user.checkPassword(userPassword):
         if not user.verifiedEmail:
-            return "Please Verify Your Email", 401
+            return "Please Verify Your Email", 400
         if not user.active:
-            return "Wait For Admin To Aprove Your Account", 401
+            return "Wait For Admin To Aprove Your Account", 400
         
         accessToken = create_access_token(identity=user)
         user.refresh_token = str(uuid.uuid4())[0:49]
@@ -86,7 +86,7 @@ def login():
         db.session.commit()
         return jsonify({'accessToken': accessToken , 'refreshToken': user.refresh_token}), 200
     else:    
-        return "Invalid Email Or Password", 401
+        return "Invalid Email Or Password", 400
 
 
 @auth_blu.post('/refresh-token')
