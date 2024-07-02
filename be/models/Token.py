@@ -15,6 +15,6 @@ class TokenTypeEnum(enum.Enum):
 
 class Token(db.Model):
     Token = db.Column(db.String(50), primary_key=True)
-    user = db.Column(db.String(50), db.ForeignKey("user.id"), nullable=False)  # Example of a foreign key column
+    user_id = db.Column(db.String(50), db.ForeignKey("user.id"), nullable=False)
     token_type = db.Column(db.Enum(TokenTypeEnum))
     

@@ -1,3 +1,13 @@
+import base64
+import os
+
+def image_to_base64(image_path):
+    image_path=os.path.join(os.path.dirname(__file__),image_path)
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+    return encoded_string.decode('utf-8')
+
+LOGO_IMAGE = "data:image/png;base64," + image_to_base64("../assets/logo.png")
 
 template="""
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
