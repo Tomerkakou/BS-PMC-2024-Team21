@@ -1,12 +1,12 @@
 import axios from 'axios'
 import {AuthModel, UserModel} from './_models'
 
-export const GET_USER_BY_ACCESSTOKEN_URL = `User`
-export const LOGIN_URL = `Auth/sign-in`
-export const GET_REFRESH_TOKEN_URL = `Auth/refresh-token`
-export const REGISTER_URL = `Auth/register`
-export const REQUEST_PASSWORD_URL = `Auth/forgot-password`
-export const RESET_PASSWORD_URL = `Auth/reset-password`
+export const GET_USER_BY_ACCESSTOKEN_URL = `auth/get-user`
+export const LOGIN_URL = `auth/login`
+export const GET_REFRESH_TOKEN_URL = `auth/refresh-token`
+export const REGISTER_URL = `auth/sign-up`
+export const REQUEST_PASSWORD_URL = `auth/forgot-password`
+export const RESET_PASSWORD_URL = `auth/reset-password`
 
 // Server should return AuthModel
 export function login(email: string, password: string) {
@@ -22,7 +22,9 @@ export function register(
   firstname: string,
   lastname: string,
   password: string,
-  password_confirmation: string
+  password_confirmation: string,
+  role:string,
+  avatar:string
 ) {
   return axios.post(REGISTER_URL, {
     email,
@@ -30,6 +32,8 @@ export function register(
     last_name: lastname,
     password,
     password_confirmation,
+    role,
+    avatar
   })
 }
 

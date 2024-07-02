@@ -1,45 +1,64 @@
 import { useState } from 'react';
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { alpha, useTheme } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
-import { useRouter } from 'routes/hooks';
 import Iconify from 'components/iconify';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RouterLink } from 'routes/components';
+import { useRouter } from 'routes/hooks';
+import { TextInput } from 'components/Inputs';
+import { useForm } from 'react-hook-form';
+import { getUserByToken, login } from 'auth/core/_requests';
+import { useAuth } from 'auth/core/Auth';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
+interface FormValues {
+  email: string;
+  password: string;
+}
 export default function LoginView() {
-  const theme = useTheme();
-
-  const router = useRouter();
-   const nav=useNavigate();
+  
+  const {control, handleSubmit,formState} = useForm<FormValues>();
+  const {saveAuth,setCurrentUser} = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const router=useRouter();
 
-  const handleClick = () => {
-    router.push("/auth/register");
+  const onSubmit = async ({email,password}:FormValues) => {
+    try{
+      const response=await login(email,password);
+      console.log(response);
+      saveAuth(response.data);
+      const {data:user}= await getUserByToken();
+      setCurrentUser(user);
+      router.push('/');
+    }catch(error:any){
+      saveAuth(undefined)
+      if (error.response) {
+        toast.error(error.response.data);
+      }
+    }
   };
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextInput fieldName="email" label="Email address" control={control}
+          rules={{ required: 'Email is required' }}
+         />
 
-        <TextField
-          name="password"
+        <TextInput
+          fieldName="password"
           label="Password"
+          control={control}
           type={showPassword ? 'text' : 'password'}
+          rules={{ required: 'Password is required' }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -64,7 +83,8 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        loading={formState.isSubmitting}
+        onClick={handleSubmit(onSubmit)}
       >
         Login
       </LoadingButton>
