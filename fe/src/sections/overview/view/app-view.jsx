@@ -15,6 +15,8 @@ import AppWidgetSummary from '../app-widget-summary';
 import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +25,23 @@ import AppConversionRates from '../app-conversion-rates';
 
 
 export default function AppView() {
+  const [usercount,setUserCount]=useState(0);
+  useEffect(()=>{
+    (async ()=>{
+      try{
+        const response=await axios.get("/statistics/usercount")
+        setUserCount(response.data.count)
+      }
+      catch(e){
+        console.log(e)
+      }
+
+    })()
+  },[])
+
+
+
+
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -41,8 +60,8 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="New Users"
-            total={1352831}
+            title="Users"
+            total={usercount}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
