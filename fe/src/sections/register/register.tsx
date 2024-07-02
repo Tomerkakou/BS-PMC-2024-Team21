@@ -15,14 +15,13 @@ import {
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
+import { register } from "auth/core/_requests";
 import { FileInput, SelectInput, TextInput } from "components/Inputs";
 import Iconify from "components/iconify";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { RouterLink } from "routes/components";
-import { useRouter } from "routes/hooks";
 
 interface FormValues {
   email: string;
@@ -45,14 +44,13 @@ export const Register = () => {
       avatar: "/assets/images/avatars/avatar_1.jpg",
     },
   });
-  const router = useRouter();
 
   const onSubmit = async (data: FormValues) => {
     try {
       if (data.image) {
         data.avatar = (await fileToBase64(data.image)) as string;
       }
-      const response = await axios.post("/auth/sign-up", data);
+      const response = await register(data.email, data.firstName, data.lastName, data.password, data.confirmPassword, data.role, data.avatar);
       setSucces(true);
     } catch (error: any) {
       if (error.response) {

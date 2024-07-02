@@ -46,14 +46,10 @@ export interface UserSocialNetworksModel {
 
 export interface UserModel {
   id: string
-  username: string
   email: string
   firstName: string
   lastName: string
-  country?: string
-  companyLogo?: string
-  avatar?: string
-  status?: string
-  roles?: Array<string>
+  avatar: string
+  role: string
   auth?: AuthModel
 }

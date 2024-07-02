@@ -72,14 +72,14 @@ const AuthInit: FC<WithChildren> = ({children}) => {
   // We should request user by authToken (IN OUR EXAMPLE IT'S accessToken) before rendering the application
   useEffect(() => {
     const requestUser = async (apiToken: string) => {
+      console.log('requestUser')
       try {
         if (!didRequest.current) {
-          const {data} = await getUserByToken()
-
-          if (data) {
-            const decodedToken = jwtDecode(auth!.accessToken) as any;
-            data.roles = [decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']]
-            setCurrentUser(data)
+          const {data:user} = await getUserByToken()
+          if (user) {
+            // const decodedToken = jwtDecode(auth!.accessToken) as any;
+            user.auth=auth;
+            setCurrentUser(user)
           }
         }
       } catch (error) {
@@ -101,7 +101,7 @@ const AuthInit: FC<WithChildren> = ({children}) => {
       setShowSplashScreen(false)
     }
     // eslint-disable-next-line
-  }, [])
+  }, [auth])
 
   return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
 }
