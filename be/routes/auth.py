@@ -7,7 +7,8 @@ from models.Token import Token, TokenTypeEnum
 from models import db
 from utils.emails.email import sendEmail
 import os
-from flask import Flask, redirect, url_for
+from flask import redirect
+
 auth_blu = Blueprint('auth',__name__)
 
 @auth_blu.post("/sign-up")
@@ -26,7 +27,7 @@ def signUp():
         
         db.session.add(newUser)
         db.session.commit()
-        newToken=Token(Token=str(uuid.uuid4())[0:49],user=newUser.id,token_type=TokenTypeEnum.VerifyEmail)
+        newToken=Token(Token=str(uuid.uuid4())[0:49],user_id=newUser.id,token_type=TokenTypeEnum.VerifyEmail)
         db.session.add(newToken)
         db.session.commit()
         url=os.getenv("BASE_URL")+f"/auth/verify-email?token={newToken.Token}"
@@ -45,11 +46,11 @@ def verifyEmail():
     token=request.args.get("token")
     token = Token.query.get(token)
     if token:
-        user=token.id
+        user=token.user
         user.verifiedEmail=True
         if user.role==RoleEnum.Student:
             user.active=True
-        db.session.remove(token)
+        db.session.delete(token)
         db.session.commit()
     return redirect(os.getenv("FRONT_URL"))
 

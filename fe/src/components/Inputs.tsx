@@ -16,10 +16,11 @@ interface TextInputProps {
     disabled?: boolean;
     readonly?: boolean;
     size?: 'small' | 'medium';
+    type?: string;
 }
 
 // TextInput component
-const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled, variant = "outlined", size = "medium" }) => {
+const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled, variant = "outlined", size = "medium",type="text" }) => {
     return (
         <Controller
             name={fieldName}
@@ -38,6 +39,7 @@ const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
                     InputProps={InputProps}
                     disabled={disabled}
                     size={size}
+                    type={type}
                     sx={sx}
                 />
             )}

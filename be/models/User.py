@@ -25,6 +25,8 @@ class User(db.Model):
     refresh_token = db.Column(db.String(256),nullable=True)
     avatar = db.Column(db.Text,nullable=True)
 
+    tokens = db.relationship('Token', backref='user', lazy=False)
+    
     def checkPassword(self,password):
         return bcrypt.check_password_hash(self.password,password)
     

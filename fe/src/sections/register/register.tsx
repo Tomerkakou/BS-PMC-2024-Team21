@@ -5,6 +5,8 @@ import {
   CardActions,
   FormControlLabel,
   Grid,
+  IconButton,
+  InputAdornment,
   Link,
   Radio,
   RadioGroup,
@@ -35,7 +37,9 @@ interface FormValues {
 
 export const Register = () => {
   const [succes, setSucces] = useState<boolean>(false);
-  const { handleSubmit, control, getValues } = useForm<FormValues>({
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
+  const { handleSubmit, control, getValues,formState } = useForm<FormValues>({
     defaultValues: {
       role: "Student",
       avatar: "/assets/images/avatars/avatar_1.jpg",
@@ -61,7 +65,6 @@ export const Register = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
-    console.log(newValue);
   };
 
   const ConfirmPassword = (cpassword: string) => {
@@ -121,12 +124,22 @@ export const Register = () => {
             control={control}
             label="Password"
             fieldName="password"
+            type={showPassword ? 'text' : 'password'}
             rules={{
               required: "Password is required!",
               pattern: {
                 value: /^(?=.*\d)(?=.*[A-Z]).{6,}$/,
                 message: "Weak Password",
               },
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
           />
           <TextInput
@@ -136,6 +149,16 @@ export const Register = () => {
             rules={{
               required: "Confirm Password is required!",
               validate: ConfirmPassword,
+            }}
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowCPassword(!showPassword)} edge="end">
+                    <Iconify icon={showCPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
           />
           <TextInput
@@ -234,6 +257,7 @@ export const Register = () => {
             type="submit"
             variant="contained"
             color="inherit"
+            loading={formState.isSubmitting}
             onClick={handleSubmit(onSubmit)}
           >
             Sign Up
