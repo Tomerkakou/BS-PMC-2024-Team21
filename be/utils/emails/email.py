@@ -9,11 +9,9 @@ templates={
 }
 
 def sendEmail(email,subject,templateName,**kwargs):
-    print(kwargs)
     html = templates[templateName]
     html=html.format(**kwargs)
 
-    print(html)
     message = Mail(
         from_email=os.getenv('SENDGRID_API_EMAIL'),
         to_emails=email,

@@ -1,8 +1,9 @@
 import { lazy } from 'react';
-import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+import { Outlet, Navigate, useRoutes,useLocation,useRouteError } from 'react-router-dom';
 
 import DashboardLayout from 'layouts/dashboard';
 import AuthLayout from 'layouts/auth';
+import { useAuth } from 'auth';
 
 export const IndexPage = lazy(() => import('pages/app'));
 export const BlogPage = lazy(() => import('pages/blog'));
@@ -15,14 +16,34 @@ export const Page404 = lazy(() => import('pages/page-not-found'));
 
 
 // ----------------------------------------------------------------------
+const UnauthorizedErrorHandler = () => {
+  const { pathname } = useLocation()
+  return (<Navigate to={'/auth'} state={{
+    redirectTo: pathname
+  }} />)
+};
+
+const LoginRedirectionHandler= () => {
+  const { state } = useLocation()
+
+  if (state && state.redirectTo) {
+    window.history.pushState(null, "", "/");
+    return (<Navigate to={state.redirectTo} />)
+  }
+
+  return (<Navigate to={'/'} />)
+};
 
 export default function Router() {
+  const {currentUser}=useAuth();
   const routes = useRoutes([
     {
-      element: (
+      element: (currentUser ?
         <DashboardLayout>
           <Outlet />
         </DashboardLayout>
+        :
+        <UnauthorizedErrorHandler/>
       ),
       children: [
         { element: <IndexPage />, index: true },
@@ -34,9 +55,12 @@ export default function Router() {
     {
       path: 'auth',
       element: (
+        !currentUser ?
         <AuthLayout>
           <Outlet />
         </AuthLayout>
+        :
+        <LoginRedirectionHandler/>
       ),
       children: [
         { element: <Navigate to="/auth/login" />, index: true},
