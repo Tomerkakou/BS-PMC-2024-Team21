@@ -3,7 +3,7 @@ FROM node:16.17.1-alpine3.16 as build
 ARG API_BASE_URL=http://localhost:5000/api
 ARG PUBLIC_URL=http://localhost:3000
 
-
+#test
 WORKDIR /fe
 COPY . /fe
 
