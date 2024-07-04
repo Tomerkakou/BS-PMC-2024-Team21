@@ -14,33 +14,34 @@ pipeline {
 
         stage('Build and Install React App') {
             steps {
-                dir('fe') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                script {
+                    dir('fe') {
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
                 }
             }
         }
-
         stage('Start Flask and React') {
-            steps {
-                parallel(
-                    // Start Flask app
-                    {
+            parallel {
+                stage('Flask') {
+                    steps {
                         script {
                             dir('be') {
                                 sh 'flask run &'
                             }
                         }
-                    },
-                    // Start React app
-                    {
+                    }
+                }
+                stage('React') {
+                    steps {
                         script {
                             dir('fe') {
                                 sh 'npm start &'
                             }
                         }
                     }
-                )
+                }
             }
         }
 
