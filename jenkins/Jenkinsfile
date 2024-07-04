@@ -1,9 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'python:3.11-slim' }
+    }
     stages {
         stage('Install Flask Dependencies') {
             agent {
-                docker { image 'python:3' }
+                docker { image 'python:3.11-slim' }
             }
             steps {
                 script {
@@ -17,7 +19,7 @@ pipeline {
         stage('Build and Install React App') {
             agent {
                 docker {
-                    image 'node:6-alpine'
+                    image 'node:16.17.1-alpine3.16'
                     args '-p 3000:3000'
                 }
             }
@@ -34,7 +36,7 @@ pipeline {
             parallel {
                 stage('Flask') {
                     agent {
-                        docker { image 'python:3' }
+                        docker { image 'python:3.11-slim' }
                     }
                     steps {
                         script {
@@ -47,7 +49,7 @@ pipeline {
                 stage('React') {
                     agent {
                         docker {
-                            image 'node:6-alpine'
+                            image 'node:16.17.1-alpine3.16'
                             args '-p 3000:3000'
                         }
                     }
