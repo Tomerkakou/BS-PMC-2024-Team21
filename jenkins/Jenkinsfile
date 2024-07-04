@@ -11,7 +11,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build and Install React App') {
             steps {
                 dir('fe') {
@@ -41,8 +40,7 @@ pipeline {
                 )
             }
         }
-    }
-    stage('Test apps') {
+        stage('Test apps') {
             steps {
                 script {
                     sh 'curl -f http://localhost:5000' // For Flask
@@ -50,6 +48,7 @@ pipeline {
                 }
             }
         }
+    }
     post {
         always {
             deleteDir()
