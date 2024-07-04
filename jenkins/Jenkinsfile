@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', 
-                    url: 'https://github.com/BS-PMC-2024/BS-PMC-2024-Team21.git'
-            }
-        }
         stage('Build Docker Images') {
             steps {
                 script {
