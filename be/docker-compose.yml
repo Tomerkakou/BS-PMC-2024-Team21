@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  bs-flask:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      FLASK_ENV: development
+      SQLALCHEMY_DATABASE_URI: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix
+      SECRET_KEY: ASASLKGHASLKDHGASKLHGASKLDGALSAD
+
