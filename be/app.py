@@ -19,14 +19,10 @@ bcrypt.init_app(app)
 CORS(app)
 
 
-@app.route('/api/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    userEmail = data.get('email')
-    userPassword = data.get('password')
-    user = User.query.filter_by(id="Admin").first()
-    if user:
-        return jsonify("ok"), 200
+@app.get('/api/hello')
+def hello():
+    return "Hello World!",200
+    
 
     
 
@@ -37,5 +33,5 @@ if __name__ == '__main__':
         print("Creating database tables...")
         db.create_all()
         print("Tables created successfully.")
-    app.run(debug=True)
+    app.run(debug=True,port=5000,host='0.0.0.0')
     
