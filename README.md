@@ -2,17 +2,6 @@
 
 This project consists of a backend built with Flask and a frontend built with React. You can run both applications separately or together using Docker Compose.
 
-## Table of Contents
-- [Installation](#installation)
-  - [Backend](#backend)
-  - [Frontend](#frontend)
-- [Running the Applications](#running-the-applications)
-  - [Running the Backend](#running-the-backend)
-  - [Running the Frontend](#running-the-frontend)
-  - [Running with Docker Compose](#running-with-docker-compose)
-- [Project Structure](#project-structure)
-- [Additional Notes](#additional-notes)
-
 ## Installation FLASK
 Follow these steps to get your LEARNIX backend up and running:
 
