@@ -2,34 +2,57 @@ pipeline {
     agent any
 
     stages {
-        stage('Build Docker Images') {
+        stage('Install Flask Dependencies') {
             steps {
                 script {
-                    sh 'docker-compose build'
+                    dir('be') {
+                        sh 'pip install -r requirements.txt'
+                    }
                 }
             }
         }
-        stage('Test Docker Compose Build') {
+
+        stage('Build and Install React App') {
+            steps {
+                dir('fe') {
+                    sh 'npm install'
+                    sh 'npm build'
+                }
+            }
+        }
+
+        stage('Start Flask and React') {
+            steps {
+                parallel(
+                    {
+                        script {
+                            dir('be') {
+                                sh 'flask run'
+                            }
+                        }
+                    },
+                    {
+                        script {
+                            dir('fe') {
+                                sh 'npm start'
+                            }
+                        }
+                    }
+                )
+            }
+        }
+    }
+    stage('Test apps') {
             steps {
                 script {
-                    sh 'docker-compose up -d'
-                    
-
                     sh 'curl -f http://localhost:5000' // For Flask
                     sh 'curl -f http://localhost:3000' // For React
                 }
             }
         }
-    }
     post {
         always {
-            script {
-                // Bring down the Docker Compose services
-                sh 'docker-compose down'
-                
-                // Clean up the workspace
-                cleanWs()
-            }
+            deleteDir()
         }
     }
 }
