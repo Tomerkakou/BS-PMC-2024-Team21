@@ -11,11 +11,12 @@ pipeline {
                 }
             }
         }
+
         stage('Build and Install React App') {
             steps {
                 dir('fe') {
                     sh 'npm install'
-                    sh 'npm build'
+                    sh 'npm run build'
                 }
             }
         }
@@ -23,34 +24,42 @@ pipeline {
         stage('Start Flask and React') {
             steps {
                 parallel(
+                    // Start Flask app
                     {
                         script {
                             dir('be') {
-                                sh 'flask run'
+                                sh 'flask run &'
                             }
                         }
                     },
+                    // Start React app
                     {
                         script {
                             dir('fe') {
-                                sh 'npm start'
+                                sh 'npm start &'
                             }
                         }
                     }
                 )
             }
         }
+
         stage('Test apps') {
             steps {
                 script {
-                    sh 'curl -f http://localhost:5000' // For Flask
-                    sh 'curl -f http://localhost:3000' // For React
+                    // Test Flask app
+                    sh 'curl -f http://localhost:5000'
+
+                    // Test React app
+                    sh 'curl -f http://localhost:3000'
                 }
             }
         }
     }
+
     post {
         always {
+            // Clean up after the pipeline
             deleteDir()
         }
     }
