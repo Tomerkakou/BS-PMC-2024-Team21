@@ -2,13 +2,20 @@ version: '3.8'
 
 services:
   bs-flask:
-    build: .
+    build: ./be
     ports:
       - "5000:5000"
     volumes:
-      - .:/app
+      - .:/be
     environment:
+      FLASK_APP: ./be/app.py
       FLASK_ENV: development
       SQLALCHEMY_DATABASE_URI: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix
       SECRET_KEY: ASASLKGHASLKDHGASKLHGASKLDGALSAD
+  bs-react:
+    build: ./fe
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/fe
 
