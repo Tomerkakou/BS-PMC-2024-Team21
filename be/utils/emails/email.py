@@ -2,10 +2,11 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from utils.emails.verifyAccount import template
-
+from utils.emails.resetPassword import templatereset
 
 templates={
-    "verifyAccount":template
+    "verifyAccount":template,
+    "resetPassword":templatereset
 }
 
 def sendEmail(email,subject,templateName,**kwargs):

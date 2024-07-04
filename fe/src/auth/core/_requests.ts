@@ -5,8 +5,8 @@ export const GET_USER_BY_ACCESSTOKEN_URL = `auth/get-user`
 export const LOGIN_URL = `auth/login`
 export const GET_REFRESH_TOKEN_URL = `auth/refresh-token`
 export const REGISTER_URL = `auth/sign-up`
-export const REQUEST_PASSWORD_URL = `auth/forgot-password`
-export const RESET_PASSWORD_URL = `auth/reset-password`
+export const REQUEST_PASSWORD_URL = `auth/reset-pass-email`
+export const RESET_PASSWORD_URL = `auth/change-pass`
 
 // Server should return AuthModel
 export function login(email: string, password: string) {
@@ -44,8 +44,8 @@ export function requestPassword(email: string) {
   })
 }
 
-export function resetPassword(payload: any) {
-  return axios.post<{result: boolean}>(RESET_PASSWORD_URL, payload)
+export function resetPassword(password:string,token:string) {
+  return axios.post<{result: boolean}>(RESET_PASSWORD_URL,{password,token})
 }
 
 
