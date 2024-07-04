@@ -4,7 +4,6 @@ import { Outlet, Navigate, useRoutes,useLocation,useRouteError } from 'react-rou
 import DashboardLayout from 'layouts/dashboard';
 import AuthLayout from 'layouts/auth';
 import { useAuth } from 'auth';
-
 export const IndexPage = lazy(() => import('pages/app'));
 export const BlogPage = lazy(() => import('pages/blog'));
 export const UserPage = lazy(() => import('pages/user'));
@@ -12,8 +11,8 @@ export const LoginPage = lazy(() => import('pages/login'));
 export const RegisterPage = lazy(() => import('pages/register'));
 export const ProductsPage = lazy(() => import('pages/products'));
 export const Page404 = lazy(() => import('pages/page-not-found'));
-
-
+export const ResetPassPage=lazy(() => import('pages/resetpass'));
+export const ResetPassEmailPage=lazy(() => import('pages/reset-pass-email'));
 
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
@@ -66,6 +65,8 @@ export default function Router() {
         { element: <Navigate to="/auth/login" />, index: true},
         { path:'login', element: <LoginPage /> },
         { path:'sign-up',element:<RegisterPage/> },
+        { path:'reset-pass-email',element:<ResetPassEmailPage/> },
+        { path:'reset-pass',element:<ResetPassPage/> }
       ],
     },
     {

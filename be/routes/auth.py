@@ -110,4 +110,49 @@ def refreshToken():
 @jwt_required()
 def getUser():
     return jsonify({'id': current_user.id, 'email': current_user.email, 'firstName': current_user.firstName, 'lastName': current_user.lastName, 'role': str(current_user.role), 'avatar': current_user.avatar})
-    
+
+
+@auth_blu.post('/reset-pass-email')   
+def resetPassEmail():
+    data = request.get_json()
+    userEmail = data.get('email')
+    user = User.query.filter_by(email = userEmail).first()
+    if user:
+        if not user.verifiedEmail:
+            return "Please Verify Your Email", 400
+        if not user.active:
+            return "Wait For Admin To Aprove Your Account", 400
+    else:
+        return "Invalid email", 400
+
+    newToken=Token(Token=str(uuid.uuid4())[0:49],user_id=user.id,token_type=TokenTypeEnum.ResetPass)
+    db.session.add(newToken)
+    db.session.commit()
+    url=os.getenv("BASE_URL")+f"/auth/reset-pass?token={newToken.Token}"
+    sendEmail(userEmail,"Reset Pass","resetPassword",base_url=os.getenv("FRONT_URL"),verify_url=url)
+    return "Email send", 201
+
+
+@auth_blu.get('/reset-pass')   
+def resetPass():
+    token=request.args.get("token")
+    url=os.getenv("FRONT_URL")+f"/auth/reset-pass?reset-pass?token={token}"
+    return redirect(url)
+
+
+@auth_blu.post('/change-pass')   
+def changepass():
+    data = request.get_json()
+    userPass = data.get('password')
+    userToken=data.get('token')
+    print(userToken)
+    token = Token.query.get(userToken)
+    if token:
+        user=token.user
+        user.password=userPass
+        user.hashPassword()
+        db.session.delete(token)
+        db.session.commit()     
+        return "ok",200
+    else :
+        return "Error",400 
