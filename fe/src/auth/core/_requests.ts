@@ -5,8 +5,8 @@ export const GET_USER_BY_ACCESSTOKEN_URL = `auth/get-user`
 export const LOGIN_URL = `auth/login`
 export const GET_REFRESH_TOKEN_URL = `auth/refresh-token`
 export const REGISTER_URL = `auth/sign-up`
-export const REQUEST_PASSWORD_URL = `auth/reset-pass-email`
-export const RESET_PASSWORD_URL = `auth/change-pass`
+export const REQUEST_PASSWORD_URL = `auth/forgot-password`
+export const RESET_PASSWORD_URL = `auth/reset-password`
 
 // Server should return AuthModel
 export function login(email: string, password: string) {

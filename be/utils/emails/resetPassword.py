@@ -1,15 +1,5 @@
-import base64
-import os
 
-def image_to_base64(image_path):
-    image_path=os.path.join(os.path.dirname(__file__),image_path)
-    with open(image_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read())
-    return encoded_string.decode('utf-8')
-
-LOGO_IMAGE = "data:image/png;base64," + image_to_base64("../assets/logo.png")
-
-templatereset="""
+template="""
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -129,8 +119,8 @@ table, td {{ color: #000000; }} #u_body a {{ color: #0000ee; text-decoration: un
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td style="padding-right: 0px;padding-left: 0px;" align="center">
-      <a href="{base_url}" target="_blank">
-      <img align="center" border="0" src="images/image-1.png" alt="LEARNIX Logo" title="LEARNIX Logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 77%;max-width: 369.6px;" width="369.6"/>
+      <a href="{FRONT_URL}" target="_blank">
+      <img align="center" border="0" src="{LOGO_IMAGE}" alt="LEARNIX Logo" title="LEARNIX Logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 77%;max-width: 369.6px;" width="369.6"/>
       </a>
     </td>
   </tr>
@@ -184,7 +174,7 @@ table, td {{ color: #000000; }} #u_body a {{ color: #0000ee; text-decoration: un
       <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 10px 34px;font-family:arial,helvetica,sans-serif;" align="left">
         
   <div style="font-size: 14px; color: #a5a0a0; line-height: 190%; text-align: left; word-wrap: break-word;">
-    <p style="line-height: 190%;">Thank you for joining us ! start boosting your learning </p>
+    <p style="line-height: 190%;">Click on the link below and choose new password! </p>
   </div>
 
       </td>
@@ -223,8 +213,8 @@ table, td {{ color: #000000; }} #u_body a {{ color: #0000ee; text-decoration: un
   <!--[if mso]><style>.v-button {{background: transparent !important;}}</style><![endif]-->
 <div align="center">
   <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:54px; v-text-anchor:middle; width:428px;" arcsize="7.5%"  strokecolor="#CCC" strokeweight="2px" fillcolor="#8f5ee9"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
-    <a href="{verify_url}" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #8f5ee9; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:90%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;border-top-width: 2px; border-top-style: solid; border-top-color: #CCC; border-left-width: 2px; border-left-style: solid; border-left-color: #CCC; border-right-width: 2px; border-right-style: solid; border-right-color: #CCC; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #CCC;font-size: 17px;">
-      <span style="display:block;padding:10px 20px;line-height:200%;"><span style="line-height: 34px;"><strong><span style="line-height: 34px;">Reset pass!</span></strong></span></span>
+    <a href="{reset_url}" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #8f5ee9; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:90%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;border-top-width: 2px; border-top-style: solid; border-top-color: #CCC; border-left-width: 2px; border-left-style: solid; border-left-color: #CCC; border-right-width: 2px; border-right-style: solid; border-right-color: #CCC; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #CCC;font-size: 17px;">
+      <span style="display:block;padding:10px 20px;line-height:200%;"><span style="line-height: 34px;"><strong><span style="line-height: 34px;">Reset password!</span></strong></span></span>
     </a>
     <!--[if mso]></center></v:roundrect><![endif]-->
 </div>

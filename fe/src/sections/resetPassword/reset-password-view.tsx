@@ -1,59 +1,49 @@
-import { useEffect, useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import { Stack, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
+import { resetPassword } from "auth/core/_requests";
 import Iconify from "components/iconify";
 import { TextInput } from "components/Inputs";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { LoadingButton } from "@mui/lab";
-import { useLocation } from "react-router-dom";
-import { resetPassword } from "auth/core/_requests";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { useRouter } from "routes/hooks";
-import { Stack, Typography } from "@mui/material";
 
 interface FormValues {
   password: string;
+  cpassword: string;
 }
 
-export default function ResetPassView() {
+export default function ResetPasswordView() {
   const { control, handleSubmit, formState, getValues } = useForm<FormValues>();
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
-
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const router = useRouter();
+
   const ConfirmPassword = (cpassword: string) => {
     const password = getValues().password;
     return password === cpassword ? true : "Password not match";
   };
 
-  const submit = async (data: FormValues) => {
-    const params = new URLSearchParams(window.location.search);
-    const iterator = params.entries();
-    let foundToken = false;
-    let tokenValue = "";
-
-    for (let entry = iterator.next(); !entry.done; entry = iterator.next()) {
-      const [key, value] = entry.value;
-      if (key.includes("token")) {
-        tokenValue = value;
-        foundToken = true;
-        break;
+  const onSubmit = async (data: FormValues) => {
+    try{
+      const response = await resetPassword(data.password, searchParams.get("token")!);
+      if (response.status === 200) {
+        router.push("/auth/login");
+      }
+    }catch(error:any){
+      if (error.response) {
+        console.log(error.response.data);
       }
     }
-
-    if (!foundToken) {
-      throw new Error("Token not found in URL parameters");
-    }
-
-    console.log(tokenValue);
-    // Wait for the state to update before using token
-    const response = await resetPassword(data.password, tokenValue);
-    console.log(response.data);
-
-    if (response.status === 200) {
-      router.push("/auth/login");
-    }
   };
+
+  if(!searchParams.has("token")){
+    return <Navigate to="/auth/login" />
+  }
+
   return (
     <>
       <Stack spacing={3}>
@@ -88,7 +78,7 @@ export default function ResetPassView() {
         <TextInput
           control={control}
           label="Confirm Password"
-          fieldName="confirmPassword"
+          fieldName="cpassword"
           rules={{
             required: "Confirm Password is required!",
             validate: ConfirmPassword,
@@ -116,9 +106,9 @@ export default function ResetPassView() {
           variant="contained"
           color="inherit"
           loading={formState.isSubmitting}
-          onClick={handleSubmit(submit)}
+          onClick={handleSubmit(onSubmit)}
         >
-          Reset pass
+          Reset password
         </LoadingButton>
       </Stack>
     </>

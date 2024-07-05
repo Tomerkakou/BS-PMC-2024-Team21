@@ -1,9 +1,10 @@
 import { lazy } from 'react';
-import { Outlet, Navigate, useRoutes,useLocation,useRouteError } from 'react-router-dom';
+import { Outlet, Navigate, useRoutes,useLocation } from 'react-router-dom';
 
 import DashboardLayout from 'layouts/dashboard';
 import AuthLayout from 'layouts/auth';
 import { useAuth } from 'auth';
+
 export const IndexPage = lazy(() => import('pages/app'));
 export const BlogPage = lazy(() => import('pages/blog'));
 export const UserPage = lazy(() => import('pages/user'));
@@ -11,8 +12,8 @@ export const LoginPage = lazy(() => import('pages/login'));
 export const RegisterPage = lazy(() => import('pages/register'));
 export const ProductsPage = lazy(() => import('pages/products'));
 export const Page404 = lazy(() => import('pages/page-not-found'));
-export const ResetPassPage=lazy(() => import('pages/resetpass'));
-export const ResetPassEmailPage=lazy(() => import('pages/reset-pass-email'));
+export const ResetPasswordPage=lazy(() => import('pages/reset-password'));
+export const ForgotPasswordPage=lazy(() => import('pages/forgot-password'));
 
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
@@ -65,8 +66,8 @@ export default function Router() {
         { element: <Navigate to="/auth/login" />, index: true},
         { path:'login', element: <LoginPage /> },
         { path:'sign-up',element:<RegisterPage/> },
-        { path:'reset-pass-email',element:<ResetPassEmailPage/> },
-        { path:'reset-pass',element:<ResetPassPage/> }
+        { path:'forgot-password',element:<ForgotPasswordPage/> },
+        { path:'reset-password',element:<ResetPasswordPage/> }
       ],
     },
     {

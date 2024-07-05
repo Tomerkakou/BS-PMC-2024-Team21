@@ -1,4 +1,5 @@
 from sqlalchemy import Enum
+from sqlalchemy.dialects.mysql import LONGTEXT
 import enum
 from models import db
 from flask_bcrypt import Bcrypt
@@ -22,10 +23,10 @@ class User(db.Model):
     role = db.Column(Enum(RoleEnum),default=RoleEnum.Student)
     verifiedEmail=db.Column(db.Boolean,nullable=False,default=False)
     active = db.Column(db.Boolean,nullable=False,default=False)
-    refresh_token = db.Column(db.String(256),nullable=True)
-    avatar = db.Column(db.Text,nullable=True)
-
+    refresh_token = db.Column(db.String(50),nullable=True)
+    avatar = db.Column(LONGTEXT,nullable=False)
     tokens = db.relationship('Token', backref='user', lazy=False)
+    
     
     def checkPassword(self,password):
         return bcrypt.check_password_hash(self.password,password)

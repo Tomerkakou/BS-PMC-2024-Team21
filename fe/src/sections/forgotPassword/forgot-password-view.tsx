@@ -1,21 +1,20 @@
-import { useState } from "react";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import Iconify from "components/iconify";
-import { TextInput } from "components/Inputs";
-import { useForm } from "react-hook-form";
-import { Stack, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import axios from "axios";
+import { Link, Stack, Typography } from "@mui/material";
 import { requestPassword } from "auth/core/_requests";
+import { TextInput } from "components/Inputs";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { RouterLink } from "routes/components";
 
 interface FormValues {
   email: string;
 }
-export default function ResetPassEmailView() {
+export default function ForgotPasswordView() {
+
   const [emailSend, setEmailSend] = useState<boolean>(false);
   const { control, handleSubmit, formState } = useForm<FormValues>();
+
   const onSubmit = async (data: FormValues) => {
     try {
       const response = await requestPassword(data.email);
@@ -30,7 +29,7 @@ export default function ResetPassEmailView() {
     return (
       <>
         <Stack spacing={3}>
-          <Typography>Enter your email</Typography>
+          <Typography variant="h4">Enter your Email</Typography>
 
           <TextInput
             control={control}
@@ -61,7 +60,18 @@ export default function ResetPassEmailView() {
   } else {
     return (
       <>
-        <Typography>Email have been send</Typography>
+        <Typography variant="h4">Email have been sent to provided address! </Typography>
+        <Typography variant="body2" sx={{ mt: 2, mb: 5}}>
+          Go back to
+          <Link
+            variant="subtitle2"
+            component={RouterLink}
+            sx={{ ml: 0.5 }}
+            href="/auth/login"
+          >
+            Log in
+          </Link>
+        </Typography>
       </>
     );
   }
