@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { useAuth } from 'auth';
+import { useRouter } from "routes/hooks";
 
 // ----------------------------------------------------------------------
 
@@ -16,10 +17,6 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
   },
   {
     label: 'Settings',
@@ -36,6 +33,7 @@ export default function AccountPopover() {
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
+  const router = useRouter();
 
   const handleClose = () => {
     setOpen(null);
@@ -44,6 +42,9 @@ export default function AccountPopover() {
   const handleLogout = () => {
     logout();
     window.location.href = '/auth/login'
+  }
+  const handleProfile = () => {  
+    router.push("/profile");
   }
 
   return (
@@ -104,6 +105,14 @@ export default function AccountPopover() {
             {option.label}
           </MenuItem>
         ))}
+        <MenuItem
+          disableRipple
+          disableTouchRipple
+          onClick={handleProfile}
+          sx={{ typography: 'body2', py: 1.5 }}
+        >
+          Profile
+        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 

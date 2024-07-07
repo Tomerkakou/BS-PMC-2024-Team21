@@ -13,6 +13,7 @@ export const ProductsPage = lazy(() => import('pages/products'));
 export const Page404 = lazy(() => import('pages/page-not-found'));
 export const ResetPassPage=lazy(() => import('pages/resetpass'));
 export const ResetPassEmailPage=lazy(() => import('pages/reset-pass-email'));
+export const ProfiilePage=lazy(() => import('pages/profile'));
 
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
@@ -49,6 +50,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
+        { path:'profile',element:<ProfiilePage/> }
       ],
     },
     {
@@ -66,7 +68,7 @@ export default function Router() {
         { path:'login', element: <LoginPage /> },
         { path:'sign-up',element:<RegisterPage/> },
         { path:'reset-pass-email',element:<ResetPassEmailPage/> },
-        { path:'reset-pass',element:<ResetPassPage/> }
+        { path:'reset-pass',element:<ResetPassPage/> },
       ],
     },
     {

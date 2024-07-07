@@ -17,6 +17,7 @@ import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuth } from 'auth';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ import axios from 'axios';
 
 export default function AppView() {
   const [usercount,setUserCount]=useState(0);
+  const {currentUser } = useAuth();
   useEffect(()=>{
     (async ()=>{
       try{
@@ -45,7 +47,7 @@ export default function AppView() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+        Hi {currentUser.firstName}, Welcome back 👋
       </Typography>
 
       <Grid container spacing={3}>
