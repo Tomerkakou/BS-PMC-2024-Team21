@@ -1,3 +1,4 @@
+import React from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Avatar,
@@ -22,6 +23,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { RouterLink } from "routes/components";
+import { useAuth } from "auth";
 
 interface FormValues {
   email: string;
@@ -34,14 +36,18 @@ interface FormValues {
   role: string;
 }
 
-export const Register = () => {
-  const [succes, setSucces] = useState<boolean>(false);
+export const Profile = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
+  const [succes, setSucces] = useState<boolean>(false);
+  const { currentUser } = useAuth();
+
   const { handleSubmit, control, getValues, formState } = useForm<FormValues>({
     defaultValues: {
-      role: "Student",
-      avatar: "/assets/images/avatars/avatar_1.jpg",
+      email: currentUser?.email,
+      firstName: currentUser?.firstName,
+      lastName: currentUser?.lastName,
+      role: currentUser?.role,
     },
   });
 
@@ -67,6 +73,15 @@ export const Register = () => {
     }
   };
 
+  const fileToBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const [tab, setTab] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -77,42 +92,14 @@ export const Register = () => {
     const password = getValues().password;
     return password === cpassword ? true : "Password not match";
   };
-  if (succes) {
-    return (
-      <>
-        <Typography variant="h3">Sign-up Successful!</Typography>
-        <Typography variant="h6" mt={3}>
-          Please check your inbox and follow the instructions to verify your
-          email address.
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
-          Go back to
-          <Link
-            variant="subtitle2"
-            component={RouterLink}
-            sx={{ ml: 0.5 }}
-            href="/auth/login"
-          >
-            Log In
-          </Link>
-        </Typography>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Typography variant="h4">Sign Up to LEARNIX</Typography>
-        <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
-          Already have account ?
-          <Link
-            variant="subtitle2"
-            component={RouterLink}
-            sx={{ ml: 0.5 }}
-            href="/auth/login"
-          >
-            Log In
-          </Link>
-        </Typography>
+
+  if (!currentUser) {
+    return <div>Loading...</div>; // Render a loading state if currentUser is not available
+  }
+  return (
+    <>
+      <Stack spacing={3}>
+        <Typography variant="h4">Your Profile</Typography>
         <Stack spacing={3}>
           <TextInput
             control={control}
@@ -126,57 +113,7 @@ export const Register = () => {
               },
             }}
           />
-          <TextInput
-            control={control}
-            label="Password"
-            fieldName="password"
-            type={showPassword ? "text" : "password"}
-            rules={{
-              required: "Password is required!",
-              pattern: {
-                value: /^(?=.*\d)(?=.*[A-Z]).{6,}$/,
-                message: "Weak Password",
-              },
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    <Iconify
-                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                    />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextInput
-            control={control}
-            label="Confirm Password"
-            fieldName="confirmPassword"
-            rules={{
-              required: "Confirm Password is required!",
-              validate: ConfirmPassword,
-            }}
-            type={showPassword ? "text" : "password"}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowCPassword(!showPassword)}
-                    edge="end"
-                  >
-                    <Iconify
-                      icon={showCPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                    />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+
           <TextInput
             control={control}
             label="First Name"
@@ -276,19 +213,10 @@ export const Register = () => {
             loading={formState.isSubmitting}
             onClick={handleSubmit(onSubmit)}
           >
-            Sign Up
+            Save Changes
           </LoadingButton>
         </CardActions>
-      </>
-    );
-  }
-};
-
-const fileToBase64 = (file: File) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+      </Stack>
+    </>
+  );
 };
