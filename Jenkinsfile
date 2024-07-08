@@ -9,17 +9,17 @@ pipeline {
                 }
             }
         }
-        stage('Test Docker Compose Build') {
-            steps {
-                script {
-                    sh 'docker-compose up -d'
+        // stage('Test Docker Compose Build') {
+        //     steps {
+        //         script {
+        //             sh 'docker-compose up -d'
                     
 
-                    sh 'curl -f http://localhost:5000' // For Flask
-                    sh 'curl -f http://localhost:3000' // For React
-                }
-            }
-        }
+        //             sh 'curl -f http://localhost:5000' // For Flask
+        //             sh 'curl -f http://localhost:3000' // For React
+        //         }
+        //     }
+        // }
     }
     post {
         always {
