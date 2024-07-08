@@ -8,7 +8,7 @@ export default function ProfilePage() {
   return (
     <>
       <Helmet>
-        <title> profile | LEARNIX </title>
+        <title> Profile | LEARNIX </title>
       </Helmet>
       <Profile />
     </>

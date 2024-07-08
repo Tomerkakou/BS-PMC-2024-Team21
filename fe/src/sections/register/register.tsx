@@ -50,7 +50,7 @@ export const Register = () => {
       if (data.image) {
         data.avatar = (await fileToBase64(data.image)) as string;
       }
-      const response = await register(
+      await register(
         data.email,
         data.firstName,
         data.lastName,

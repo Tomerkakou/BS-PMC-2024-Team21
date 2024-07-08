@@ -7,7 +7,6 @@ import Router from "./routes/sections";
 import ThemeProvider from "./theme";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import LayoutSplashScreen from "layouts/dashboard/common/LayoutSplashScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // ----------------------------------------------------------------------
