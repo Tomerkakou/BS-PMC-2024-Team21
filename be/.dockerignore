@@ -1,0 +1,46 @@
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environment directories
+venv/
+.env/
+.env.bak/
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore logs and local data
+*.log
+*.sqlite3
+
+# Ignore node_modules if using Node.js for front-end dependencies
+node_modules/
+
+# Ignore pytest cache
+.cache/
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# Ignore builds
+build/
+dist/
+*.egg-info
+
+# Ignore config files
+.env
+config.py
+
+# Ignore any other file or directory that shouldn't be included in the image
+# Add any other patterns that apply to your specific project structure

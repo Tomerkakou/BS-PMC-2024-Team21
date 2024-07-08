@@ -4,6 +4,7 @@ from models import db
 from dotenv import load_dotenv
 from models.User import bcrypt
 from routes.auth import auth_blu, jwt
+
 import os
 
 #env
@@ -31,4 +32,5 @@ if __name__ == '__main__':
         db.create_all()
         print("Tables created successfully.")
     app.run(debug=True)
+
     
