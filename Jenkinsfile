@@ -5,7 +5,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'docker-compose build'
+                    sh 'docker compose build'
                 }
             }
         }
@@ -25,7 +25,7 @@ pipeline {
         always {
             script {
                 // Bring down the Docker Compose services
-                sh 'docker-compose down'
+                //sh 'docker compose down'
                 
                 // Clean up the workspace
                 cleanWs()
