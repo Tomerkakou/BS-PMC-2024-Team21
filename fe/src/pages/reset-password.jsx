@@ -1,18 +1,17 @@
 import { Helmet } from 'react-helmet-async';
-import ResetPassView from 'sections/resetPassword/resetpass';
+import {ResetPasswordView} from 'sections/resetPassword';
 
 
 
 // ----------------------------------------------------------------------
 
-export default function ResetPassPage() {
+export default function ResetPasswordPage() {
   return (
     <>
       <Helmet>
-        <title> ResetPassword | LEARNIX </title>
+        <title> Reset Password | LEARNIX </title>
       </Helmet>
-
-    <ResetPassView/>
+      <ResetPasswordView/>
     </>
   );
 }

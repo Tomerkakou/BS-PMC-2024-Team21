@@ -8,7 +8,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import Iconify from "components/iconify";
-import { useNavigate } from "react-router-dom";
 import { RouterLink } from "routes/components";
 import { useRouter } from "routes/hooks";
 import { TextInput } from "components/Inputs";
@@ -86,7 +85,8 @@ export default function LoginView() {
         <Link
           variant="subtitle2"
           underline="hover"
-          href="/auth/reset-pass-email"
+          component={RouterLink}
+          href="/auth/forgot-password"
         >
           Forgot password?
         </Link>

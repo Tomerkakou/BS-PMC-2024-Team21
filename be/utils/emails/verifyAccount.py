@@ -1,13 +1,3 @@
-import base64
-import os
-
-def image_to_base64(image_path):
-    image_path=os.path.join(os.path.dirname(__file__),image_path)
-    with open(image_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read())
-    return encoded_string.decode('utf-8')
-
-LOGO_IMAGE = "data:image/png;base64," + image_to_base64("../assets/logo.png")
 
 template="""
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -129,8 +119,8 @@ table, td {{ color: #000000; }} #u_body a {{ color: #0000ee; text-decoration: un
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td style="padding-right: 0px;padding-left: 0px;" align="center">
-      <a href="{base_url}" target="_blank">
-      <img align="center" border="0" src="images/image-1.png" alt="LEARNIX Logo" title="LEARNIX Logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 77%;max-width: 369.6px;" width="369.6"/>
+      <a href="{FRONT_URL}" target="_blank">
+      <img align="center" border="0" src="{LOGO_IMAGE}" alt="LEARNIX Logo" title="LEARNIX Logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 77%;max-width: 369.6px;" width="369.6"/>
       </a>
     </td>
   </tr>

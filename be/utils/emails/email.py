@@ -1,16 +1,21 @@
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from utils.emails.verifyAccount import template
-from utils.emails.resetPassword import templatereset
+from utils.emails import verifyAccount,resetPassword
+
+LOGO_IMAGE = "https://i.ibb.co/wzMsZts/image-1.png" 
+
+FRONT_URL=os.getenv("FRONT_URL")
 
 templates={
-    "verifyAccount":template,
-    "resetPassword":templatereset
+    "verifyAccount":verifyAccount.template,
+    "resetPassword":resetPassword.template
 }
 
 def sendEmail(email,subject,templateName,**kwargs):
     html = templates[templateName]
+    kwargs["LOGO_IMAGE"]=LOGO_IMAGE
+    kwargs["FRONT_URL"]=FRONT_URL
     html=html.format(**kwargs)
 
     message = Mail(
@@ -25,3 +30,4 @@ def sendEmail(email,subject,templateName,**kwargs):
         return True
     except Exception as e:
         print(e.message)
+
