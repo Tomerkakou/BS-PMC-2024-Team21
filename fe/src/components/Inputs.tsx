@@ -1,5 +1,6 @@
 import { Autocomplete, Checkbox, CircularProgress, createFilterOptions, darken, FilterOptionsState, FormControlLabel, InputProps, lighten, styled, SxProps, TextField, TextFieldVariants } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+import { MuiFileInput } from 'mui-file-input';
 import React, { useEffect } from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
 
@@ -15,10 +16,11 @@ interface TextInputProps {
     disabled?: boolean;
     readonly?: boolean;
     size?: 'small' | 'medium';
+    type?: string;
 }
 
 // TextInput component
-const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled, variant = "outlined", size = "medium" }) => {
+const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled, variant = "outlined", size = "medium",type="text" }) => {
     return (
         <Controller
             name={fieldName}
@@ -37,6 +39,7 @@ const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
                     InputProps={InputProps}
                     disabled={disabled}
                     size={size}
+                    type={type}
                     sx={sx}
                 />
             )}
@@ -273,6 +276,45 @@ const DateInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
 
 }
 
+interface MuiFileInputProps {
+    placeholder: string;
+    control: Control<any>;
+    rules?: RegisterOptions<any>;
+    accept?:string;
+    icon?:React.ReactNode;
+    fieldName:string;
+}
+const FileInput:React.FC<MuiFileInputProps> = ({
+    placeholder,
+    control,
+    rules,
+    accept,
+    icon,
+    fieldName
+}) => {
+    return (
+        <Controller
+            name={fieldName}
+            control={control}
+            rules={rules}
+            render={({ field, fieldState }) => (
+              <MuiFileInput
+                placeholder={placeholder}
+                {...field}
+                helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                error={fieldState.invalid}
+                InputProps={{
+                  inputProps: {
+                    accept: accept,
+                  },
+                  startAdornment: icon,
+                }}
+              />
+            )}
+          />
+    );
+}
 
-export { CheckBoxInput, DateInput, SelectInput, TextInput };
+
+export { CheckBoxInput, DateInput, SelectInput, TextInput,FileInput };
 

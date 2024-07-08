@@ -1,9 +1,7 @@
-import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import { bgGradient } from 'theme/css';
@@ -39,6 +37,8 @@ const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
             p: 5,
             width: 1,
             maxWidth: 420,
+            maxHeight: 0.75,
+            overflow: 'auto',
           }}
         >
           {children}

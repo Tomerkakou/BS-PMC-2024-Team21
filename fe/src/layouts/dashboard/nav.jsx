@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -15,19 +14,19 @@ import { RouterLink } from 'routes/components';
 
 import { useResponsive } from 'hooks/use-responsive';
 
-import { account } from '_mock/account';
 
 import Logo from 'components/logo';
 import Scrollbar from 'components/scrollbar';
 
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
+import { useAuth } from 'auth';
 
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
-
+  const {currentUser}=useAuth();
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -50,13 +49,13 @@ export default function Nav({ openNav, onCloseNav }) {
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
-      <Avatar src={account.photoURL} alt="photoURL" />
+      <Avatar src={currentUser.avatar} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+        <Typography variant="subtitle2">{`${currentUser.firstName} ${currentUser.lastName}`}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.role}
+          {currentUser.role}
         </Typography>
       </Box>
     </Box>

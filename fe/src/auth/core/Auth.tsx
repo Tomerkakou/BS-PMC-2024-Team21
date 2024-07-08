@@ -13,7 +13,6 @@ import {AuthModel, UserModel} from './_models'
 import * as authHelper from './AuthHelpers'
 import {getUserByToken} from './_requests'
 import {WithChildren} from 'utils/types'
-import {jwtDecode} from 'jwt-decode'
 
 
 type AuthContextProps = {
@@ -74,12 +73,11 @@ const AuthInit: FC<WithChildren> = ({children}) => {
     const requestUser = async (apiToken: string) => {
       try {
         if (!didRequest.current) {
-          const {data} = await getUserByToken()
-
-          if (data) {
-            const decodedToken = jwtDecode(auth!.accessToken) as any;
-            data.roles = [decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']]
-            setCurrentUser(data)
+          const {data:user} = await getUserByToken()
+          if (user) {
+            // const decodedToken = jwtDecode(auth!.accessToken) as any;
+            user.auth=auth;
+            setCurrentUser(user)
           }
         }
       } catch (error) {
@@ -101,7 +99,7 @@ const AuthInit: FC<WithChildren> = ({children}) => {
       setShowSplashScreen(false)
     }
     // eslint-disable-next-line
-  }, [])
+  }, [auth])
 
   return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
 }
