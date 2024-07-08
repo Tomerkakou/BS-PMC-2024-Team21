@@ -17,7 +17,7 @@ export default function ForgotPasswordView() {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const response = await requestPassword(data.email);
+      await requestPassword(data.email);
       setEmailSend(true);
     } catch (error: any) {
       if (error.response) {

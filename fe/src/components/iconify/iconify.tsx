@@ -2,7 +2,6 @@ import { forwardRef } from 'react';
 import { Icon } from '@iconify/react';
 
 import Box from '@mui/material/Box';
-import { Icons } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
