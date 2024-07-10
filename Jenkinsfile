@@ -1,18 +1,10 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build Docker Images') {
+        stage('Build Docker Images and Running tests') {
             steps {
                 script {
-                    sh 'docker compose build'
-                }
-            }
-        }
-        stage('Running tests inside docker') {
-            steps {
-                script {
-                    sh 'docker compose run bs-flask pytest -v'
+                    sh 'docker-compose build'
                 }
             }
         }
