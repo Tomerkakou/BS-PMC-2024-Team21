@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  bs-flask:
+    build: ./be
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/be
+    environment:
+      FLASK_APP: ./be/app.py
+      SQLALCHEMY_DATABASE_URI: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix
+      SQLALCHEMY_DATABASE_URI-TESTING: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix-test
+      BASE_URL: http://localhost:5000/api
+      FRONT_URL: http://localhost:3000
+      SECRET_KEY: ASASLKGHASLKDHGASKLHGASKLDGALSAD
+      SENDGRID_API_KEY: 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
+      SENDGRID_API_EMAIL: tomerka3@ac.sce.ac.il
+  bs-react:
+    build: ./fe
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/fe
+

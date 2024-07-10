@@ -1,6 +1,5 @@
-import base64
 import uuid
-from flask import Blueprint, app, request, jsonify, abort
+from flask import Blueprint, request, jsonify
 from models.User import User
 from models.User import RoleEnum
 from models.Token import Token, TokenTypeEnum
@@ -8,7 +7,7 @@ from models import db
 from utils.emails.email import sendEmail
 import os
 from flask import redirect
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, current_user
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, current_user
 
 jwt = JWTManager()
 
@@ -21,7 +20,7 @@ def user_identity_lookup(user):
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
-    return User.query.filter_by(id=identity).one_or_none()
+    return User.query.filter_by(id=identity).one_or_404()
 
 @auth_blu.post("/sign-up")
 def signUp():
@@ -32,18 +31,17 @@ def signUp():
     lastName=data.get("lastName")
     role=data.get("role")
     avatar = data.get('avatar')
-    print(avatar)
     newUser = User(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
     newUser.hashPassword()
     try:
         
         db.session.add(newUser)
         db.session.commit()
-        newToken=Token(Token=str(uuid.uuid4())[0:49],user_id=newUser.id,token_type=TokenTypeEnum.VerifyEmail)
+        newToken=Token(token=str(uuid.uuid4())[0:49],user_id=newUser.id,type=TokenTypeEnum.VerifyEmail)
         db.session.add(newToken)
         db.session.commit()
-        url=os.getenv("BASE_URL")+f"/auth/verify-email?token={newToken.Token}"
-        sendEmail(email,"Verify your account","verifyAccount",base_url=os.getenv("FRONT_URL"),verify_url=url)
+        url=os.getenv("BASE_URL")+f"/auth/verify-email?token={newToken.token}"
+        sendEmail(email,"Verify your account","verifyAccount",verify_url=url)
         return "success", 201
 
     except Exception as e:
@@ -93,7 +91,6 @@ def login():
 @jwt_required()
 def refreshToken():
     data = request.get_json()
-    access_token = data.get('accessToken')
     refresh_token = data.get('refreshToken')
 
     if current_user.refresh_token != refresh_token:
@@ -109,50 +106,45 @@ def refreshToken():
 @auth_blu.get('/get-user')
 @jwt_required()
 def getUser():
-    return jsonify({'id': current_user.id, 'email': current_user.email, 'firstName': current_user.firstName, 'lastName': current_user.lastName, 'role': str(current_user.role), 'avatar': current_user.avatar})
+    return jsonify({'id': current_user.id, 
+                    'email': current_user.email, 
+                    'firstName': current_user.firstName, 
+                    'lastName': current_user.lastName,
+                    'role': current_user.role.value, 
+                    'avatar': current_user.avatar
+                    })
+    
 
-
-@auth_blu.post('/reset-pass-email')   
+@auth_blu.post('/forgot-password')   
 def resetPassEmail():
     data = request.get_json()
     userEmail = data.get('email')
     user = User.query.filter_by(email = userEmail).first()
     if user:
-        if not user.verifiedEmail:
-            return "Please Verify Your Email", 400
-        if not user.active:
-            return "Wait For Admin To Aprove Your Account", 400
-    else:
-        return "Invalid email", 400
-
-    newToken=Token(Token=str(uuid.uuid4())[0:49],user_id=user.id,token_type=TokenTypeEnum.ResetPass)
-    db.session.add(newToken)
-    db.session.commit()
-    url=os.getenv("BASE_URL")+f"/auth/reset-pass?token={newToken.Token}"
-    sendEmail(userEmail,"Reset Pass","resetPassword",base_url=os.getenv("FRONT_URL"),verify_url=url)
-    return "Email send", 201
+        newToken=Token(token=str(uuid.uuid4())[0:49],user_id=user.id,type=TokenTypeEnum.ResetPassword)
+        db.session.add(newToken)
+        db.session.commit()
+        front_url=os.getenv("FRONT_URL")
+        reset_url=front_url+f"/auth/reset-password?token={newToken.token}"
+        sendEmail(userEmail,"Reset your password","resetPassword",reset_url=reset_url)
+        
+    return "Email sent", 201
 
 
-@auth_blu.get('/reset-pass')   
-def resetPass():
-    token=request.args.get("token")
-    url=os.getenv("FRONT_URL")+f"/auth/reset-pass?reset-pass?token={token}"
-    return redirect(url)
 
-
-@auth_blu.post('/change-pass')   
+@auth_blu.post('/reset-password')   
 def changepass():
     data = request.get_json()
     userPass = data.get('password')
     userToken=data.get('token')
-    print(userToken)
     token = Token.query.get(userToken)
-    if token:
-        user=token.user
-        user.password=userPass
-        user.hashPassword()
-        db.session.delete(token)
-        db.session.commit()     
-        return "ok",200
-    else :
-        return "Error",400 
+    if not token:
+        return "Invalid token",400 
+    
+    user=token.user
+    user.password=userPass
+    user.hashPassword()
+    db.session.delete(token)
+    db.session.commit()     
+    return "ok",200
+        
