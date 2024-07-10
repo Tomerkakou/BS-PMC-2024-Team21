@@ -20,7 +20,7 @@ def user_identity_lookup(user):
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
-    return User.query.filter_by(id=identity).one_or_none()
+    return User.query.filter_by(id=identity).one_or_404()
 
 @auth_blu.post("/sign-up")
 def signUp():

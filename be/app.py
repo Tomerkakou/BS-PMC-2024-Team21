@@ -4,33 +4,38 @@ from models import db
 from dotenv import load_dotenv
 from models.User import bcrypt
 from routes.auth import auth_blu, jwt
+from routes.statistics import stats_blu
 
-import os
-
-#env
 load_dotenv()
 
-#flask app
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-app.config['JWT_SECRET_KEY'] = os.getenv("SECRET_KEY")
+def create_app(config_name='development'):
+    app = Flask(__name__)
 
-db.init_app(app)
-bcrypt.init_app(app)
-jwt.init_app(app)
+    app.config.from_object(config_by_name[config_name])
 
-CORS(app)
+    db.init_app(app)
+    bcrypt.init_app(app)
+    jwt.init_app(app)
 
-app.register_blueprint(auth_blu, url_prefix='/api/auth')    
+    CORS(app)
 
+    app.register_blueprint(auth_blu, url_prefix='/api/auth')
+    app.register_blueprint(stats_blu, url_prefix='/api/statistics')
 
-    
+    return app
+
+config_by_name = {
+    'development': 'config.DevelopmentConfig',
+    'testing': 'config.TestingConfig',
+    'production': 'config.ProductionConfig',
+}
+
 if __name__ == '__main__':
+    app = create_app('development')  # Run in development mode by default
+
     with app.app_context():
         print("Creating database tables...")
         db.create_all()
         print("Tables created successfully.")
-    app.run(debug=True)
 
-    
+    app.run(debug=True)

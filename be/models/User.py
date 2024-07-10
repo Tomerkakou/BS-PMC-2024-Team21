@@ -3,7 +3,7 @@ from sqlalchemy.dialects.mysql import LONGTEXT
 import enum
 from models import db
 from flask_bcrypt import Bcrypt
-from sqlalchemy import event
+from sqlalchemy import event,Text
 import uuid
 
 bcrypt = Bcrypt()
@@ -24,7 +24,7 @@ class User(db.Model):
     verifiedEmail=db.Column(db.Boolean,nullable=False,default=False)
     active = db.Column(db.Boolean,nullable=False,default=False)
     refresh_token = db.Column(db.String(50),nullable=True)
-    avatar = db.Column(LONGTEXT,nullable=False)
+    avatar = db.Column(Text,nullable=False)
     tokens = db.relationship('Token', backref='user', lazy=False)
     
     
