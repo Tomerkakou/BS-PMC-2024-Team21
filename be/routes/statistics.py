@@ -6,8 +6,8 @@ from flask_jwt_extended import jwt_required, current_user
 
 stats_blu = Blueprint('statistics',__name__)
 
-@jwt_required()
 @stats_blu.get("/usercount")
+@jwt_required()
 def countusers():
     if current_user.role!=RoleEnum.Admin:
         return "OnlyAdmin",401

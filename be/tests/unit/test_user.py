@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture(scope='module',name='user')
 def insert_user(_db):
-    user = User(email = 'example@example.com', password = 'Test1234', firstName = 'Test', lastName = 'User', role= RoleEnum.Student,avatar='avatar')
+    user = User(email = 'example@example.com', password = 'Test1234', firstName = 'Test', lastName = 'User', role= RoleEnum.Admin,avatar='avatar')
     _db.session.add(user)
     _db.session.commit()
     return user

@@ -1,6 +1,6 @@
 import uuid
 from flask import Blueprint, request, jsonify
-from models.User import User
+from models.User import User, Student,Lecturer
 from models.User import RoleEnum
 from models.Token import Token, TokenTypeEnum
 from models import db
@@ -31,7 +31,12 @@ def signUp():
     lastName=data.get("lastName")
     role=data.get("role")
     avatar = data.get('avatar')
-    newUser = User(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
+    if role=='Student' :
+        newUser = Student(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
+    elif role=='Lecturer' :
+        newUser = Lecturer(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
+    elif role=='Admin' :
+        newUser = User(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
     newUser.hashPassword()
     try:
         
