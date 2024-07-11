@@ -152,4 +152,7 @@ def changepass():
     db.session.delete(token)
     db.session.commit()     
     return "ok",200
-        
+
+
+
+  

@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from models.User import bcrypt
 from routes.auth import auth_blu, jwt
 from routes.statistics import stats_blu
-
+from routes.admin import admin_blu
 load_dotenv()
 
 def create_app(config_name='development'):
@@ -21,6 +21,7 @@ def create_app(config_name='development'):
 
     app.register_blueprint(auth_blu, url_prefix='/api/auth')
     app.register_blueprint(stats_blu, url_prefix='/api/statistics')
+    app.register_blueprint(admin_blu, url_prefix='/api/admin')
 
     return app
 
