@@ -9,10 +9,11 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-
+import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Label from 'components/label';
 import Iconify from 'components/iconify';
+import Switch from '@mui/material/Switch';
 
 // ----------------------------------------------------------------------
 
@@ -20,22 +21,36 @@ export default function UserTableRow({
   selected,
   name,
   avatarUrl,
-  company,
+  email,
   role,
   isVerified,
   status,
   handleClick,
+  nonActiveUser,
+  activeUser
 }) {
   const [open, setOpen] = useState(null);
-
+  
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
+  const [checked, setChecked] = useState(true);
+
+  const handleChange = async (event) => {
+    const newChecked = event.target.checked;
+    setChecked(newChecked);
+    if (newChecked) {
+      await activeUser();
+    } else {
+      await nonActiveUser();
+    }
+  };
+
 
   const handleCloseMenu = () => {
     setOpen(null);
   };
-
+  console.log(isVerified)
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -52,54 +67,39 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell>{email}</TableCell>
 
         <TableCell>{role}</TableCell>
 
         <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
 
         <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+          <Label color={status ?  'success'  : "error"}>{status ?  'Active'  : "Not active"}</Label>
+        </TableCell>
+        <TableCell>
+        <Switch
+        checked={checked}
+        onChange={handleChange}
+        inputProps={{ 'aria-label': 'controlled' }}
+        />
         </TableCell>
 
-        <TableCell align="right">
-          <IconButton onClick={handleOpenMenu}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>
       </TableRow>
-
-      <Popover
-        open={!!open}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: { width: 140 },
-        }}
-      >
-        <MenuItem onClick={handleCloseMenu}>
-          <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
-          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
-      </Popover>
+       
+  
     </>
   );
 }
 
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
-  company: PropTypes.any,
+  email: PropTypes.any,
   handleClick: PropTypes.func,
   isVerified: PropTypes.any,
   name: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
+  nonActiveUser:PropTypes.any,
+  activeUser:PropTypes.any
 };
