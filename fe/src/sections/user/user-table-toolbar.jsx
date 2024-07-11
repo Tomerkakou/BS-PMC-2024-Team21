@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Tooltip from '@mui/material/Tooltip';
@@ -8,10 +9,20 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import Iconify from 'components/iconify';
+import { LoadingButton } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableToolbar({ numSelected, filterName, onFilterName,nonActiveUser }) {
+export default function UserTableToolbar({ numSelected, filterName, onFilterName,deActivateUsers }) {
+  const [loading,setLoading]=useState(false);
+  const deleteAllSelected=(event)=>{
+    setLoading(true);
+    try{
+      deActivateUsers(event)
+    }finally{
+      setLoading(false);
+    }
+  }
   return (
     <Toolbar
       sx={{
@@ -47,16 +58,14 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton  onClick={nonActiveUser}>
-            <Iconify icon="eva:trash-2-fill"/>
-          </IconButton>
+          <LoadingButton loading={loading}>
+            <IconButton  onClick={deleteAllSelected}>
+              <Iconify icon="eva:trash-2-fill"/>
+            </IconButton>
+          </LoadingButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
+        null
       )}
     </Toolbar>
   );
@@ -66,5 +75,5 @@ UserTableToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
-  nonActiveUser:PropTypes.any,
+  deActivateUsers:PropTypes.any,
 };

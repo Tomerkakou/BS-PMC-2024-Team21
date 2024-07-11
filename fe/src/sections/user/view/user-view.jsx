@@ -1,5 +1,4 @@
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
@@ -12,10 +11,10 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import { useAuth } from 'auth';
 import axios from 'axios';
-import Iconify from 'components/iconify';
 import Label from 'components/label';
 import Scrollbar from 'components/scrollbar';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
 import UserTableHead from '../user-table-head';
@@ -59,7 +58,6 @@ export default function UserPage() {
       try{
         const response=await axios.get("/admin/getusers")
         setUsers(response.data)
-        console.log(response.data)
       }
       catch(e){
         console.log(e)
@@ -76,32 +74,43 @@ export default function UserPage() {
     setSelected([]);
   };
 
-  const nonActiveUser = async (event,id_list) =>{
-
-    const response= await axios.post("/admin/nonactive",id_list)
-    const nonActiveUsers = response.data.users;
-    for(const user of users){
-      if (nonActiveUsers.includes(user.id))
-      {
-        user.status=false;
+  const deActivateUsers = async (event,id_list) =>{
+    try{
+      const response=await axios.post("/admin/deactivate-user",id_list)
+      const {message,users_id} = response.data;
+      for(const user of users){
+        if (users_id.includes(user.id))
+        {
+          user.status=false;
+        }
+      }
+      setUsers([...users])
+      toast.success(message)
+      setSelected([]);
+    }catch(error){
+      if(error.response){
+        toast.error(error.response.data)
       }
     }
-    setUsers([...users])
-    setSelected([]);
   }
-  const activedUser = async (event,id_list) =>{
-
-    const response= await axios.post("/admin/activeuser",id_list)
-    const activedUsers = response.data.users;
-    for(const user of users){
-      if (activedUsers.includes(user.id))
-      {
-        user.status=true;
+  const activateUsers = async (event,id_list) =>{
+    try{
+      const response=await axios.post("/admin/activate-user",id_list)
+      const {message,users_id} = response.data;
+      for(const user of users){
+        if (users_id.includes(user.id))
+        {
+          user.status=true;
+        }
+      }
+      setUsers([...users])
+      toast.success(message)
+      setSelected([]);
+    }catch(error){
+      if(error.response){
+        toast.error(error.response.data)
       }
     }
-    setUsers([...users])
-
-    setSelected([]);
   }
 
 
@@ -148,19 +157,12 @@ export default function UserPage() {
 
 
 
-
-
-
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
-
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New User
-        </Button>
       </Stack>
 
       <Card>
@@ -168,7 +170,7 @@ export default function UserPage() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
-          nonActiveUser={(event)=>nonActiveUser(event,selected)}
+          deActivateUsers={(event)=>deActivateUsers(event,selected)}
         />
 
         <Scrollbar>
@@ -192,32 +194,28 @@ export default function UserPage() {
               />
               <TableBody>
               <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-          <TableCell padding="checkbox">
-         
-          </TableCell>
-          <TableCell component="th" scope="row" padding="none">
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={currentUser.firstName} src={currentUser.avatar} />
-            <Typography variant="subtitle2" noWrap>
-              {`${currentUser.firstName} ${currentUser.lastName}`}
-            </Typography>
-          </Stack>
-        </TableCell>
+                <TableCell padding="checkbox"/>
+                <TableCell component="th" scope="row" padding="none">
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <Avatar alt={currentUser.firstName} src={currentUser.avatar} />
+                    <Typography variant="subtitle2" noWrap>
+                      {`${currentUser.firstName} ${currentUser.lastName}`}
+                    </Typography>
+                  </Stack>
+                </TableCell>
 
-        <TableCell>{currentUser.email}</TableCell>
+                <TableCell>{currentUser.email}</TableCell>
 
-        <TableCell>{currentUser.role}</TableCell>
+                <TableCell>{currentUser.role}</TableCell>
 
-        <TableCell align="center">{'Yes'}</TableCell>
+                <TableCell align="center">{'Yes'}</TableCell>
 
-        <TableCell>
-          <Label color={ 'success'}>{ 'Active'}</Label>
-        </TableCell>
+                <TableCell>
+                  <Label color={ 'success'}>{ 'Active'}</Label>
+                </TableCell>
 
-        <TableCell align="right">
-
-        </TableCell>
-      </TableRow>
+                <TableCell align="right"/>
+              </TableRow>
 
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -230,10 +228,10 @@ export default function UserPage() {
                       email={row.email}
                       avatarUrl={row.avatar}
                       isVerified={row.verifiedEmail}
-                      selected={selected.indexOf(row.id) !== -1}
+                      selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
-                      nonActiveUser={(event) => nonActiveUser(event, [row.id])}
-                      activeUser={(event) => activedUser(event, [row.id])}
+                      deActivateUsers={(event) => deActivateUsers(event, [row.id])}
+                      activateUsers={(event) => activateUsers(event, [row.id])}
                     />
                   ))}
 

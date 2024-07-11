@@ -28,7 +28,7 @@ def getusers():
 
 
 
-@admin_blu.post('/nonactive')
+@admin_blu.post('/deactivate-user')
 @jwt_required()
 def nonActiveUser():
     id_list = request.get_json()
@@ -37,13 +37,13 @@ def nonActiveUser():
         user.active=False
     db.session.commit()
     if len(users)>1:
-        return jsonify({'message':'Users deleted','users':[user.id for user in users] }),200
+        return jsonify({'message':'Users Deleted','users_id':[user.id for user in users] }),200
     else :
-        return jsonify({'message':f'{users[0].firstName} {users[0].lastName} deleted','users': [user.id for user in users]}),200
+        return jsonify({'message':f'{users[0].firstName} {users[0].lastName} Deleted','users_id': [user.id for user in users]}),200
     
 
         
-@admin_blu.post('/activeuser')
+@admin_blu.post('/activate-user')
 @jwt_required()
 def activeUser():
     id_list = request.get_json()
@@ -52,7 +52,7 @@ def activeUser():
         user.active=True
     db.session.commit()
     if len(users)>1:
-        return jsonify({'message':'Users deleted','users':[user.id for user in users]}),200
+        return jsonify({'message':'Users Activated','users_id':[user.id for user in users]}),200
     else :
-        return jsonify({'message':f'{users[0].firstName} {users[0].lastName} deleted','users': [user.id for user in users]}),200
+        return jsonify({'message':f'{users[0].firstName} {users[0].lastName} Activated','users_id': [user.id for user in users]}),200
       

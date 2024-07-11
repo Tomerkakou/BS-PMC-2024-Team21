@@ -1,19 +1,14 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Popover from '@mui/material/Popover';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import MenuItem from '@mui/material/MenuItem';
-import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Avatar from '@mui/material/Avatar';
+import Checkbox from '@mui/material/Checkbox';
+import Stack from '@mui/material/Stack';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 import Label from 'components/label';
-import Iconify from 'components/iconify';
-import Switch from '@mui/material/Switch';
 
 // ----------------------------------------------------------------------
 
@@ -26,31 +21,26 @@ export default function UserTableRow({
   isVerified,
   status,
   handleClick,
-  nonActiveUser,
-  activeUser
+  deActivateUsers,
+  activateUsers,
 }) {
-  const [open, setOpen] = useState(null);
+
+  const [loading,setLoading]=useState(false);
   
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
-  };
-  const [checked, setChecked] = useState(true);
 
-  const handleChange = async (event) => {
-    const newChecked = event.target.checked;
-    setChecked(newChecked);
-    if (newChecked) {
-      await activeUser();
-    } else {
-      await nonActiveUser();
+  const handleBtnClick= (func)=>{
+    return async (event)=>{
+      setLoading(true)
+      try{
+        await func(event);
+      }
+      finally{
+        setLoading(false)
+      }
     }
-  };
+  }
+ 
 
-
-  const handleCloseMenu = () => {
-    setOpen(null);
-  };
-  console.log(isVerified)
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -77,11 +67,20 @@ export default function UserTableRow({
           <Label color={status ?  'success'  : "error"}>{status ?  'Active'  : "Not active"}</Label>
         </TableCell>
         <TableCell>
-        <Switch
-        checked={checked}
-        onChange={handleChange}
-        inputProps={{ 'aria-label': 'controlled' }}
-        />
+          {!status && 
+            <LoadingButton color="success" loading={loading}
+              onClick={handleBtnClick(activateUsers)}
+            >
+              Activate
+            </LoadingButton>
+          }
+          {status && 
+            <LoadingButton color="error" loading={loading}
+              onClick={handleBtnClick(deActivateUsers)}
+            >
+              DeActivate
+            </LoadingButton>
+          }
         </TableCell>
 
       </TableRow>
@@ -99,7 +98,7 @@ UserTableRow.propTypes = {
   name: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
-  nonActiveUser:PropTypes.any,
-  activeUser:PropTypes.any
+  status: PropTypes.any,
+  deActivateUsers:PropTypes.any,
+  activateUsers:PropTypes.any,
 };
