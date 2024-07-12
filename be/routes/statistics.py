@@ -1,6 +1,7 @@
 from flask import Blueprint,jsonify
-from models.User import RoleEnum, User
-from flask_jwt_extended import jwt_required, current_user
+from models.User import User
+from flask_jwt_extended import jwt_required
+from utils.jwt import role
 
 
 
@@ -8,8 +9,7 @@ stats_blu = Blueprint('statistics',__name__)
 
 @stats_blu.get("/usercount")
 @jwt_required()
+@role('Admin')
 def countusers():
-    if current_user.role!=RoleEnum.Admin:
-        return "OnlyAdmin",401
     count =len(User.query.all())
     return jsonify({"count":count}),200

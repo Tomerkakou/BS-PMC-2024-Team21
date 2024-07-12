@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { getUserByToken, login } from "auth/core/_requests";
 import { useAuth } from "auth/core/Auth";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,9 @@ export default function LoginView() {
       const response = await login(email, password);
       saveAuth(response.data);
       const { data: user } = await getUserByToken();
+      user.auth=response.data;
+      const decodedToken = jwtDecode(user.auth!.accessToken) as any;
+      user.role=decodedToken.role;
       setCurrentUser(user);
       router.push("/");
     } catch (error: any) {
@@ -50,7 +54,15 @@ export default function LoginView() {
           fieldName="email"
           label="Email address"
           control={control}
-          rules={{ required: "Email is required" }}
+          rules={{ required: "Email is required!",
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Invalid Email",
+            },
+            maxLength:{
+              value:50,
+              message:'Maximum length is 50!'
+            }}}
         />
 
         <TextInput

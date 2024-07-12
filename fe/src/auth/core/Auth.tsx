@@ -13,6 +13,7 @@ import {AuthModel, UserModel} from './_models'
 import * as authHelper from './AuthHelpers'
 import {getUserByToken} from './_requests'
 import {WithChildren} from 'utils/types'
+import { jwtDecode } from 'jwt-decode'
 
 
 type AuthContextProps = {
@@ -75,8 +76,9 @@ const AuthInit: FC<WithChildren> = ({children}) => {
         if (!didRequest.current) {
           const {data:user} = await getUserByToken()
           if (user) {
-            // const decodedToken = jwtDecode(auth!.accessToken) as any;
+            const decodedToken = jwtDecode(auth!.accessToken) as any;
             user.auth=auth;
+            user.role=decodedToken.role;
             setCurrentUser(user)
           }
         }

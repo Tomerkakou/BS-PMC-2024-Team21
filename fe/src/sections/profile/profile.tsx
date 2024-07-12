@@ -6,7 +6,7 @@ import { useAuth } from "auth";
 export const Profile = () => {
   const { currentUser } = useAuth();
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} sx={{p:3,pl:5}}>
       <Grid item xs={12}>
         <Typography variant="h4">Profile</Typography>
       </Grid>

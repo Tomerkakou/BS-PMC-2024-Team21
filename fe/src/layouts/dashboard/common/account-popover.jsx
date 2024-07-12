@@ -16,11 +16,15 @@ import { useRouter } from "routes/hooks";
 const MENU_OPTIONS = [
   {
     label: 'Home',
-    icon: 'eva:home-fill',
+    route:'/'
+  },
+  {
+    label: 'Profile',
+    route:'/profile',
   },
   {
     label: 'Settings',
-    icon: 'eva:settings-2-fill',
+    route:'/settings',
   },
 ];
 
@@ -35,16 +39,16 @@ export default function AccountPopover() {
   };
   const router = useRouter();
 
-  const handleClose = () => {
+  const handleClose = (route) => {
     setOpen(null);
+    if(route){
+      router.push(route);
+    }
   };
 
   const handleLogout = () => {
-    logout();
     window.location.href = '/auth/login'
-  }
-  const handleProfile = () => {  
-    router.push("/profile");
+    logout();
   }
 
   return (
@@ -101,18 +105,10 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
+          <MenuItem key={option.label} onClick={()=>handleClose(option.route)}>
             {option.label}
           </MenuItem>
         ))}
-        <MenuItem
-          disableRipple
-          disableTouchRipple
-          onClick={handleProfile}
-          sx={{ typography: 'body2', py: 1.5 }}
-        >
-          Profile
-        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 

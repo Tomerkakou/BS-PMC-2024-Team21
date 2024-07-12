@@ -41,6 +41,10 @@ export default function ForgotPasswordView() {
                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                 message: "Invalid Email",
               },
+              maxLength:{
+                value:50,
+                message:'Maximum length is 50!'
+              }
             }}
           />
           <LoadingButton

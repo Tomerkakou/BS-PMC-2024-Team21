@@ -57,5 +57,9 @@ export function getRefreshToken(prevAccessToken: string, refreshToken: string) {
   return axios.post<AuthModel>(GET_REFRESH_TOKEN_URL, {
     accessToken: prevAccessToken,
     refreshToken: refreshToken
+  },{
+    headers:{
+      Authorization:'Bearer ' + refreshToken
+    }
   })
 }

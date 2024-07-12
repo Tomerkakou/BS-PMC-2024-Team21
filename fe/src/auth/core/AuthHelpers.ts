@@ -96,7 +96,7 @@ export function setupAxios(axios: any) {
     (config: any) => {
       const auth = getAuth();
       if (auth) {
-        if (auth.accessToken) {
+        if (auth.accessToken && !isRefreshing) {
           config.headers.Authorization = `Bearer ${auth.accessToken}`;
         }
         const decodedToken = jwtDecode(auth.accessToken) as any;

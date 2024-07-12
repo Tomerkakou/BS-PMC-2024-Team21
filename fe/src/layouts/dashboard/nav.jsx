@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect,useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -28,6 +28,8 @@ export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
   const {currentUser}=useAuth();
   const upLg = useResponsive('up', 'lg');
+
+  const navlinks=useMemo(()=>navConfig[currentUser?.role],[currentUser])
 
   useEffect(() => {
     if (openNav) {
@@ -63,7 +65,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
+      {navlinks.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>

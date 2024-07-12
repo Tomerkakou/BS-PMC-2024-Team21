@@ -7,7 +7,7 @@ import { StyledScrollbar, StyledRootScrollbar } from './styles';
 
 // ----------------------------------------------------------------------
 
-const Scrollbar = forwardRef(({ children, sx, ...other }, ref) => {
+const Scrollbar = forwardRef(({ children, sx, ...other }:any, ref) => {
   const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
 
   const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
@@ -36,9 +36,5 @@ const Scrollbar = forwardRef(({ children, sx, ...other }, ref) => {
   );
 });
 
-Scrollbar.propTypes = {
-  children: PropTypes.node,
-  sx: PropTypes.object,
-};
 
 export default memo(Scrollbar);

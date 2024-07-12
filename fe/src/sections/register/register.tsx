@@ -124,6 +124,10 @@ export const Register = () => {
                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                 message: "Invalid Email",
               },
+              maxLength:{
+                value:50,
+                message:'Maximum length is 50!'
+              }
             }}
           />
           <TextInput
@@ -183,6 +187,10 @@ export const Register = () => {
             fieldName="firstName"
             rules={{
               required: "First Name is required!",
+              maxLength:{
+                value:50,
+                message:'Maximum length is 50!'
+              }
             }}
           />
           <TextInput
@@ -191,6 +199,10 @@ export const Register = () => {
             fieldName="lastName"
             rules={{
               required: "Last Name is required!",
+              maxLength:{
+                value:50,
+                message:'Maximum length is 50!'
+              }
             }}
           />
           <SelectInput
