@@ -12,14 +12,14 @@ pipeline {
         stage('Running Tests inside Docker') {
             steps {
                 script {
-                    sh 'docker compose up'
+                    sh 'docker compose up bs-flask'
                 }
             }
         }
         stage('Tear Down Docker Compose') {
             steps {
                 script {
-                    sh 'docker compose down'
+                    sh 'docker compose stop bs-flask'
                 }
             }
         }
