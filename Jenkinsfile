@@ -9,6 +9,20 @@ pipeline {
                 }
             }
         }
+        stage('Running Tests inside Docker') {
+            steps {
+                script {
+                    sh 'docker compose up'
+                }
+            }
+        }
+        stage('Tear Down Docker Compose') {
+            steps {
+                script {
+                    sh 'docker compose down'
+                }
+            }
+        }
         // stage('Test Docker Compose Build') {
         //     steps {
         //         script {
