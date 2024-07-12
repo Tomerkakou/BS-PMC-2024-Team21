@@ -1,8 +1,5 @@
 import enum
 from models import db
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt()
 
 class TokenTypeEnum(enum.Enum):
     VerifyEmail = 'VerifyEmail'

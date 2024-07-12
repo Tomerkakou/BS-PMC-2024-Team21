@@ -1,26 +1,20 @@
-import uuid
-from flask import Blueprint, request, jsonify
-from models.User import User, Student,Lecturer
-from models.User import RoleEnum
-from models.Token import Token, TokenTypeEnum
-from models import db
-from utils.emails.email import sendEmail
 import os
-from flask import redirect
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, current_user
+import uuid
 
-jwt = JWTManager()
+from flask import Blueprint, jsonify, redirect, request
+from flask_jwt_extended import (create_access_token,
+                                create_refresh_token, current_user,
+                                get_jwt_identity, jwt_required,
+                                )
+from models import db
+from models.Notification import Notification, NotificationType
+from models.Token import Token, TokenTypeEnum
+from models.User import Lecturer, RoleEnum, Student, User
+from routes.notification import generateNotification, socketio
+from utils.emails.email import sendEmail
 
 auth_blu = Blueprint('auth',__name__)
 
-@jwt.user_identity_loader
-def user_identity_lookup(user):
-    return user.id
-
-@jwt.user_lookup_loader
-def user_lookup_callback(_jwt_header, jwt_data):
-    identity = jwt_data["sub"]
-    return User.query.filter_by(id=identity).one_or_404()
 
 @auth_blu.post("/sign-up")
 def signUp():
@@ -32,11 +26,11 @@ def signUp():
     role=data.get("role")
     avatar = data.get('avatar')
     if role=='Student' :
-        newUser = Student(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
+        newUser = Student(email = email, password = password, firstName = firstName, lastName = lastName, role=RoleEnum[role],avatar=avatar)
     elif role=='Lecturer' :
-        newUser = Lecturer(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
+        newUser = Lecturer(email = email, password = password, firstName = firstName, lastName = lastName, role=RoleEnum[role],avatar=avatar)
     elif role=='Admin' :
-        newUser = User(email = email, password = password, firstName = firstName, lastName = lastName, role= role,avatar=avatar)
+        newUser = User(email = email, password = password, firstName = firstName, lastName = lastName, role=RoleEnum[role],avatar=avatar)
     newUser.hashPassword()
     try:
         
@@ -67,6 +61,17 @@ def verifyEmail():
             user.active=True
         db.session.delete(token)
         db.session.commit()
+        if user.role!=RoleEnum.Student:
+            nft=Notification(
+                title=f'New {user.role.value} Signed Up!',
+                msg=F'{user.firstName} {user.lastName} just signed up and waiting for your approval!',
+                type=NotificationType.VerifyUser,
+                belongToId=user.id,
+                users=User.query.filter_by(role=RoleEnum.Admin).all()
+            )
+            db.session.add(nft)
+            db.session.commit()
+            socketio.emit('verifyUser', generateNotification(nft))
     return redirect(os.getenv("FRONT_URL"))
 
     
@@ -84,28 +89,18 @@ def login():
             return "Wait For Admin To Aprove Your Account", 400
         
         accessToken = create_access_token(identity=user)
-        user.refresh_token = str(uuid.uuid4())[0:49]
-
-        db.session.commit()
-        return jsonify({'accessToken': accessToken , 'refreshToken': user.refresh_token}), 200
+        refresh_token = create_refresh_token(identity=user)
+        return jsonify({'accessToken': accessToken , 'refreshToken': refresh_token}), 200
     else:    
         return "Invalid Email Or Password", 400
 
 
 @auth_blu.post('/refresh-token')
-@jwt_required()
+@jwt_required(refresh=True)
 def refreshToken():
-    data = request.get_json()
-    refresh_token = data.get('refreshToken')
-
-    if current_user.refresh_token != refresh_token:
-        return "TOKEN ERROR", 401
-
-    accessToken = create_access_token(identity=current_user)
-    current_user.refresh_token = str(uuid.uuid4())[0:49]
-
-    db.session.commit()
-    return jsonify({'accessToken': accessToken , 'refreshToken': current_user.refresh_token}), 200
+    refresh_token = create_refresh_token(identity=current_user)
+    access_token = create_access_token(identity=current_user)
+    return jsonify({'accessToken': access_token , 'refreshToken': refresh_token}),200
 
 
 @auth_blu.get('/get-user')
@@ -115,7 +110,6 @@ def getUser():
                     'email': current_user.email, 
                     'firstName': current_user.firstName, 
                     'lastName': current_user.lastName,
-                    'role': current_user.role.value, 
                     'avatar': current_user.avatar
                     })
     

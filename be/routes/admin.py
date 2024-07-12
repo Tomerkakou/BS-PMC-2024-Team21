@@ -1,20 +1,14 @@
-import uuid
 from flask import Blueprint, request, jsonify
-from models.User import User, Student,Lecturer
-from models.User import RoleEnum
-from models.Token import Token, TokenTypeEnum
+from models.User import User
 from models import db
-from utils.emails.email import sendEmail
-import os
-from flask import redirect
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, current_user
-
-jwt = JWTManager()
+from flask_jwt_extended import  jwt_required, current_user
+from utils.jwt import role
 
 admin_blu = Blueprint('admin',__name__)
 
 @admin_blu.get('/getusers')
 @jwt_required()
+@role('Admin')
 def getusers(): 
     users = User.query.filter(User.id != current_user.id).all()
     if users:

@@ -1,9 +1,9 @@
 from sqlalchemy import Enum
 from sqlalchemy.dialects.mysql import LONGTEXT
+from models.Notification import user_notification
 import enum
 from models import db
 from flask_bcrypt import Bcrypt
-from sqlalchemy import event,Text
 import uuid
 
 bcrypt = Bcrypt()
@@ -23,9 +23,10 @@ class User(db.Model):
     role = db.Column(Enum(RoleEnum))
     verifiedEmail=db.Column(db.Boolean,nullable=False,default=False)
     active = db.Column(db.Boolean,nullable=False,default=False)
-    refresh_token = db.Column(db.String(50),nullable=True)
-    avatar = db.Column(Text,nullable=False)
+    avatar = db.Column(LONGTEXT,nullable=False)
     tokens = db.relationship('Token', backref='user', lazy=False)
+    _ = db.relationship('Notification', backref='belongTo', lazy=True)
+    notifications = db.relationship('Notification', secondary = 'user_notification', back_populates = 'users')
     
     __mapper_args__ = {
         "polymorphic_identity": RoleEnum.Admin,
