@@ -36,7 +36,7 @@ def signUp():
         
         db.session.add(newUser)
         db.session.commit()
-        newToken=Token(token=str(uuid.uuid4())[0:49],user_id=newUser.id,type=TokenTypeEnum.VerifyEmail)
+        newToken=Token(user_id=newUser.id,type=TokenTypeEnum.VerifyEmail)
         db.session.add(newToken)
         db.session.commit()
         url=os.getenv("BASE_URL")+f"/auth/verify-email?token={newToken.token}"
@@ -45,6 +45,7 @@ def signUp():
 
     except Exception as e:
         print(e)
+        db.session.rollback()
         return "Email already exist!", 400
 
 
@@ -53,7 +54,7 @@ def signUp():
 @auth_blu.get("/verify-email")
 def verifyEmail():
     token=request.args.get("token")
-    token = Token.query.get(token)
+    token = db.session.get(Token, token)
     if token:
         user=token.user
         user.verifiedEmail=True
@@ -120,7 +121,7 @@ def resetPassEmail():
     userEmail = data.get('email')
     user = User.query.filter_by(email = userEmail).first()
     if user:
-        newToken=Token(token=str(uuid.uuid4())[0:49],user_id=user.id,type=TokenTypeEnum.ResetPassword)
+        newToken=Token(user_id=user.id,type=TokenTypeEnum.ResetPassword)
         db.session.add(newToken)
         db.session.commit()
         front_url=os.getenv("FRONT_URL")
@@ -136,7 +137,7 @@ def changepass():
     data = request.get_json()
     userPass = data.get('password')
     userToken=data.get('token')
-    token = Token.query.get(userToken)
+    token = db.session.get(Token,userToken)
     if not token:
         return "Invalid token",400 
     
