@@ -62,6 +62,11 @@ const navConfig = {
       path: '/blog',
       icon: icon('ic_blog'),
     },
+    {
+      title: 'lecturer',
+      path: '/lecturer',
+      icon: icon('ic_blog'),
+    },
   ],
 };
 

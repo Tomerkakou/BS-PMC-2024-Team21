@@ -18,6 +18,7 @@ export const ProfiilePage=lazy(() => import('pages/profile'));
 export const ResetPasswordPage=lazy(() => import('pages/reset-password'));
 export const ForgotPasswordPage=lazy(() => import('pages/forgot-password'));
 
+export const LecturerPage=lazy(() => import('pages/student/lecturer'));
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
   const { pathname } = useLocation()
@@ -76,7 +77,8 @@ export default function Router() {
         ...roleRoutes,
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path:'profile',element:<ProfiilePage/> }
+        { path:'profile',element:<ProfiilePage/> },
+        { path: 'lecturer', element: <LecturerPage /> }
       ],
     },
     {

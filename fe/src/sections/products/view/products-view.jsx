@@ -11,6 +11,7 @@ import ProductCard from '../product-card';
 import ProductSort from '../product-sort';
 import ProductFilters from '../product-filters';
 import ProductCartWidget from '../product-cart-widget';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,10 @@ export default function ProductsView() {
   const handleOpenFilter = () => {
     setOpenFilter(true);
   };
+  const handle =async () =>{
+    const result =await axios.get("/student/getlecturer");
+    console.log(result);
+  } 
 
   const handleCloseFilter = () => {
     setOpenFilter(false);
@@ -30,7 +35,9 @@ export default function ProductsView() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         Products
       </Typography>
-
+      <button onClick={()=>handle()}>
+        nirrrrrrrr
+      </button>
       <Stack
         direction="row"
         alignItems="center"
