@@ -10,7 +10,7 @@ class NotificationType(enum.Enum):
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20), nullable=False)
+    title = db.Column(db.String(40), nullable=False)
     msg=db.Column(db.String(150), nullable=False)
     createdAt=db.Column(db.DateTime, default=datetime.now())
     type = db.Column(db.Enum(NotificationType))

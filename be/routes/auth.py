@@ -3,14 +3,14 @@ import uuid
 
 from flask import Blueprint, jsonify, redirect, request
 from flask_jwt_extended import (create_access_token,
-                                create_refresh_token, current_user,
-                                get_jwt_identity, jwt_required,
+                                create_refresh_token, current_user,jwt_required,
                                 )
 from models import db
 from models.Notification import Notification, NotificationType
 from models.Token import Token, TokenTypeEnum
 from models.User import Lecturer, RoleEnum, Student, User
-from routes.notification import generateNotification, socketio
+from routes.notification import generateNotification
+from utils.socketio import socketio
 from utils.emails.email import sendEmail
 
 auth_blu = Blueprint('auth',__name__)

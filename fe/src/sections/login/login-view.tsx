@@ -9,13 +9,13 @@ import Typography from "@mui/material/Typography";
 
 import Iconify from "components/iconify";
 import { RouterLink } from "routes/components";
-import { useRouter } from "routes/hooks";
 import { TextInput } from "components/Inputs";
 import { useForm } from "react-hook-form";
 import { getUserByToken, login } from "auth/core/_requests";
 import { useAuth } from "auth/core/Auth";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -27,8 +27,9 @@ export default function LoginView() {
   const { control, handleSubmit, formState } = useForm<FormValues>();
   const { saveAuth, setCurrentUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
-
+  const { state } = useLocation();
+  const navigate = useNavigate();
+;
   const onSubmit = async ({ email, password }: FormValues) => {
     try {
       const response = await login(email, password);
@@ -38,7 +39,12 @@ export default function LoginView() {
       const decodedToken = jwtDecode(user.auth!.accessToken) as any;
       user.role=decodedToken.role;
       setCurrentUser(user);
-      router.push("/");
+      if (state && state.redirectTo) {
+        window.history.pushState(null, "", "/");
+        navigate(state.redirectTo);
+        return ;
+      }
+      navigate("/");
     } catch (error: any) {
       saveAuth(undefined);
       if (error.response) {

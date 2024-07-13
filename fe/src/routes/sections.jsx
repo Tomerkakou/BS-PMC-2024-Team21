@@ -21,7 +21,7 @@ export const ForgotPasswordPage=lazy(() => import('pages/forgot-password'));
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
   const { pathname } = useLocation()
-  return (<Navigate to={'/auth'} state={{
+  return (<Navigate to={'/auth/login'} state={{
     redirectTo: pathname
   }} />)
 };
@@ -103,7 +103,7 @@ export default function Router() {
     },
     {
       path: '*',
-      element: <Navigate to="/404" replace />,
+      element: currentUser ? <Navigate to="/404" replace /> :  <UnauthorizedErrorHandler/>,
     },
   ]);
 

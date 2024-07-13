@@ -1,5 +1,4 @@
 import { AuthModel } from './_models'
-import {jwtDecode} from 'jwt-decode'
 import { getRefreshToken } from './_requests'
 
 
@@ -99,8 +98,6 @@ export function setupAxios(axios: any) {
         if (auth.accessToken && !isRefreshing) {
           config.headers.Authorization = `Bearer ${auth.accessToken}`;
         }
-        const decodedToken = jwtDecode(auth.accessToken) as any;
-      } else {
       }
 
       return config;
@@ -150,4 +147,5 @@ export function setupAxios(axios: any) {
   });
 }
 
-export { getAuth, setAuth, removeAuth, AUTH_LOCAL_STORAGE_KEY }
+export { AUTH_LOCAL_STORAGE_KEY, getAuth, removeAuth, setAuth }
+

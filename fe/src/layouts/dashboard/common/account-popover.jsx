@@ -41,7 +41,7 @@ export default function AccountPopover() {
 
   const handleClose = (route) => {
     setOpen(null);
-    if(route){
+    if(route!==undefined){
       router.push(route);
     }
   };
@@ -81,7 +81,7 @@ export default function AccountPopover() {
       <Popover
         open={!!open}
         anchorEl={open}
-        onClose={handleClose}
+        onClose={()=>handleClose()}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{

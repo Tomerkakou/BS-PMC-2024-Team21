@@ -10,6 +10,7 @@ import Logo from 'components/logo';
 // ----------------------------------------------------------------------
 
 export default function NotFoundView() {
+
   const renderHeader = (
     <Box
       component="header"
@@ -63,7 +64,7 @@ export default function NotFoundView() {
             }}
           />
 
-          <Button href="/" size="large" variant="contained" component={RouterLink}>
+           <Button href="/" size="large" variant="contained" component={RouterLink}>
             Go to Home
           </Button>
         </Box>
