@@ -9,31 +9,29 @@ pipeline {
                 }
             }
         }
-        stage('Running Tests inside Docker') {
+        stage('Running Docker') {
             steps {
                 script {
-                    sh 'docker compose up bs-flask'
+                    sh 'docker compose up -d'
                 }
             }
         }
-        stage('Tear Down Docker Compose') {
+        stage('Test Docker Compose Build') {
             steps {
                 script {
-                    sh 'docker compose stop bs-flask'
+                    sh 'curl -f http://localhost:6748' // For Flask
+                    sh 'curl -f http://localhost:6749' // For React
                 }
             }
         }
-        // stage('Test Docker Compose Build') {
-        //     steps {
-        //         script {
-        //             sh 'docker-compose up -d'
-                    
-
-        //             sh 'curl -f http://localhost:5000' // For Flask
-        //             sh 'curl -f http://localhost:3000' // For React
-        //         }
-        //     }
-        // }
+        stage('Running tests') {
+            steps {
+                script {
+                    sh 'pytest be/ -v'
+                }
+            }
+        }
+  
     }
     post {
         always {

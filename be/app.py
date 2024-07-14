@@ -28,6 +28,10 @@ def create_app(config_name='development'):
     app.register_blueprint(admin_blu, url_prefix='/api/admin')
     app.register_blueprint(notify_blu,url_prefix='/api/notification')
 
+    @app.get('/')
+    def index():
+        return "Welcome to the API!" , 200
+
     return app
 
 config_by_name = {

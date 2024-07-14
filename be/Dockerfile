@@ -8,6 +8,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 6748
 
-CMD [ "pytest", "-v"]
+CMD [ "flask", "run", "--host", "0.0.0.0", "--port", "6748" ]

@@ -37,6 +37,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-jenkins": "PORT=6749 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
