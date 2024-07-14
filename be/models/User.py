@@ -41,6 +41,10 @@ class User(db.Model):
     def hashPassword(self):
         self.password = bcrypt.generate_password_hash(self.password).decode('utf-8')
 
+    @property
+    def fullName(self):
+        return f'{self.firstName} {self.lastName}'
+
 class Student(User):
     id = db.Column(db.String(50), db.ForeignKey("user.id"), primary_key=True)
     lecturers = db.relationship('Lecturer', secondary = 'student_lecturer', back_populates = 'students')
@@ -60,5 +64,5 @@ class Lecturer(User):
 student_lecturer = db.Table(
   'student_lecturer',
   db.Column('student_id', db.String(50), db.ForeignKey('student.id')),
-  db.Column('course_id', db.String(50), db.ForeignKey('lecturer.id'))
+  db.Column('lecturer_id', db.String(50), db.ForeignKey('lecturer.id'))
 )
