@@ -14,11 +14,11 @@ class Notification(db.Model):
     msg=db.Column(db.String(150), nullable=False)
     createdAt=db.Column(db.DateTime, default=datetime.now())
     type = db.Column(db.Enum(NotificationType))
-    belongToId = db.Column(db.String(50), db.ForeignKey("user.id"), nullable=True)
+    belongToId = db.Column(db.String(50), db.ForeignKey("user.id",ondelete='CASCADE'), nullable=True)
     users = db.relationship('User', secondary = 'user_notification', back_populates = 'notifications')
 
 user_notification = db.Table(
   'user_notification',
-  db.Column('user_id', db.String(50), db.ForeignKey('user.id')),
-  db.Column('notification_id', db.Integer, db.ForeignKey('notification.id'))
+  db.Column('user_id', db.String(50), db.ForeignKey('user.id', ondelete='CASCADE')),
+  db.Column('notification_id', db.Integer, db.ForeignKey('notification.id', ondelete='CASCADE'))
 )

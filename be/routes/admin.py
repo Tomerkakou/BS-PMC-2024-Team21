@@ -24,6 +24,7 @@ def getusers():
 
 @admin_blu.post('/deactivate-user')
 @jwt_required()
+@role('Admin')
 def nonActiveUser():
     id_list = request.get_json()
     users = User.query.filter(User.id.in_(id_list),User.id != current_user.id).all()
@@ -39,6 +40,7 @@ def nonActiveUser():
         
 @admin_blu.post('/activate-user')
 @jwt_required()
+@role('Admin')
 def activeUser():
     id_list = request.get_json()
     users = User.query.filter(User.id.in_(id_list),User.id != current_user.id).all()

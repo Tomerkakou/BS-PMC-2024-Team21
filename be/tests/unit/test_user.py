@@ -1,29 +1,29 @@
-from models.User import User,RoleEnum
-import pytest
+from models.User import User
 
-@pytest.fixture(scope='module',name='user')
-def insert_user(_db):
-    user = User(email = 'example@example.com', password = 'Test1234', firstName = 'Test', lastName = 'User', role= RoleEnum.Admin,avatar='avatar')
-    _db.session.add(user)
-    _db.session.commit()
-    return user
-
-def test_get_user(user):
-    assert user.id is not None
-    retrieved_user = User.query.filter_by(id=user.id).first()
+def test_get_user(admin):
+    assert admin.id is not None
+    retrieved_user = User.query.filter_by(id=admin.id).first()
     assert retrieved_user is not None
-    assert retrieved_user.id == user.id
-    assert retrieved_user.email == user.email
-    assert retrieved_user.password == user.password
+    assert retrieved_user.id == admin.id
+    assert retrieved_user.email == admin.email
+    assert retrieved_user.password == admin.password
+
+def test_user_hash_password(admin):
+    admin.hashPassword()
+    assert admin.password != 'Test1234'
+
+def test_user_check_password(admin):
+    assert admin.checkPassword('Test1234') == True
+    assert admin.checkPassword('Test12345') == False
+
+def test_student_lecturer_realstionship(_db,student,lecturer):
+    lecturer.students.append(student)
+    _db.session.commit()
+    
+    assert lecturer in student.lecturers
 
 
-def test_user_hash_password(user):
-    user.hashPassword()
-    assert user.password != 'Test1234'
 
-def test_user_check_password(user):
-    assert user.checkPassword('Test1234') == True
-    assert user.checkPassword('Test12345') == False
 
 
     

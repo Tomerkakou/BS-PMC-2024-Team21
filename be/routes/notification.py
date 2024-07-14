@@ -6,6 +6,7 @@ from models.User import User
 from models import db
 from flask_jwt_extended import jwt_required, current_user
 from utils.socketio import socketio
+from utils.jwt import role
 
 
 notify_blu = Blueprint('notify',__name__)
@@ -14,6 +15,7 @@ notify_blu = Blueprint('notify',__name__)
 
 @notify_blu.get('/activateUser')
 @jwt_required()
+@role('Admin')
 def activateUser():
     user_id=request.args.get("id")
     user=User.query.filter_by(id=user_id).first()
