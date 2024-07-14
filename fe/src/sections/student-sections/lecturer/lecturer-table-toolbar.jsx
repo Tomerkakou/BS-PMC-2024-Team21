@@ -1,21 +1,33 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
-
-import Tooltip from '@mui/material/Tooltip';
+import { useState } from 'react';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import Iconify from 'components/iconify';
+import Tooltip from '@mui/material/Tooltip';
+
 import { LoadingButton } from '@mui/lab';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
-export default function LecturerTableToolbar({ numSelected, filterName, onFilterName }) {
-  
+export default function LecturerTableToolbar({ numSelected, filterName, onFilterName,handleDeleteLecturers,selected }) {
   const [loading,setLoading]=useState(false);
+  const deleteAllSelected=async (event)=>{
+    setLoading(true);
+    try{
+      const response=await axios.post("/student/remove-lecturers",selected)
+      handleDeleteLecturers(selected,true)
+      toast.success(response.data)
+    }catch(e){
+      console.error(e)
+    }finally{
+      setLoading(false);
+    }
+  }
   return (
     <Toolbar
       sx={{
@@ -37,7 +49,7 @@ export default function LecturerTableToolbar({ numSelected, filterName, onFilter
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Search lecturer..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify
@@ -48,6 +60,15 @@ export default function LecturerTableToolbar({ numSelected, filterName, onFilter
           }
         />
       )}
+      {numSelected > 0 ? (
+        <Tooltip title="Delete">
+          <LoadingButton loading={loading} onClick={deleteAllSelected}>
+              <Iconify icon="eva:trash-2-fill"/>
+          </LoadingButton>
+        </Tooltip>
+      ) : (
+        null
+      )}
     </Toolbar>
   );
 }
@@ -57,4 +78,6 @@ LecturerTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   deActivateUsers:PropTypes.any,
+  handleDeleteLecturers:PropTypes.func,
+  selected:PropTypes.any
 };

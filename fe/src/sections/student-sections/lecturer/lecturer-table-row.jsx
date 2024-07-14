@@ -8,8 +8,9 @@ import Stack from '@mui/material/Stack';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import Label from 'components/label';
-import { useAuth } from 'auth';
+import axios from 'axios';
+import Iconify from 'components/iconify';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
@@ -19,21 +20,24 @@ export default function LecturerTableRow({
   avatarUrl,
   email,
   handleClick,
+  id,
+  handleDeleteLecturers
 }) {
 
   const [loading,setLoading]=useState(false);
-  const {currentUser}=useAuth()
-  const allowDelete=currentUser.email!==email;
 
-  const handleBtnClick= (func)=>{
-    return async (event)=>{
-      setLoading(true)
-      try{
-        await func(event);
-      }
-      finally{
-        setLoading(false)
-      }
+  const handleBtnClick= async ()=>{
+    setLoading(true)
+    try{
+      //delete lecturer
+      const response = await axios.post(`/student/remove-lecturers`,[id])
+      handleDeleteLecturers([id])
+      toast.success(response.data)
+    }catch(e){
+      console.error(e)
+    }
+    finally{
+      setLoading(false)
     }
   }
  
@@ -42,7 +46,7 @@ export default function LecturerTableRow({
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
-          {allowDelete && <Checkbox disableRipple checked={selected} onChange={handleClick} />}
+          {<Checkbox disableRipple checked={selected} onChange={handleClick} />}
         </TableCell>
 
         <TableCell component="th" scope="row" padding="none">
@@ -55,6 +59,12 @@ export default function LecturerTableRow({
         </TableCell>
 
         <TableCell>{email}</TableCell>
+
+        <TableCell align="right">
+          <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
+            <Iconify icon="eva:person-delete-outline" />
+          </LoadingButton>
+        </TableCell>
 
       </TableRow>
        
@@ -69,4 +79,6 @@ LecturerTableRow.propTypes = {
   handleClick: PropTypes.func,
   name: PropTypes.any,
   selected: PropTypes.any,
+  id: PropTypes.any,
+  handleDeleteLecturers: PropTypes.func
 };

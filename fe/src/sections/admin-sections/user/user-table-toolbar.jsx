@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -58,10 +57,8 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <LoadingButton loading={loading}>
-            <IconButton  onClick={deleteAllSelected}>
+          <LoadingButton loading={loading} onClick={deleteAllSelected}>
               <Iconify icon="eva:trash-2-fill"/>
-            </IconButton>
           </LoadingButton>
         </Tooltip>
       ) : (

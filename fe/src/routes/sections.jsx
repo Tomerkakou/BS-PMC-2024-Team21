@@ -17,7 +17,6 @@ export const Page404 = lazy(() => import('pages/page-not-found'));
 export const ProfiilePage=lazy(() => import('pages/profile'));
 export const ResetPasswordPage=lazy(() => import('pages/reset-password'));
 export const ForgotPasswordPage=lazy(() => import('pages/forgot-password'));
-
 export const LecturerPage=lazy(() => import('pages/student/lecturer'));
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
@@ -54,6 +53,7 @@ export default function Router() {
       case 'Student':
         return [
           { element: <IndexStudentPage />, index: true },
+          { path: 'lecturers', element: <LecturerPage /> }
         ]
       case 'Lecturer':
         return [
@@ -78,7 +78,6 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path:'profile',element:<ProfiilePage/> },
-        { path: 'lecturer', element: <LecturerPage /> }
       ],
     },
     {

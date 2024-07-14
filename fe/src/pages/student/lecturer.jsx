@@ -8,7 +8,7 @@ export default function LeturerPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | LEARNIX </title>
+        <title> Lecturers | LEARNIX </title>
       </Helmet>
       <LecturerView />
     </>

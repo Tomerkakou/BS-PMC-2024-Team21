@@ -196,7 +196,7 @@ export default function UserPage() {
                   { id: 'role', label: 'Role' },
                   { id: 'verifiedEmail', label: 'Verified', align: 'center' },
                   { id: 'status', label: 'Status' },
-                  { id: 'Action' },
+                  { id: '' },
                 ]}
               />
               <TableBody>

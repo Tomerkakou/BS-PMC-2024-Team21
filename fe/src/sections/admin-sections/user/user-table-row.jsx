@@ -68,7 +68,7 @@ export default function UserTableRow({
         <TableCell>
           <Label color={status ?  'success'  : "error"}>{status ?  'Active'  : "Not active"}</Label>
         </TableCell>
-        <TableCell>
+        <TableCell align='right'>
           {!status && allowDelete && isVerified &&
             <LoadingButton color="success" loading={loading}
               onClick={handleBtnClick(activateUsers)}
