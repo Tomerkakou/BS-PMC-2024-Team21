@@ -1,23 +1,29 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
-
-import Tooltip from '@mui/material/Tooltip';
+import { useState } from 'react';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import Iconify from 'components/iconify';
+import Tooltip from '@mui/material/Tooltip';
+
 import { LoadingButton } from '@mui/lab';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableToolbar({ numSelected, filterName, onFilterName,deActivateUsers }) {
+export default function LecturerTableToolbar({ numSelected, filterName, onFilterName,handleDeleteLecturers,selected }) {
   const [loading,setLoading]=useState(false);
-  const deleteAllSelected=(event)=>{
+  const deleteAllSelected=async (event)=>{
     setLoading(true);
     try{
-      deActivateUsers(event)
+      const response=await axios.post("/student/remove-lecturers",selected)
+      handleDeleteLecturers(selected,true)
+      toast.success(response.data)
+    }catch(e){
+      console.error(e)
     }finally{
       setLoading(false);
     }
@@ -43,7 +49,7 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Search lecturer..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify
@@ -54,7 +60,6 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
           }
         />
       )}
-
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <LoadingButton loading={loading} onClick={deleteAllSelected}>
@@ -68,9 +73,11 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
   );
 }
 
-UserTableToolbar.propTypes = {
+LecturerTableToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   deActivateUsers:PropTypes.any,
+  handleDeleteLecturers:PropTypes.func,
+  selected:PropTypes.any
 };

@@ -10,24 +10,21 @@ import Typography from '@mui/material/Typography';
 import { useAuth } from 'auth';
 import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
-import TableRowsLoader from 'components/table'
+import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import LecturerTableHead from '../lecturer-table-head';
+import LecturerTableRow from '../lecturer-table-row';
+import LecturerTableToolbar from '../lecturer-table-toolbar';
+import NewLecturer from '../new-lecturer';
 import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
-import UserTableHead from '../user-table-head';
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
 import { applyFilter, emptyRows, getComparator } from '../utils';
-
-
-
 
 
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function LecturerView() {
   const [page, setPage] = useState(0);
   const {currentUser}=useAuth();
 
@@ -41,7 +38,9 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [users,setUsers] = useState([]);
+  const [signedLecturer,setSingedLecturers] = useState([]);
+  const [otherLecturer,setOtherLecturers] = useState([]);
+  const [loading,setLoading] = useState(true);
   
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -54,17 +53,10 @@ export default function UserPage() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/admin/getusers")
-        const current={
-          id:currentUser.id,
-          email:currentUser.email,
-          isVerified:true,
-          status:true,
-          name:`${currentUser.firstName} ${currentUser.lastName}`,
-          avatar:currentUser.avatar,
-          role:currentUser.role
-        }
-        setUsers([current,...response.data])
+        const response=await axios.get("/student/getlecturer")
+        setSingedLecturers(response.data.signed)
+        setOtherLecturers(response.data.other)
+        setLoading(false)
       }
       catch(e){
         console.log(e)
@@ -74,54 +66,12 @@ export default function UserPage() {
  
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.id);
+      const newSelecteds = signedLecturer.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
-
-  const deActivateUsers = async (event,id_list) =>{
-    try{
-      const response=await axios.post("/admin/deactivate-user",id_list)
-      const {message,users_id} = response.data;
-      for(const user of users){
-        if (users_id.includes(user.id))
-        {
-          user.status=false;
-        }
-      }
-      setUsers([...users])
-      toast.success(message)
-      setSelected([]);
-    }catch(error){
-      if(error.response){
-        toast.error(error.response.data)
-      }
-    }
-  }
-  const activateUsers = async (event,id_list) =>{
-    try{
-      const response=await axios.post("/admin/activate-user",id_list)
-      const {message,users_id} = response.data;
-      for(const user of users){
-        if (users_id.includes(user.id))
-        {
-          user.status=true;
-        }
-      }
-      setUsers([...users])
-      toast.success(message)
-      setSelected([]);
-    }catch(error){
-      if(error.response){
-        toast.error(error.response.data)
-      }
-    }
-  }
-
-
-
 
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
@@ -139,7 +89,6 @@ export default function UserPage() {
       );
     }
     setSelected(newSelected);
-    console.log(newSelected)
   };
 
   const handleChangePage = (event, newPage) => {
@@ -157,70 +106,79 @@ export default function UserPage() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: users,
+    inputData: signedLecturer,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
+  const handleNewLecturer = (lecturers) => {
+    setSingedLecturers([...lecturers, ...signedLecturer]);
+    setOtherLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((l)=>l.id===lecturer.id)))
+  }
 
+  const handleDeleteLecturers = (lecturers,resetSelected)=>{
+    const addToOther=signedLecturer.filter((lecturer)=>lecturers.find((id)=>id===lecturer.id)).map((lecturer)=>({id:lecturer.id,name:lecturer.name}))
+    setSingedLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((id)=>id===lecturer.id)))
+    setOtherLecturers(prev=>[...prev,...addToOther])
+    if(resetSelected){
+      setSelected([])
+    }
+  }
 
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Users</Typography>
+        <Typography variant="h4">Lecturers</Typography>
+        <NewLecturer lecturers={otherLecturer} handleNewLecturer={handleNewLecturer}/>
       </Stack>
 
       <Card>
-        <UserTableToolbar
+        <LecturerTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
-          deActivateUsers={(event)=>deActivateUsers(event,selected)}
+          selected={selected}
+          handleDeleteLecturers={handleDeleteLecturers}
         />
+        
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
+              <LecturerTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={signedLecturer.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'verifiedEmail', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
                   { id: '' },
                 ]}
               />
               <TableBody>
-                {users.length && dataFiltered
+                {!loading && dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <UserTableRow
+                    <LecturerTableRow
                       key={row.id}
+                      id={row.id}
                       name={row.name}
-                      role={row.role}
-                      status={row.status}
                       email={row.email}
                       avatarUrl={row.avatar}
-                      isVerified={row.verifiedEmail}
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
-                      deActivateUsers={(event) => deActivateUsers(event, [row.id])}
-                      activateUsers={(event) => activateUsers(event, [row.id])}
+                      handleDeleteLecturers={handleDeleteLecturers}
                     />
                   ))}
-                {!users.length && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, signedLecturer.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -232,7 +190,7 @@ export default function UserPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={signedLecturer.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

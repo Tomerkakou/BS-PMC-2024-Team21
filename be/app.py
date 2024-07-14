@@ -10,6 +10,7 @@ from routes.notification import notify_blu
 from utils.jsonEncoder import CJSONEncoder
 from utils.jwt import jwt
 from utils.socketio import socketio
+from routes.student import student_blu
 
 load_dotenv()
 
@@ -27,6 +28,7 @@ def create_app(config_name='development'):
     app.register_blueprint(stats_blu, url_prefix='/api/statistics')
     app.register_blueprint(admin_blu, url_prefix='/api/admin')
     app.register_blueprint(notify_blu,url_prefix='/api/notification')
+    app.register_blueprint(student_blu,url_prefix='/api/student')
 
     @app.get('/')
     def index():
