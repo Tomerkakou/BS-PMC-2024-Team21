@@ -18,12 +18,7 @@ export default function LecturerTableRow({
   name,
   avatarUrl,
   email,
-  role,
-  isVerified,
-  status,
   handleClick,
-  deActivateUsers,
-  activateUsers,
 }) {
 
   const [loading,setLoading]=useState(false);
@@ -61,30 +56,6 @@ export default function LecturerTableRow({
 
         <TableCell>{email}</TableCell>
 
-        <TableCell>{role}</TableCell>
-
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
-
-        <TableCell>
-          <Label color={status ?  'success'  : "error"}>{status ?  'Active'  : "Not active"}</Label>
-        </TableCell>
-        <TableCell>
-          {!status && allowDelete && isVerified &&
-            <LoadingButton color="success" loading={loading}
-              onClick={handleBtnClick(activateUsers)}
-            >
-              Activate
-            </LoadingButton>
-          }
-          {status && allowDelete &&
-            <LoadingButton color="error" loading={loading}
-              onClick={handleBtnClick(deActivateUsers)}
-            >
-              DeActivate
-            </LoadingButton>
-          }
-        </TableCell>
-
       </TableRow>
        
   
@@ -96,11 +67,6 @@ LecturerTableRow.propTypes = {
   avatarUrl: PropTypes.any,
   email: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
   name: PropTypes.any,
-  role: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.any,
-  deActivateUsers:PropTypes.any,
-  activateUsers:PropTypes.any,
 };

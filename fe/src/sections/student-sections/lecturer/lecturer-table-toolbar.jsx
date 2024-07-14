@@ -13,17 +13,9 @@ import { LoadingButton } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
-export default function LecturerTableToolbar({ numSelected, filterName, onFilterName,deActivateUsers }) {
+export default function LecturerTableToolbar({ numSelected, filterName, onFilterName }) {
   
   const [loading,setLoading]=useState(false);
-  const deleteAllSelected=(event)=>{
-    setLoading(true);
-    try{
-      deActivateUsers(event)
-    }finally{
-      setLoading(false);
-    }
-  }
   return (
     <Toolbar
       sx={{
@@ -55,18 +47,6 @@ export default function LecturerTableToolbar({ numSelected, filterName, onFilter
             </InputAdornment>
           }
         />
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <LoadingButton loading={loading}>
-            <IconButton  onClick={deleteAllSelected}>
-              <Iconify icon="eva:trash-2-fill"/>
-            </IconButton>
-          </LoadingButton>
-        </Tooltip>
-      ) : (
-        null
       )}
     </Toolbar>
   );

@@ -39,6 +39,7 @@ export default function LecturerView() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [users,setUsers] = useState([]);
+  const [loading,setLoading] = useState(true);
   
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -51,17 +52,9 @@ export default function LecturerView() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/admin/getusers")
-        const current={
-          id:currentUser.id,
-          email:currentUser.email,
-          isVerified:true,
-          status:true,
-          name:`${currentUser.firstName} ${currentUser.lastName}`,
-          avatar:currentUser.avatar,
-          role:currentUser.role
-        }
-        setUsers([current,...response.data])
+        const response=await axios.get("/student/getlecturer")
+        setUsers([...response.data])
+        setLoading(false)
       }
       catch(e){
         console.log(e)
@@ -77,48 +70,6 @@ export default function LecturerView() {
     }
     setSelected([]);
   };
-
-  const deActivateUsers = async (event,id_list) =>{
-    try{
-      const response=await axios.post("/admin/deactivate-user",id_list)
-      const {message,users_id} = response.data;
-      for(const user of users){
-        if (users_id.includes(user.id))
-        {
-          user.status=false;
-        }
-      }
-      setUsers([...users])
-      toast.success(message)
-      setSelected([]);
-    }catch(error){
-      if(error.response){
-        toast.error(error.response.data)
-      }
-    }
-  }
-  const activateUsers = async (event,id_list) =>{
-    try{
-      const response=await axios.post("/admin/activate-user",id_list)
-      const {message,users_id} = response.data;
-      for(const user of users){
-        if (users_id.includes(user.id))
-        {
-          user.status=true;
-        }
-      }
-      setUsers([...users])
-      toast.success(message)
-      setSelected([]);
-    }catch(error){
-      if(error.response){
-        toast.error(error.response.data)
-      }
-    }
-  }
-
-
-
 
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
@@ -174,8 +125,8 @@ export default function LecturerView() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
-          deActivateUsers={(event)=>deActivateUsers(event,selected)}
         />
+        
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
@@ -190,31 +141,22 @@ export default function LecturerView() {
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'verifiedEmail', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
-                  { id: 'Action' },
                 ]}
               />
               <TableBody>
-                {users.length && dataFiltered
+                {!loading && dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <LecturerTableRow
                       key={row.id}
                       name={row.name}
-                      role={row.role}
-                      status={row.status}
                       email={row.email}
                       avatarUrl={row.avatar}
-                      isVerified={row.verifiedEmail}
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
-                      deActivateUsers={(event) => deActivateUsers(event, [row.id])}
-                      activateUsers={(event) => activateUsers(event, [row.id])}
                     />
                   ))}
-                {!users.length && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
                 <TableEmptyRows
                   height={77}
                   emptyRows={emptyRows(page, rowsPerPage, users.length)}
