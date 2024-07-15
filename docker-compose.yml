@@ -3,6 +3,7 @@ version: '3.8'
 services:
   bs-flask:
     build: ./be
+    image: bs-flask
     ports:
       - "6748:6748"
     volumes:
@@ -18,6 +19,7 @@ services:
       SENDGRID_API_EMAIL: tomerka3@ac.sce.ac.il
   bs-react:
     build: ./fe
+    image: bs-react
     ports:
       - "6749:6749"
     volumes:
