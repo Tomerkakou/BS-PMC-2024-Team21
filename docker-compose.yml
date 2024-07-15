@@ -3,12 +3,13 @@ version: '3.8'
 services:
   bs-flask:
     build: ./be
+    image: bs-flask
     ports:
       - "6748:6748"
     volumes:
-      - .:/be
+      - ./be:/app
     environment:
-      FLASK_APP: ./be/app.py
+      FLASK_APP: app.py
       SQLALCHEMY_DATABASE_URI: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix
       SQLALCHEMY_DATABASE_URI-TESTING: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix-test
       BASE_URL: http://localhost:6748/api
@@ -18,8 +19,9 @@ services:
       SENDGRID_API_EMAIL: tomerka3@ac.sce.ac.il
   bs-react:
     build: ./fe
+    image: bs-react
     ports:
       - "6749:6749"
     volumes:
-      - .:/fe
+      - ./fe:/app
 

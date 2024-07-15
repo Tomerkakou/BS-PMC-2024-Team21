@@ -4,7 +4,7 @@ ARG API_BASE_URL=http://localhost:6748/api
 ARG PUBLIC_URL=http://localhost:6749
 ARG SOCKET_URL=http://localhost:6748
 
-WORKDIR /fe
+WORKDIR /app
 COPY . .
 
 ENV REACT_APP_API_BASE_URL=$API_BASE_URL
@@ -17,4 +17,4 @@ RUN npm run build
 
 EXPOSE 6749
 
-CMD ["npm","run", "start-jenkins" ,"--prefix" ,"./fe"]
+CMD ["npm","run", "start-jenkins"]

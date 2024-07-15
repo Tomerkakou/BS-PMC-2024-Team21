@@ -1,7 +1,6 @@
-import os
 import uuid
 
-from flask import Blueprint, jsonify, redirect, request
+from flask import Blueprint, jsonify, redirect, request,current_app
 from flask_jwt_extended import (create_access_token,
                                 create_refresh_token, current_user,jwt_required,
                                 )
@@ -39,7 +38,7 @@ def signUp():
         newToken=Token(user_id=newUser.id,type=TokenTypeEnum.VerifyEmail)
         db.session.add(newToken)
         db.session.commit()
-        url=os.getenv("BASE_URL")+f"/auth/verify-email?token={newToken.token}"
+        url=current_app.config['BASE_URL']+f"/auth/verify-email?token={newToken.token}"
         sendEmail(email,"Verify your account","verifyAccount",verify_url=url)
         return "success", 201
 
@@ -73,7 +72,7 @@ def verifyEmail():
             db.session.add(nft)
             db.session.commit()
             socketio.emit('verifyUser', generateNotification(nft))
-    return redirect(os.getenv("FRONT_URL"))
+    return redirect(current_app.config['FRONT_URL'])
 
     
 @auth_blu.post('/login')
@@ -124,7 +123,7 @@ def resetPassEmail():
         newToken=Token(user_id=user.id,type=TokenTypeEnum.ResetPassword)
         db.session.add(newToken)
         db.session.commit()
-        front_url=os.getenv("FRONT_URL")
+        front_url=current_app.config['FRONT_URL']
         reset_url=front_url+f"/auth/reset-password?token={newToken.token}"
         sendEmail(userEmail,"Reset your password","resetPassword",reset_url=reset_url)
         

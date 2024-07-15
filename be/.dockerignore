@@ -40,7 +40,7 @@ dist/
 
 # Ignore config files
 .env
-config.py
+
 
 # Ignore any other file or directory that shouldn't be included in the image
 # Add any other patterns that apply to your specific project structure

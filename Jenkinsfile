@@ -1,47 +1,78 @@
 pipeline {
-    agent any
+  agent any
 
-    stages {
-        stage('Build Docker Images') {
-            steps {
-                script {
-                    sh 'docker compose build'
-                }
-            }
-        }
-        stage('Running Docker') {
-            steps {
-                script {
-                    sh 'docker compose up'
-                }
-            }
-        }
-        stage('Test Docker Compose Build') {
-            steps {
-                script {
-                    sh 'curl -f http://localhost:6748' // For Flask
-                    sh 'curl -f http://localhost:6749' // For React
-                }
-            }
-        }
-        stage('Running tests') {
-            steps {
-                script {
-                    sh 'pytest be/ -v'
-                }
-            }
-        }
-  
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([$class: 'GitSCM',
+          branches: [
+            [name: '*/Jenkins']
+          ],
+          userRemoteConfigs: [
+            [url: 'https://github.com/BS-PMC-2024/BS-PMC-2024-Team21.git',
+            credentialsId: '1'
+            ]
+        ]
+        ])
+      }
     }
-    post {
-        always {
-            script {
-                // Bring down the Docker Compose services
-                //sh 'docker compose down'
-                
-                // Clean up the workspace
-                cleanWs()
-            }
+
+    stage('Build Docker Images') {
+      steps {
+        script {
+            // Build the backend Docker image
+            sh 'docker compose build --no-cache'
         }
+      }
     }
+    
+    stage('Run Backend Tests') {
+      steps {
+        script {
+            sh 'docker  run --rm bs-flask pytest -v'
+        }
+      }
+    }
+
+    stage('Run Docker Containers') {
+      steps {
+        script {
+            // Build the backend Docker image
+            sh 'docker compose up -d'
+        }
+      }
+    }
+
+    // stage('Run Frontend Tests') {
+    //   steps {
+    //     script {
+    //       dir('client') {
+    //         sh 'docker run --rm bs-pmc-2024-team5-client npm test'
+    //       }
+    //     }
+    //   }
+    // }
+
+    // Uncomment and modify the following stage if you need to deploy with Docker Compose
+    /*
+    stage('Deploy with Docker Compose') {
+      steps {
+        script {
+          // Start the services using Docker Compose
+          sh 'docker-compose up -d'
+        }
+      }
+    }
+    */
+  }
+
+  post {
+    always {
+      script {
+        // Clean up workspace and Docker containers
+        sh 'docker compose down'
+        cleanWs()
+      }
+    }
+  }
 }

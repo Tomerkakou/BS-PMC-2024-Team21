@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-WORKDIR /be
+WORKDIR /app
 
 COPY requirements.txt requirements.txt
 
