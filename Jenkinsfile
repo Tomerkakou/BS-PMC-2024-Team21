@@ -26,7 +26,7 @@ pipeline {
       }
     }
 
-    stage('Build Docker Images') {
+    stage('Run Docker Containers') {
       steps {
         script {
             // Build the backend Docker image
