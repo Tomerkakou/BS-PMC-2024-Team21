@@ -20,10 +20,17 @@ pipeline {
     stage('Build Docker Images') {
       steps {
         script {
-          dir('backend') {
             // Build the backend Docker image
             sh 'docker compose build --no-cache'
-          }
+        }
+      }
+    }
+
+    stage('Build Docker Images') {
+      steps {
+        script {
+            // Build the backend Docker image
+            sh 'docker compose up -d'
         }
       }
     }
@@ -41,9 +48,7 @@ pipeline {
     stage('Run Backend Tests') {
       steps {
         script {
-          dir('be') {
-            sh 'docker run --rm bs-flask pytest -v'
-          }
+            sh 'docker compose run --rm bs-flask pytest -v'
         }
       }
     }
