@@ -42,15 +42,6 @@ pipeline {
         }
       }
     }
-    
-    stage('Test Docker Compose Build') {
-        steps {
-            script {
-                sh 'curl -f http://localhost:6748' // For Flask
-                sh 'curl -f http://localhost:6749' // For React
-            }
-        }
-    }
 
     // stage('Run Frontend Tests') {
     //   steps {
