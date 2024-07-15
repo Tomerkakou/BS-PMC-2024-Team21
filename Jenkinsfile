@@ -22,7 +22,7 @@ pipeline {
         script {
           dir('backend') {
             // Build the backend Docker image
-            sh 'docker-compose build --no-cache'
+            sh 'docker compose build --no-cache'
           }
         }
       }
@@ -65,7 +65,7 @@ pipeline {
     always {
       script {
         // Clean up workspace and Docker containers
-        sh 'docker-compose down'
+        sh 'docker compose down'
         cleanWs()
       }
     }
