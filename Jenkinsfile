@@ -6,7 +6,7 @@ pipeline {
       steps {
         checkout([$class: 'GitSCM',
           branches: [
-            [name: '*/Jenkins']
+            [name: '*/main']
           ],
           userRemoteConfigs: [
             [url: 'https://github.com/BS-PMC-2024/BS-PMC-2024-Team21.git',

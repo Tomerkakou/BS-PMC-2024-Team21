@@ -39,7 +39,8 @@ def signUp():
         db.session.add(newToken)
         db.session.commit()
         url=current_app.config['BASE_URL']+f"/auth/verify-email?token={newToken.token}"
-        sendEmail(email,"Verify your account","verifyAccount",verify_url=url)
+        if not current_app.config['TESTING']:
+            sendEmail(email,"Verify your account","verifyAccount",verify_url=url)
         return "success", 201
 
     except Exception as e:
@@ -125,7 +126,8 @@ def resetPassEmail():
         db.session.commit()
         front_url=current_app.config['FRONT_URL']
         reset_url=front_url+f"/auth/reset-password?token={newToken.token}"
-        sendEmail(userEmail,"Reset your password","resetPassword",reset_url=reset_url)
+        if not current_app.config['TESTING']:
+            sendEmail(userEmail,"Reset your password","resetPassword",reset_url=reset_url)
         
     return "Email sent", 201
 
