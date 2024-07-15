@@ -9,8 +9,10 @@ pipeline {
             [name: '*/Jenkins']
           ],
           userRemoteConfigs: [
-            [url: 'https://github.com/BS-PMC-2024/BS-PMC-2024-Team21.git']
-          ]
+            [url: 'https://github.com/BS-PMC-2024/BS-PMC-2024-Team21.git',
+            credentialsId: '1'
+            ]
+        ]
         ])
       }
     }
