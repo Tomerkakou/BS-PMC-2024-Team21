@@ -1,5 +1,5 @@
 import os
-from datetime import timedelta
+
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
     SECRET_KEY = os.getenv("SECRET_KEY")
@@ -14,7 +14,9 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI-TESTING")
+    SECRET_KEY = 'ASASLKGHASLKDHGASKLHGASKLDGALSAD'
+    JWT_SECRET_KEY = 'ASASLKGHASLKDHGASKLHGASKLDGALSAD'
+    SQLALCHEMY_DATABASE_URI = 'mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix-test'
 
 class ProductionConfig(Config):
     # JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)

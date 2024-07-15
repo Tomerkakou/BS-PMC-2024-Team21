@@ -25,6 +25,14 @@ pipeline {
         }
       }
     }
+    
+    stage('Run Backend Tests') {
+      steps {
+        script {
+            sh 'docker  run --rm bs-flask pytest -v'
+        }
+      }
+    }
 
     stage('Run Docker Containers') {
       steps {
@@ -44,14 +52,6 @@ pipeline {
     //     }
     //   }
     // }
-
-    stage('Run Backend Tests') {
-      steps {
-        script {
-            sh 'docker compose run --rm bs-flask pytest -v'
-        }
-      }
-    }
 
     // Uncomment and modify the following stage if you need to deploy with Docker Compose
     /*
