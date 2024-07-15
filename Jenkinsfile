@@ -42,6 +42,15 @@ pipeline {
         }
       }
     }
+    
+    stage('Test Docker Compose Build') {
+        steps {
+            script {
+                sh 'curl -f http://localhost:6748' // For Flask
+                sh 'curl -f http://localhost:6749' // For React
+            }
+        }
+    }
 
     // stage('Run Frontend Tests') {
     //   steps {
@@ -54,16 +63,6 @@ pipeline {
     // }
 
     // Uncomment and modify the following stage if you need to deploy with Docker Compose
-    /*
-    stage('Deploy with Docker Compose') {
-      steps {
-        script {
-          // Start the services using Docker Compose
-          sh 'docker-compose up -d'
-        }
-      }
-    }
-    */
   }
 
   post {
