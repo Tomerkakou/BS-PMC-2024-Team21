@@ -14,16 +14,15 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 
 import { fToNow } from "utils/format-time";
-
 import { useAuth } from "auth";
 import axios from "axios";
 import Iconify from "components/iconify";
 import Scrollbar from "components/scrollbar";
 import io from "socket.io-client";
 
+
 const socket = io(process.env.REACT_APP_SOCKET_URL ?? "");
 // ----------------------------------------------------------------------
-
 interface NotificationItemProps {
   title: string;
   message: string;
@@ -59,11 +58,13 @@ export default function NotificationsPopover() {
       case "Student":
         break;
       case "Lecturer":
+
         socket.on("VerifyStudent", (msg) => {
           if (msg.id === currentUser.id) {
             setNotifications((prev) => [msg.nft, ...prev]);
           }
         });
+
         break;
     }
     socket.on("deleteNotification", (ids) => {
@@ -71,7 +72,9 @@ export default function NotificationsPopover() {
     });
     return () => {
       socket.off("verifyUser");
+
       socket.off("VerifyStudent");
+
       socket.off("deleteNotification");
       socket.disconnect();
     };
@@ -202,6 +205,7 @@ function renderContent(notification: NotificationItemProps) {
           >
             &nbsp; <br />
             {notification.message}
+
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "end" }}>
             <IconButton
@@ -240,6 +244,7 @@ function renderContent(notification: NotificationItemProps) {
           >
             &nbsp; <br />
             {notification.message}
+
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "end" }}>
             <IconButton
@@ -255,6 +260,7 @@ function renderContent(notification: NotificationItemProps) {
               onClick={() =>
                 axios.get(
                   "/notification/studentApproval?id=" + notification.belongTo
+
                 )
               }
             >

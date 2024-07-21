@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { useAuth } from 'auth';
 import { useRouter } from "routes/hooks";
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -37,12 +38,14 @@ export default function AccountPopover() {
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
-  const router = useRouter();
+  const navigate = useNavigate();
 
-  const handleClose = (route) => {
+  const handleClose = (event,route) => {
+    event.stopPropagation();
     setOpen(null);
     if(route!==undefined){
-      router.push(route);
+      setTimeout(() => 
+        navigate(route), 300);
     }
   };
 
@@ -81,7 +84,7 @@ export default function AccountPopover() {
       <Popover
         open={!!open}
         anchorEl={open}
-        onClose={()=>handleClose()}
+        onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
@@ -105,7 +108,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={()=>handleClose(option.route)}>
+          <MenuItem key={option.label} onClick={(e)=>handleClose(e,option.route)}>
             {option.label}
           </MenuItem>
         ))}
