@@ -169,4 +169,6 @@ def changeProfile():
         db.session.rollback()
         return "Email already exist!", 400
 
-  
+
+      
+        
