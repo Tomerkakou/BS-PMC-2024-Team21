@@ -45,6 +45,12 @@ const navConfig = {
       path: '/blog',
       icon: icon('ic_blog'),
     },
+    {
+
+      title: 'students',
+      path: '/students',
+      icon: icon('ic_user'),
+    }
   ],
   Student:[
     {

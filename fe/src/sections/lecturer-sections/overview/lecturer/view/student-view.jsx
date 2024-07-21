@@ -12,10 +12,9 @@ import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import LecturerTableHead from '../lecturer-table-head';
-import LecturerTableRow from '../lecturer-table-row';
-import LecturerTableToolbar from '../lecturer-table-toolbar';
-import NewLecturer from '../new-lecturer';
+import StudentTableHead from '../student-table-head';
+import StudentTableRow from '../student-table-row';
+import StudentTableToolbar from '../student-table-toolbar';
 import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
 import { applyFilter, emptyRows, getComparator } from '../utils';
@@ -24,7 +23,7 @@ import { applyFilter, emptyRows, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
-export default function LecturerView() {
+export default function StudentView() {
   const [page, setPage] = useState(0);
   const {currentUser}=useAuth();
 
@@ -38,8 +37,8 @@ export default function LecturerView() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [signedLecturer,setSingedLecturers] = useState([]);
-  const [otherLecturer,setOtherLecturers] = useState([]);
+  const [signedStudents,setSingedStudents] = useState([]);
+  
   const [loading,setLoading] = useState(true);
   
   const handleSort = (event, id) => {
@@ -53,9 +52,8 @@ export default function LecturerView() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/student/getlecturer")
-        setSingedLecturers(response.data.signed)
-        setOtherLecturers(response.data.other)
+        const response=await axios.get("/lecturer/getstudents")
+        setSingedStudents(response.data.signed)
         setLoading(false)
       }
       catch(e){
@@ -66,7 +64,7 @@ export default function LecturerView() {
  
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = signedLecturer.map((n) => n.id);
+      const newSelecteds = signedStudents.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -106,19 +104,15 @@ export default function LecturerView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: signedLecturer,
+    inputData: signedStudents,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
-  const handleNewLecturer = (lecturers) => {
-    setOtherLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((l)=>l===lecturer.id)))
-  }
+  
 
-  const handleDeleteLecturers = (lecturers,resetSelected)=>{
-    const addToOther=signedLecturer.filter((lecturer)=>lecturers.find((id)=>id===lecturer.id)).map((lecturer)=>({id:lecturer.id,name:lecturer.name}))
-    setSingedLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((id)=>id===lecturer.id)))
-    setOtherLecturers(prev=>[...prev,...addToOther])
+  const handleDeleteStudents = (students,resetSelected)=>{
+    setSingedStudents(prev=>prev.filter((student)=>!students.find((id)=>id===student.id)))
     if(resetSelected){
       setSelected([])
     }
@@ -128,28 +122,25 @@ export default function LecturerView() {
 
   return (
     <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Lecturers</Typography>
-        <NewLecturer lecturers={otherLecturer} handleNewLecturer={handleNewLecturer}/>
-      </Stack>
+
 
       <Card>
-        <LecturerTableToolbar
+        <StudentTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
           selected={selected}
-          handleDeleteLecturers={handleDeleteLecturers}
+          handleDeleteStudents={handleDeleteStudents}
         />
         
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <LecturerTableHead
+              <StudentTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={signedLecturer.length}
+                rowCount={setSingedStudents.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -163,7 +154,7 @@ export default function LecturerView() {
                 {!loading && dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <LecturerTableRow
+                    <StudentTableRow
                       key={row.id}
                       id={row.id}
                       name={row.name}
@@ -171,13 +162,13 @@ export default function LecturerView() {
                       avatarUrl={row.avatar}
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
-                      handleDeleteLecturers={handleDeleteLecturers}
+                      handleDeleteStudents={handleDeleteStudents}
                     />
                   ))}
                 {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, signedLecturer.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, setSingedStudents.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -189,7 +180,7 @@ export default function LecturerView() {
         <TablePagination
           page={page}
           component="div"
-          count={signedLecturer.length}
+          count={setSingedStudents.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

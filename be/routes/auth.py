@@ -150,5 +150,26 @@ def changepass():
     return "ok",200
 
 
+@auth_blu.post('/change-profile')
+@jwt_required()
+def changeProfile():
+    data = request.get_json()
+    email=data.get("email")
+    firstName=data.get("firstName")
+    lastName=data.get("lastName")
+    avatar=data.get("avatar")
+    try :
+        current_user.firstName=firstName
+        current_user.lastName=lastName
+        current_user.email=email
+        current_user.avatar=avatar
+        db.session.commit()
+        return "Profile Updated",200
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return "Email already exist!", 400
 
-  
+
+      
+        
