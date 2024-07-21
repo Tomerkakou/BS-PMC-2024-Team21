@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
@@ -11,6 +12,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
+
 import { fToNow } from "utils/format-time";
 import { useAuth } from "auth";
 import axios from "axios";
@@ -18,9 +20,9 @@ import Iconify from "components/iconify";
 import Scrollbar from "components/scrollbar";
 import io from "socket.io-client";
 
+
 const socket = io(process.env.REACT_APP_SOCKET_URL ?? "");
 // ----------------------------------------------------------------------
-
 interface NotificationItemProps {
   title: string;
   message: string;
@@ -56,6 +58,13 @@ export default function NotificationsPopover() {
       case "Student":
         break;
       case "Lecturer":
+
+        socket.on("VerifyStudent", (msg) => {
+          if (msg.id === currentUser.id) {
+            setNotifications((prev) => [msg.nft, ...prev]);
+          }
+        });
+
         break;
     }
     socket.on("deleteNotification", (ids) => {
@@ -63,6 +72,9 @@ export default function NotificationsPopover() {
     });
     return () => {
       socket.off("verifyUser");
+
+      socket.off("VerifyStudent");
+
       socket.off("deleteNotification");
       socket.disconnect();
     };
@@ -193,6 +205,7 @@ function renderContent(notification: NotificationItemProps) {
           >
             &nbsp; <br />
             {notification.message}
+
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "end" }}>
             <IconButton
@@ -208,6 +221,46 @@ function renderContent(notification: NotificationItemProps) {
               onClick={() =>
                 axios.get(
                   "/notification/activateUser?id=" + notification.belongTo
+                )
+              }
+            >
+              <Iconify icon="eva:checkmark-fill" />
+            </IconButton>
+          </Box>
+        </Typography>
+      ),
+    };
+  }
+  if (notification.type === "VerifyStudent") {
+    return {
+      avatar: <img alt={notification.title} src={notification.avatar} />,
+      title: (
+        <Typography variant="subtitle2">
+          {notification.title}
+          <Typography
+            component="span"
+            variant="body2"
+            sx={{ color: "text.secondary" }}
+          >
+            &nbsp; <br />
+            {notification.message}
+
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "end" }}>
+            <IconButton
+              color="error"
+              onClick={() =>
+                axios.get("/notification/dismiss?id=" + notification.id)
+              }
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+            <IconButton
+              color="success"
+              onClick={() =>
+                axios.get(
+                  "/notification/studentApproval?id=" + notification.belongTo
+
                 )
               }
             >

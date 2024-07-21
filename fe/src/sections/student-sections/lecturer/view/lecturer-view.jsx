@@ -112,8 +112,7 @@ export default function LecturerView() {
   });
 
   const handleNewLecturer = (lecturers) => {
-    setSingedLecturers([...lecturers, ...signedLecturer]);
-    setOtherLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((l)=>l.id===lecturer.id)))
+    setOtherLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((l)=>l===lecturer.id)))
   }
 
   const handleDeleteLecturers = (lecturers,resetSelected)=>{

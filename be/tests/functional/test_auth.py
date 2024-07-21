@@ -1,5 +1,5 @@
 
-import os
+from flask import current_app
 from models.Token import  TokenTypeEnum
 from models.User import User
 
@@ -52,7 +52,7 @@ def test_verify_email(client):
     with client:
         response = client.get(f'/api/auth/verify-email?token={token}')
         assert response.status_code == 302
-        assert response.headers["Location"] == os.getenv('FRONT_URL')
+        assert response.headers["Location"] == current_app.config['FRONT_URL']
         assert user.verifiedEmail == True
         assert user.active == False
 
