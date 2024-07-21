@@ -78,7 +78,7 @@ export default function NotificationsPopover() {
       socket.off("deleteNotification");
       socket.disconnect();
     };
-  }, [currentUser?.role]);
+  }, [currentUser]);
 
   useEffect(() => {
     if (notifications.length === 0) {
