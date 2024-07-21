@@ -5,7 +5,7 @@ from datetime import datetime
 
 class NotificationType(enum.Enum):
     VerifyUser = 'VerifyUser'
-    
+    VerifyStudent = 'VerifyStudent'
 
 
 class Notification(db.Model):

@@ -28,6 +28,21 @@ def activateUser():
 
     return "blahblah",200
 
+@notify_blu.get('/studentApproval')
+@jwt_required()
+@role('Lecturer')
+def studentApproval():
+    student_id=request.args.get("id")
+    student=User.query.filter_by(id=student_id).first()
+    current_user.students.append(student)
+    notification=Notification.query.filter_by(belongToId=student.id,type=NotificationType.VerifyStudent).first()
+    notification_id=notification.id
+    db.session.delete(notification)
+    db.session.commit()
+    socketio.emit('deleteNotification',[notification_id,])
+
+    return "blahblah",200
+
 @notify_blu.get('/dismiss')
 @jwt_required()
 def dismiss_notification():
