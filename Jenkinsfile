@@ -37,8 +37,10 @@ pipeline {
     stage('Checking container') {
       steps {
         script {
-            sh 'sleep 5'
-            sh 'docker ps'
+          sh 'sleep 30' // Increase sleep time if necessary
+          sh 'docker ps -a' // List all containers, including stopped ones
+          sh 'docker logs bs-flask || true' // Optional: show logs for debugging
+          sh 'docker logs bs-react || true' // Optional: show logs for debugging
         }
       }
     }
