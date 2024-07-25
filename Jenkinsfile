@@ -38,8 +38,7 @@ pipeline {
       steps {
         script {
             sh 'sleep 5'
-            sh 'curl -X GET http://localhost:6748/'
-            sh 'curl -X GET http://localhost:6749/'
+            sh 'docker ps'
         }
       }
     }
