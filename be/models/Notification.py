@@ -1,5 +1,5 @@
 import enum
-from models import db
+from be.models import db
 from datetime import datetime
 
 

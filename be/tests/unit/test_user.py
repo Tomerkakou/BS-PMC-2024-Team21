@@ -1,4 +1,4 @@
-from models.User import User
+from be.models.User import User
 
 def test_get_user(admin):
     assert admin.id is not None

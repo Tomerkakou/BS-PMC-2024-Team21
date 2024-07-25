@@ -1,27 +1,40 @@
 version: '3.8'
 
 services:
+  bs-react:
+    build: ./fe
+    image: bs-react
+    container_name: bs-react
+    ports:
+      - "6749:6749"
+    volumes:
+      - ./fe:/app
+    networks:
+      - app_network
   bs-flask:
     build: ./be
     image: bs-flask
+    container_name: bs-flask
     ports:
       - "6748:6748"
     volumes:
-      - ./be:/app
+      - ./be:/be
     environment:
       FLASK_APP: app.py
+      FLASK_ENV: ${FLASK_ENV}
       SQLALCHEMY_DATABASE_URI: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix
-      SQLALCHEMY_DATABASE_URI-TESTING: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix-test
+      SQLALCHEMY_DATABASE_URI_TESTING: mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix-test
       BASE_URL: http://localhost:6748/api
       FRONT_URL: http://localhost:6749
       SECRET_KEY: ASASLKGHASLKDHGASKLHGASKLDGALSAD
       SENDGRID_API_KEY: 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
       SENDGRID_API_EMAIL: tomerka3@ac.sce.ac.il
-  bs-react:
-    build: ./fe
-    image: bs-react
-    ports:
-      - "6749:6749"
-    volumes:
-      - ./fe:/app
+    depends_on:
+      - bs-react
+    networks:
+      - app_network
+networks:
+  app_network:
+    driver: bridge
+  
 

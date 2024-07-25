@@ -1,5 +1,5 @@
 
-from models.Notification import NotificationType
+from be.models.Notification import NotificationType
 from datetime import datetime
 
 def test_notification(notification):

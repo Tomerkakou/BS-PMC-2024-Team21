@@ -50,6 +50,7 @@ export default function LoginView() {
       if (error.response) {
         toast.error(error.response.data);
       }
+      toast.error("An error occurred. Please try again later.");
     }
   };
 
@@ -58,6 +59,7 @@ export default function LoginView() {
       <Stack spacing={3}>
         <TextInput
           fieldName="email"
+          id="email-login"
           label="Email address"
           control={control}
           rules={{ required: "Email is required!",
@@ -74,6 +76,7 @@ export default function LoginView() {
         <TextInput
           fieldName="password"
           label="Password"
+          id="password-login"
           control={control}
           type={showPassword ? "text" : "password"}
           rules={{ required: "Password is required" }}
@@ -116,6 +119,7 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
+        id="btn-login"
         loading={formState.isSubmitting}
         onClick={handleSubmit(onSubmit)}
       >

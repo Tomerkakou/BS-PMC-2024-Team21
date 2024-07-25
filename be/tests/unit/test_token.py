@@ -1,5 +1,5 @@
 
-from models.Token import TokenTypeEnum
+from be.models.Token import TokenTypeEnum
 
 
 def test_token_email(admin,token_email):

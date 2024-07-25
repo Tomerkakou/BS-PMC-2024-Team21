@@ -1,22 +1,30 @@
+import os
 from flask import Flask
 from flask_cors import CORS
-from models import db
+from be.models import db
 from dotenv import load_dotenv
-from models.User import bcrypt
-from routes.auth import auth_blu
-from routes.statistics import stats_blu
-from routes.admin import admin_blu
-from routes.notification import notify_blu
-from utils.jsonEncoder import CJSONEncoder
-from utils.jwt import jwt
-from utils.socketio import socketio
-from routes.student import student_blu
-from routes.lecturer import lecturer_blu
+from be.models.User import bcrypt
+from be.routes.auth import auth_blu
+from be.routes.statistics import stats_blu
+from be.routes.admin import admin_blu
+from be.routes.notification import notify_blu
+from be.utils.jwt import jwt
+from be.utils.socketio import socketio
+from be.routes.student import student_blu
+from be.routes.lecturer import lecturer_blu
 load_dotenv()
 
-def create_app(config_name='development'):
+def create_app(config_name=None):
+    
     app = Flask(__name__)
+    if config_name is None:
+        config_name = os.getenv('FLASK_ENV', 'production') or 'production'
+
     app.config.from_object(config_by_name[config_name])
+
+    if app.debug:
+        app.config.from_object(config_by_name['development'])
+
     CORS(app)
 
     db.init_app(app)
@@ -33,14 +41,15 @@ def create_app(config_name='development'):
 
     @app.get('/')
     def index():
-        return "Welcome to the API!" , 200
+        print(config_name)
+        return config_name , 200
 
     return app
 
 config_by_name = {
-    'development': 'config.DevelopmentConfig',
-    'testing': 'config.TestingConfig',
-    'production': 'config.ProductionConfig',
+    'development': 'be.config.DevelopmentConfig',
+    'testing': 'be.config.TestingConfig',
+    'production': 'be.config.ProductionConfig',
 }
 
 if __name__ == '__main__':

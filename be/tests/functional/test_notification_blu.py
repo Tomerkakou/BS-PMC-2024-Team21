@@ -1,4 +1,4 @@
-from models.Notification import Notification, NotificationType
+from be.models.Notification import Notification, NotificationType
 
 
 def test_loadall(client,auth_admin,notification):

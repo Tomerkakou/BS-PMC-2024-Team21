@@ -1,8 +1,7 @@
 from sqlalchemy import Enum
 from sqlalchemy.dialects.mysql import LONGTEXT
-from models.Notification import user_notification
 import enum
-from models import db
+from be.models import db
 from flask_bcrypt import Bcrypt
 import uuid
 

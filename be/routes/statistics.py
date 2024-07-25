@@ -1,7 +1,7 @@
 from flask import Blueprint,jsonify
-from models.User import User
+from be.models.User import User
 from flask_jwt_extended import jwt_required
-from utils.jwt import role
+from be.utils.jwt import role
 
 
 

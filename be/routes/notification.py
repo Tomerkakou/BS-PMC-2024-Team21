@@ -1,12 +1,12 @@
 
 
 from flask import Blueprint, request, jsonify
-from models.Notification import Notification,NotificationType
-from models.User import User
-from models import db
+from be.models.Notification import Notification,NotificationType
+from be.models.User import User
+from be.models import db
 from flask_jwt_extended import jwt_required, current_user
-from utils.socketio import socketio
-from utils.jwt import role
+from be.utils.socketio import socketio
+from be.utils.jwt import role
 
 
 notify_blu = Blueprint('notify',__name__)

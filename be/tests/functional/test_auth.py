@@ -1,7 +1,7 @@
 
 from flask import current_app
-from models.Token import  TokenTypeEnum
-from models.User import User
+from be.models.Token import  TokenTypeEnum
+from be.models.User import User
 
 def test_signUp(client):
     data = {

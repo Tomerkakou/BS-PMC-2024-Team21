@@ -1,6 +1,6 @@
 import enum
 import uuid
-from models import db
+from be.models import db
 
 class TokenTypeEnum(enum.Enum):
     VerifyEmail = 'VerifyEmail'

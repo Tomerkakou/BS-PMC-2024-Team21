@@ -26,34 +26,33 @@ pipeline {
       }
     }
     
-    stage('Run Backend Tests') {
+    stage('Run Application') {
       steps {
         script {
-            sh 'docker  run --rm bs-flask pytest -v'
+            sh 'FLASK_ENV=testing docker compose up -d'
         }
       }
     }
 
-    stage('Run Docker Containers') {
+    stage('Checking container') {
+      steps {
+        script {
+            sh 'sleep 5'
+            sh 'curl -X GET http://localhost:6748/'
+            sh 'curl -X GET http://localhost:6749/'
+        }
+      }
+    }
+
+    stage('Running Tests inside Container') {
       steps {
         script {
             // Build the backend Docker image
-            sh 'docker compose up -d'
+            sh 'docker exec -it bs-flask pytest -v  /be'
         }
       }
     }
 
-    // stage('Run Frontend Tests') {
-    //   steps {
-    //     script {
-    //       dir('client') {
-    //         sh 'docker run --rm bs-pmc-2024-team5-client npm test'
-    //       }
-    //     }
-    //   }
-    // }
-
-    // Uncomment and modify the following stage if you need to deploy with Docker Compose
   }
 
   post {

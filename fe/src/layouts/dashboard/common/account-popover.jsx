@@ -58,6 +58,7 @@ export default function AccountPopover() {
     <>
       <IconButton
         onClick={handleOpen}
+        id="account-popover"
         sx={{
           width: 40,
           height: 40,
@@ -119,6 +120,7 @@ export default function AccountPopover() {
           disableRipple
           disableTouchRipple
           onClick={handleLogout}
+          id="btn-logout"
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout

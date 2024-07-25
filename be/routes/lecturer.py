@@ -1,10 +1,7 @@
 from flask import Blueprint, jsonify, request
-from sqlalchemy import not_
-from models.User import User
-from models import db
+from be.models import db
 from flask_jwt_extended import  jwt_required, current_user
-from models.User import Lecturer
-from utils.jwt import role
+from be.utils.jwt import role
 
 
 lecturer_blu = Blueprint('lecturer',__name__)

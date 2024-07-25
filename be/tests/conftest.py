@@ -1,12 +1,34 @@
 import pytest
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/../'))
-from app import create_app
-from models import db
-from models.User import Lecturer, RoleEnum, Student, User
-from models.Token import Token, TokenTypeEnum
-from models.Notification import Notification, NotificationType
+from be.app import create_app
+from be.models import db
+from be.models.User import Lecturer, RoleEnum, Student, User
+from be.models.Token import Token, TokenTypeEnum
+from be.models.Notification import Notification, NotificationType
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from chromedriver_py import binary_path
+
+def get_driver():
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--remote-debugging-port=9222")
+    svc = webdriver.ChromeService(executable_path=binary_path)
+    driver = webdriver.Chrome(service=svc,options=options)
+    return driver
+
+@pytest.fixture(scope="module")
+def driver():
+    driver = get_driver()
+    yield driver
+    driver.quit()
+
+@pytest.fixture(scope="session")
+def front_url(app):
+    return app.config['FRONT_TEST_URL']
 
 
 @pytest.fixture(scope='session')
@@ -26,13 +48,13 @@ def test_client(app):
 def init_db(app):
     """Initialize the test database."""
     with app.app_context():
+        print("Dropping database tables...")
+        db.drop_all()  # Drop tables
         print("Creating database tables...")
         db.create_all()  # Create tables
 
-        yield db  
-        print("Dropping database tables...")
-        db.session.remove()
-        db.drop_all()  # Drop tables
+        return db  
+        
 
 @pytest.fixture(scope='module',name='admin')
 def insert_admin(_db):

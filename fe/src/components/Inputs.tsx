@@ -17,10 +17,11 @@ interface TextInputProps {
     readonly?: boolean;
     size?: 'small' | 'medium';
     type?: string;
+    id?:string;
 }
 
 // TextInput component
-const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled, variant = "outlined", size = "medium",type="text" }) => {
+const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled,id, variant = "outlined", size = "medium",type="text" }) => {
     return (
         <Controller
             name={fieldName}
@@ -33,6 +34,7 @@ const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
                     label={label}
                     variant={variant}
                     fullWidth
+                    id={id}
                     required={Boolean(rules?.required)}
                     error={Boolean(fieldState.error)}
                     helperText={fieldState.error?.message}
@@ -55,10 +57,11 @@ interface CheckBoxInputProps {
     fieldName: string;
     CheckSx?: SxProps;
     sx?: SxProps;
+    id?:string;
 }
 
 //CheckBox component
-const CheckBoxInput: React.FC<CheckBoxInputProps> = ({ control, rules, label, fieldName, CheckSx, sx }) => {
+const CheckBoxInput: React.FC<CheckBoxInputProps> = ({ control, rules, label, fieldName, CheckSx, sx,id }) => {
     return (
         <Controller
             name={fieldName}
@@ -71,6 +74,7 @@ const CheckBoxInput: React.FC<CheckBoxInputProps> = ({ control, rules, label, fi
                     control={
                         <Checkbox
                             sx={CheckSx}
+                            id={id}
                             checked={field.value}
                             {...field}
                         />
@@ -137,6 +141,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
     onInputChange,
     getOptionKey,
     createable,
+    id,
     readonly,
     variant = "outlined",
     size = "medium"
@@ -177,6 +182,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
                     getOptionKey={getOptionKey}
                     disabled={disabled}
                     freeSolo={createable}
+                    id={id}
                     readOnly={readonly}
                     isOptionEqualToValue={isOptionEqualToValue}
                     onChange={(_, data, reason, details) => {
@@ -283,6 +289,7 @@ interface MuiFileInputProps {
     accept?:string;
     icon?:React.ReactNode;
     fieldName:string;
+    id?:string;
 }
 const FileInput:React.FC<MuiFileInputProps> = ({
     placeholder,
@@ -290,6 +297,7 @@ const FileInput:React.FC<MuiFileInputProps> = ({
     rules,
     accept,
     icon,
+    id,
     fieldName
 }) => {
     return (
@@ -303,6 +311,7 @@ const FileInput:React.FC<MuiFileInputProps> = ({
                 {...field}
                 helperText={fieldState.invalid ? fieldState.error?.message : ''}
                 error={fieldState.invalid}
+                id={id}
                 InputProps={{
                   inputProps: {
                     accept: accept,

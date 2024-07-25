@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import jsonify
 from flask_jwt_extended import (JWTManager,verify_jwt_in_request,get_jwt)
-from models.User import User
+from be.models.User import User
 
 
 jwt = JWTManager()
