@@ -4,7 +4,7 @@ ARG API_BASE_URL=http://localhost:6748/api
 ARG PUBLIC_URL=http://localhost:6749
 ARG SOCKET_URL=http://localhost:6748
 
-WORKDIR /app
+WORKDIR /fe
 COPY . .
 
 ENV REACT_APP_API_BASE_URL=$API_BASE_URL
