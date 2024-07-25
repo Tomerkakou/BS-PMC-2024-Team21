@@ -9,6 +9,7 @@ services:
       - "6749:6749"
     volumes:
       - ./fe:/fe
+    command: ["npm","run", "start-jenkins"]
     networks:
       - app_network
   bs-flask:
@@ -19,6 +20,7 @@ services:
       - "6748:6748"
     volumes:
       - ./be:/be
+    command: [ "flask", "run", "--host", "0.0.0.0", "--port", "6748" ]
     environment:
       FLASK_APP: /be/app.py
       FLASK_ENV: ${FLASK_ENV}
