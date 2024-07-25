@@ -25,6 +25,21 @@ pipeline {
         }
       }
     }
+    stage('Inspect Container File Structure') {
+        steps {
+            script {
+                // Run a temporary container to inspect the file structure
+                sh '''
+                docker create --name temp-container bs-react
+                docker run --rm temp-container /bin/sh -c "ls -la"
+                docker rm temp-container
+                docker create --name temp-container bs-flask
+                docker run --rm temp-container /bin/sh -c "ls -la"
+                docker rm temp-container
+                '''
+            }
+        }
+    }
     
     stage('Run Application') {
       steps {
