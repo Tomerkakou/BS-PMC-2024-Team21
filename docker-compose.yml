@@ -20,7 +20,7 @@ services:
       - "6748:6748"
     volumes:
       - ./be:/be
-    command:  ["sh", "-c", "pwd && ls -la && flask run --host 0.0.0.0 --port 6748"]
+    command:  ["sh", "-c", "pwd && ls -la && cd .. && ls -la && flask run --host 0.0.0.0 --port 6748"]
     environment:
       FLASK_APP: /be/app.py
       FLASK_ENV: ${FLASK_ENV}
