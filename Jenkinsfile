@@ -47,7 +47,7 @@ pipeline {
       steps {
         script {
             // Build the backend Docker image
-            sh 'docker exec -it bs-flask pytest -v  /be'
+            sh 'docker exec bs-flask pytest -v  /be'
         }
       }
     }
