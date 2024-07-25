@@ -71,7 +71,7 @@ pipeline {
     always {
       script {
         // Clean up workspace and Docker containers
-        sh 'docker compose down'
+        sh 'docker compose down -v'
         cleanWs()
       }
     }
