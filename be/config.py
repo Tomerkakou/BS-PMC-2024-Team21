@@ -5,8 +5,11 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
     JWT_SECRET_KEY = os.getenv("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SENDGRID_API_KEY=os.getenv("SENDGRID_API_KEY")
+    SENDGRID_API_EMAIL=os.getenv("SENDGRID_API_EMAIL")
     BASE_URL = os.getenv("BASE_URL")
     FRONT_URL = os.getenv("FRONT_URL")
+    OPENAI_API_KEY = os.getenv("OPEN_AI_KEY")
 
 class DevelopmentConfig(Config):
     DEBUG = True

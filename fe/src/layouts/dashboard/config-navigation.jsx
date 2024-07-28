@@ -49,7 +49,13 @@ const navConfig = {
 
       title: 'students',
       path: '/students',
-      icon: icon('ic_user'),
+      icon: icon('ic_students'),
+    },
+    {
+
+      title: 'documents',
+      path: '/documents',
+      icon: icon('ic_documents'),
     }
   ],
   Student:[

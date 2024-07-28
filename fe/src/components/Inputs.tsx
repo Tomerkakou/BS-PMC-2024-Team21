@@ -17,11 +17,12 @@ interface TextInputProps {
     readonly?: boolean;
     size?: 'small' | 'medium';
     type?: string;
+    multiline?: number;
     id?:string;
 }
 
 // TextInput component
-const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled,id, variant = "outlined", size = "medium",type="text" }) => {
+const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled,id, multiline,variant = "outlined", size = "medium",type="text" }) => {
     return (
         <Controller
             name={fieldName}
@@ -41,6 +42,8 @@ const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
                     InputProps={InputProps}
                     disabled={disabled}
                     size={size}
+                    multiline={Boolean(multiline)}
+                    rows={multiline}
                     type={type}
                     sx={sx}
                 />
@@ -290,6 +293,7 @@ interface MuiFileInputProps {
     icon?:React.ReactNode;
     fieldName:string;
     id?:string;
+    className?:string;
 }
 const FileInput:React.FC<MuiFileInputProps> = ({
     placeholder,
@@ -305,10 +309,11 @@ const FileInput:React.FC<MuiFileInputProps> = ({
             name={fieldName}
             control={control}
             rules={rules}
+            defaultValue={null}
             render={({ field, fieldState }) => (
               <MuiFileInput
-                placeholder={placeholder}
                 {...field}
+                placeholder={placeholder}
                 helperText={fieldState.invalid ? fieldState.error?.message : ''}
                 error={fieldState.invalid}
                 id={id}
@@ -324,6 +329,54 @@ const FileInput:React.FC<MuiFileInputProps> = ({
     );
 }
 
+const DragAndDropBox = styled(MuiFileInput)(({ theme }) => ({
+    '& > div:first-of-type':{
+    border: '2px dashed',
+    borderColor: theme.palette.primary.light,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  }
+}));
 
-export { CheckBoxInput, DateInput, SelectInput, TextInput,FileInput };
+const DropBoxInput:React.FC<MuiFileInputProps> = ({
+    placeholder,
+    control,
+    rules,
+    accept,
+    icon,
+    id,
+    fieldName
+}) => {
+    return (
+        <Controller
+            name={fieldName}
+            control={control}
+            rules={rules}
+            defaultValue={null}
+            render={({ field, fieldState }) => (
+              <DragAndDropBox
+                {...field}
+                placeholder={placeholder}
+                helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                error={fieldState.invalid}
+                id={id}
+                InputProps={{
+                  inputProps: {
+                    accept: accept,
+                  },
+                  startAdornment: icon,
+                }}
+              />
+            )}
+          />
+    );
+}
+
+  
+export { CheckBoxInput, DateInput, SelectInput, TextInput,FileInput,DropBoxInput };
 

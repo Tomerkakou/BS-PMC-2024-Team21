@@ -28,6 +28,7 @@
     "react-draggable": "^4.4.6",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.52.0",
+    "react-pdf": "^9.1.0",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
