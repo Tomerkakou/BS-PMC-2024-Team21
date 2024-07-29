@@ -11,19 +11,20 @@ import { useAuth } from 'auth';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import LecturerTableHead from '../documents-table-head';
-import LecturerTableRow from '../documents-table-row';
-import LecturerTableToolbar from '../documents-table-toolbar';
-import NewLecturer from '../new-document';
+import DocumentTableHead from '../documents-table-head';
+import DocumentTableRow from '../documents-table-row';
+import DocumentTableToolbar from '../documents-table-toolbar';
+import NewDocument from '../new-document';
 import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
 import { applyFilter, emptyRows, getComparator } from '../utils';
+import axios from 'axios';
 
 
 
 // ----------------------------------------------------------------------
 
-export default function LecturerView() {
+export default function DocumentView() {
   const [page, setPage] = useState(0);
   const {currentUser}=useAuth();
 
@@ -37,7 +38,8 @@ export default function LecturerView() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [signedLecturer,setSingedLecturers] = useState([]);
+  const [documentLecture,setDocumentLecture] = useState([]);
+
   const [otherLecturer,setOtherLecturers] = useState([]);
   const [loading,setLoading] = useState(true);
   
@@ -52,8 +54,9 @@ export default function LecturerView() {
   useEffect(()=>{
     (async ()=>{
       try{
-        // const response=await axios.get("/student/getlecturer")
-        // setSingedLecturers(response.data.signed)
+        const response=await axios.get("/lecturer/getdocuments")
+        console.log(response.data);
+        setDocumentLecture(response.data.documents);
         // setOtherLecturers(response.data.other)
         setLoading(false)
       }
@@ -65,7 +68,7 @@ export default function LecturerView() {
  
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = signedLecturer.map((n) => n.id);
+      const newSelecteds = documentLecture.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -105,23 +108,24 @@ export default function LecturerView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: signedLecturer,
+    inputData: documentLecture,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
-  const handleNewLecturer = (lecturers) => {
-    setOtherLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((l)=>l===lecturer.id)))
+  const handleNewDocument = (newDocuments) => {
+    setDocumentLecture((prevDocuments) => [...prevDocuments, newDocuments]);
   }
 
-  const handleDeleteLecturers = (lecturers,resetSelected)=>{
-    const addToOther=signedLecturer.filter((lecturer)=>lecturers.find((id)=>id===lecturer.id)).map((lecturer)=>({id:lecturer.id,name:lecturer.name}))
-    setSingedLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((id)=>id===lecturer.id)))
-    setOtherLecturers(prev=>[...prev,...addToOther])
-    if(resetSelected){
-      setSelected([])
+  const handleDeleteDocuments = (documents, resetSelected) => {
+    setDocumentLecture((prev) =>
+      prev.filter((document) => !documents.find((id) => id === document.id))
+    );
+    if (resetSelected) {
+      setSelected([]);
     }
-  }
+  };
+  
 
   const notFound = !dataFiltered.length && !!filterName;
 
@@ -129,54 +133,59 @@ export default function LecturerView() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Lecturers</Typography>
-        <NewLecturer handleNewDocument={handleNewLecturer}/>
+        <NewDocument handleNewDocument={handleNewDocument}/>
       </Stack>
 
       <Card>
-        <LecturerTableToolbar
+        <DocumentTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
           selected={selected}
-          handleDeleteLecturers={handleDeleteLecturers}
+          handleDeleteDocuments={handleDeleteDocuments}
         />
         
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <LecturerTableHead
+              <DocumentTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={signedLecturer.length}
+                rowCount={documentLecture.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'email', label: 'Email' },
-                  { id: '' },
+                  { id: 'subject', label: 'Subject' },
+                  { id: 'description', label: 'Description' },
+                  {id: 'createdAt', label: 'Release Date'},
+                  {id: 'pages', label: 'Pages'},
+                  {id:''}
                 ]}
               />
               <TableBody>
                 {!loading && dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <LecturerTableRow
+                    <DocumentTableRow
                       key={row.id}
                       id={row.id}
                       name={row.name}
-                      email={row.email}
-                      avatarUrl={row.avatar}
+                      subject={row.subject}
+                      description={row.description}
+                      createdAt={row.createdAt}
+                      pages={row.pages}
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
-                      handleDeleteLecturers={handleDeleteLecturers}
+                      handleDeleteDocuments={handleDeleteDocuments}
                     />
                   ))}
                 {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, signedLecturer.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, documentLecture.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -188,7 +197,7 @@ export default function LecturerView() {
         <TablePagination
           page={page}
           component="div"
-          count={signedLecturer.length}
+          count={documentLecture.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

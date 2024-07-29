@@ -19,10 +19,7 @@ interface FormValues {
   doc: File;
 }
 
-
-const NewDocument: React.FC<NewDocumentProps> = ({
-  handleNewDocument,
-}) => {
+const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
   const [open, setOpen] = useState(false);
   const { control, reset, handleSubmit } = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
@@ -40,9 +37,10 @@ const NewDocument: React.FC<NewDocumentProps> = ({
         doc: doc,
       });
       toast.success("Document summarized successfully");
+      handleNewDocument(response.data);
       handleClose();
-    } catch (e:any) {
-      if(e.response){
+    } catch (e: any) {
+      if (e.response) {
         toast.error(e.response.data);
       }
       console.error(e);
@@ -79,14 +77,17 @@ const NewDocument: React.FC<NewDocumentProps> = ({
             label="Document Name"
             control={control}
             fieldName="docName"
-            rules={{ required: "Document Name is required" ,maxLength: { value: 50, message: "Document Name is too long" } }}
+            rules={{
+              required: "Document Name is required",
+              maxLength: { value: 50, message: "Document Name is too long" },
+            }}
           />
-           <SelectInput
+          <SelectInput
             label="Subject"
             control={control}
             fieldName="subject"
             rules={{ required: "Subject is required" }}
-            options={["C#", "Java", "Python", "JavaScript","SQL"]}
+            options={["C#", "Java", "Python", "JavaScript", "SQL"]}
           />
           <DropBoxInput
             control={control}
@@ -101,14 +102,15 @@ const NewDocument: React.FC<NewDocumentProps> = ({
             control={control}
             fieldName="description"
             multiline={5}
-            rules={{ maxLength: { value: 100, message: "Description is too long" } }}
+            rules={{
+              maxLength: { value: 100, message: "Description is too long" },
+            }}
           />
         </Stack>
       </MainModal>
     </>
   );
 };
-
 
 const fileToBase64 = (file: File) => {
   return new Promise((resolve, reject) => {

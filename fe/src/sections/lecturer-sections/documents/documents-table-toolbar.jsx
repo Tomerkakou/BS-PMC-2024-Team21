@@ -14,13 +14,13 @@ import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
-export default function LecturerTableToolbar({ numSelected, filterName, onFilterName,handleDeleteLecturers,selected }) {
+export default function DocumentTableToolbar({ numSelected, filterName, onFilterName,handleDeleteDocuments,selected }) {
   const [loading,setLoading]=useState(false);
   const deleteAllSelected=async (event)=>{
     setLoading(true);
     try{
-      const response=await axios.post("/student/remove-lecturers",selected)
-      handleDeleteLecturers(selected,true)
+      const response=await axios.post("/lecturer/remove-documents",selected)
+      handleDeleteDocuments(selected,true)
       toast.success(response.data)
     }catch(e){
       console.error(e)
@@ -49,7 +49,7 @@ export default function LecturerTableToolbar({ numSelected, filterName, onFilter
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search lecturer..."
+          placeholder="Search document..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify
@@ -73,11 +73,11 @@ export default function LecturerTableToolbar({ numSelected, filterName, onFilter
   );
 }
 
-LecturerTableToolbar.propTypes = {
+DocumentTableToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   deActivateUsers:PropTypes.any,
-  handleDeleteLecturers:PropTypes.func,
+  handleDeleteDocuments:PropTypes.func,
   selected:PropTypes.any
 };

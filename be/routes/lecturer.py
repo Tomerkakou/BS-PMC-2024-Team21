@@ -34,11 +34,27 @@ def newPdf():
         pdf.init_pages_summarize()
         db.session.add(pdf)
         db.session.commit()
-        return jsonify({"docName":pdf.docName,
+        return jsonify({"name":pdf.docName,
                         "description":pdf.description,
-                        "subject":pdf.subject.value,
-                        "createAt":pdf.createdAt.strftime('%Y-%m-%d %H:%M:%S'),
-                        "pages":pdf.pages}), 200
+                        "subject":pdf.subject.value,}), 200
     except:
         db.session.rollback()
         return 'Invalid file please check you file and try again!', 400
+
+@lecturer_blu.get('/getdocuments')
+@jwt_required()
+@role("Lecturer")
+def getdocuments():
+    document_list = [{'id': doc.id, 'name': f'{doc.docName}', 'description': doc.description, 'subject': doc.subject.value, 'createdAt':doc.createdAt, 'pages': doc.pages} for doc in current_user.pdf_documents]
+    return jsonify({'documents':document_list}), 200
+
+@lecturer_blu.post('/remove-documents')
+@jwt_required()
+@role("Lecturer")
+def remove_documents():
+    docs_id = request.get_json()
+    documents_to_delete=[doc for doc in current_user.pdf_documents if doc.id in docs_id]
+    for doc in documents_to_delete:
+        db.session.delete(doc)  
+    db.session.commit()
+    return 'Documents Removed Successfully!', 200

@@ -17,7 +17,7 @@ class PdfDocument(db.Model):
     pages=db.Column(db.Integer, nullable=False,default=0)
     doc = db.Column(LONGTEXT, nullable=False)
     lecturer_id = db.Column(db.String(50), db.ForeignKey("lecturer.id", ondelete='CASCADE'), nullable=False)
-    pagesSummarize = db.relationship('PageSummarize', backref='pdf_document', lazy=True)
+    pagesSummarize = db.relationship('PageSummarize', backref='pdf_document', lazy=True, cascade="all, delete-orphan", passive_deletes=True)
 
     def init_pages_summarize(self):
         pdf_file = io.BytesIO(base64.b64decode(self.doc.replace('data:application/pdf;base64,', '')))
