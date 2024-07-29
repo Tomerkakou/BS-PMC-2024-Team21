@@ -22,6 +22,7 @@ pipeline {
         script {
             // Build the backend Docker image
             sh 'docker compose build --no-cache'
+            sh 'FLASK_ENV=testing docker compose up -d'
         }
       }
     }
@@ -40,7 +41,7 @@ pipeline {
     stage('Run Application') {
       steps {
         script {
-            sh 'FLASK_ENV=testing docker compose up -d'
+           
         }
       }
     }
