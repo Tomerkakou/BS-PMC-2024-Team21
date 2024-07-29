@@ -12,26 +12,22 @@ import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-
-import TableHead from 'components/table/table-head';
+import DocsTableHead from '../docs-table-head';
+import DocsTableRow from '../docs-table-row';
+import DocsTableToolbar from '../docs-table-toolbar';
 import TableEmptyRows from 'components/table/table-empty-rows';
 import TableNoData from 'components/table/table-no-data';
 import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
-import LecturerTableRow from '../lecturer-table-row';
-import LecturerTableToolbar from '../lecturer-table-toolbar';
-import NewLecturer from '../new-lecturer';
 
 
 
 // ----------------------------------------------------------------------
 
-export default function LecturerView() {
+export default function DocsView() {
   const [page, setPage] = useState(0);
   const {currentUser}=useAuth();
 
   const [order, setOrder] = useState('asc');
-
-  const [selected, setSelected] = useState([]);
 
   const [orderBy, setOrderBy] = useState('name');
 
@@ -39,8 +35,7 @@ export default function LecturerView() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [signedLecturer,setSingedLecturers] = useState([]);
-  const [otherLecturer,setOtherLecturers] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [loading,setLoading] = useState(true);
   
   const handleSort = (event, id) => {
@@ -54,9 +49,8 @@ export default function LecturerView() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/student/getlecturer")
-        setSingedLecturers(response.data.signed)
-        setOtherLecturers(response.data.other)
+        const response=await axios.get("/student/documents")
+        setDocuments(response.data)
         setLoading(false)
       }
       catch(e){
@@ -64,33 +58,7 @@ export default function LecturerView() {
       }
     })()
   },[currentUser])
- 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = signedLecturer.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
 
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -107,78 +75,62 @@ export default function LecturerView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: signedLecturer,
+    inputData: documents,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
-  const handleNewLecturer = (lecturers) => {
-    setOtherLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((l)=>l===lecturer.id)))
-  }
-
-  const handleDeleteLecturers = (lecturers,resetSelected)=>{
-    const addToOther=signedLecturer.filter((lecturer)=>lecturers.find((id)=>id===lecturer.id)).map((lecturer)=>({id:lecturer.id,name:lecturer.name}))
-    setSingedLecturers(prev=>prev.filter((lecturer)=>!lecturers.find((id)=>id===lecturer.id)))
-    setOtherLecturers(prev=>[...prev,...addToOther])
-    if(resetSelected){
-      setSelected([])
-    }
-  }
 
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Lecturers</Typography>
-        <NewLecturer lecturers={otherLecturer} handleNewLecturer={handleNewLecturer}/>
+        <Typography variant="h4">Documents</Typography>
       </Stack>
 
       <Card>
-        <LecturerTableToolbar
-          numSelected={selected.length}
+        <DocsTableToolbar
           filterName={filterName}
           onFilterName={handleFilterByName}
-          selected={selected}
-          handleDeleteLecturers={handleDeleteLecturers}
         />
         
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <TableHead
+              <DocsTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={signedLecturer.length}
-                numSelected={selected.length}
+                rowCount={documents.length}
                 onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'email', label: 'Email' },
-                  { id: '' },
+                  { id: 'subject', label: 'Subject' },
+                  { id: 'lecturer',label:'Lecturer' },
+                  { id:'createdAt',label:'Created At'},
+                  { id:'description',label:'Description'},
+                  { id:'',label:''}
                 ]}
               />
               <TableBody>
                 {!loading && dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <LecturerTableRow
+                    <DocsTableRow
                       key={row.id}
                       id={row.id}
                       name={row.name}
-                      email={row.email}
-                      avatarUrl={row.avatar}
-                      selected={(selected.indexOf(row.id) !== -1)}
-                      handleClick={(event) => handleClick(event, row.id)}
-                      handleDeleteLecturers={handleDeleteLecturers}
+                      subject={row.subject}
+                      lecturer={row.lecturer}
+                      date={row.date}
+                      description={row.description}
                     />
                   ))}
-                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={3} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, signedLecturer.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, documents.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -190,7 +142,7 @@ export default function LecturerView() {
         <TablePagination
           page={page}
           component="div"
-          count={signedLecturer.length}
+          count={documents.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

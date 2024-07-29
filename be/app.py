@@ -43,7 +43,7 @@ def create_app(config_name=None):
     def index():
         print(config_name)
         return config_name , 200
-
+    
     return app
 
 config_by_name = {

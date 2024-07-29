@@ -1,31 +1,29 @@
 
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import Typography from '@mui/material/Typography';
 import { useAuth } from 'auth';
 import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
-import TableRowsLoader from 'components/table'
+import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
 import TableHead from '../../../../components/table/table-head';
 import TableEmptyRows from '../../../../components/table/table-empty-rows';
 import TableNoData from '../../../../components/table/table-no-data';
 import { applyFilter, emptyRows, getComparator } from '../../../../components/table/utils';
+import StudentTableRow from '../student-table-row';
+import StudentTableToolbar from '../student-table-toolbar';
+
 
 
 
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function StudentView() {
   const [page, setPage] = useState(0);
   const {currentUser}=useAuth();
 
@@ -39,7 +37,9 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [users,setUsers] = useState([]);
+  const [signedStudents,setSingedStudents] = useState([]);
+  
+  const [loading,setLoading] = useState(true);
   
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -52,74 +52,26 @@ export default function UserPage() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/admin/getusers")
-        const current={
-          id:currentUser.id,
-          email:currentUser.email,
-          isVerified:true,
-          status:true,
-          name:`${currentUser.firstName} ${currentUser.lastName}`,
-          avatar:currentUser.avatar,
-          role:currentUser.role
-        }
-        setUsers([current,...response.data])
+        const response=await axios.get("/lecturer/getstudents")
+        setSingedStudents(response.data.signed)
       }
       catch(e){
         console.log(e)
+      }
+      finally{
+        setLoading(false)
       }
     })()
   },[currentUser])
  
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.id);
+      const newSelecteds = signedStudents.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
-
-  const deActivateUsers = async (event,id_list) =>{
-    try{
-      const response=await axios.post("/admin/deactivate-user",id_list)
-      const {message,users_id} = response.data;
-      for(const user of users){
-        if (users_id.includes(user.id))
-        {
-          user.status=false;
-        }
-      }
-      setUsers([...users])
-      toast.success(message)
-      setSelected([]);
-    }catch(error){
-      if(error.response){
-        toast.error(error.response.data)
-      }
-    }
-  }
-  const activateUsers = async (event,id_list) =>{
-    try{
-      const response=await axios.post("/admin/activate-user",id_list)
-      const {message,users_id} = response.data;
-      for(const user of users){
-        if (users_id.includes(user.id))
-        {
-          user.status=true;
-        }
-      }
-      setUsers([...users])
-      toast.success(message)
-      setSelected([]);
-    }catch(error){
-      if(error.response){
-        toast.error(error.response.data)
-      }
-    }
-  }
-
-
-
 
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
@@ -137,7 +89,6 @@ export default function UserPage() {
       );
     }
     setSelected(newSelected);
-    console.log(newSelected)
   };
 
   const handleChangePage = (event, newPage) => {
@@ -155,28 +106,35 @@ export default function UserPage() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: users,
+    inputData: signedStudents,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
+  
 
+  const handleDeleteStudents = (students,resetSelected)=>{
+    setSingedStudents(prev=>prev.filter((student)=>!students.find((id)=>id===student.id)))
+    if(resetSelected){
+      setSelected([])
+    }
+  }
 
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Users</Typography>
-      </Stack>
+
 
       <Card>
-        <UserTableToolbar
+        <StudentTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
-          deActivateUsers={(event)=>deActivateUsers(event,selected)}
+          selected={selected}
+          handleDeleteStudents={handleDeleteStudents}
         />
+        
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
@@ -184,41 +142,35 @@ export default function UserPage() {
               <TableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={setSingedStudents.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'verifiedEmail', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
                   { id: '' },
                 ]}
               />
               <TableBody>
-                {users.length && dataFiltered
+                {!loading && dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <UserTableRow
+                    <StudentTableRow
                       key={row.id}
+                      id={row.id}
                       name={row.name}
-                      role={row.role}
-                      status={row.status}
                       email={row.email}
                       avatarUrl={row.avatar}
-                      isVerified={row.verifiedEmail}
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
-                      deActivateUsers={(event) => deActivateUsers(event, [row.id])}
-                      activateUsers={(event) => activateUsers(event, [row.id])}
+                      handleDeleteStudents={handleDeleteStudents}
                     />
                   ))}
-                {!users.length && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, setSingedStudents.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -229,8 +181,9 @@ export default function UserPage() {
 
         <TablePagination
           page={page}
+
           component="div"
-          count={users.length}
+          count={setSingedStudents.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

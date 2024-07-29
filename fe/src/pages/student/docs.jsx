@@ -1,16 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 
-import { StudentView } from 'sections/lecturer-sections/students/view';
+import { DocsView } from 'sections/student-sections/docs/view';
 
 // ----------------------------------------------------------------------
 
-export default function LeturerPage() {
+export default function docsPage() {
   return (
     <>
       <Helmet>
-        <title> Students | LEARNIX </title>
+        <title> Documents | LEARNIX </title>
       </Helmet>
-      <StudentView />
+      <DocsView />
     </>
   );
 }

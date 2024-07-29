@@ -8,22 +8,23 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import { useAuth } from 'auth';
-import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import StudentTableHead from '../student-table-head';
-import StudentTableRow from '../student-table-row';
-import StudentTableToolbar from '../student-table-toolbar';
-import TableEmptyRows from '../table-empty-rows';
-import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
+import TableHead from 'components/table/table-head';
+import DocumentTableRow from '../documents-table-row';
+import DocumentTableToolbar from '../documents-table-toolbar';
+import NewDocument from '../new-document';
+import TableEmptyRows from 'components/table/table-empty-rows';
+import TableNoData from 'components/table/table-no-data';
+import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
+import axios from 'axios';
 
 
 
 // ----------------------------------------------------------------------
 
-export default function StudentView() {
+export default function DocumentView() {
   const [page, setPage] = useState(0);
   const {currentUser}=useAuth();
 
@@ -37,8 +38,8 @@ export default function StudentView() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [signedStudents,setSingedStudents] = useState([]);
-  
+  const [documentLecture,setDocumentLecture] = useState([]);
+
   const [loading,setLoading] = useState(true);
   
   const handleSort = (event, id) => {
@@ -52,8 +53,10 @@ export default function StudentView() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/lecturer/getstudents")
-        setSingedStudents(response.data.signed)
+        const response=await axios.get("/lecturer/getdocuments")
+        console.log(response.data);
+        setDocumentLecture(response.data.documents);
+        // setOtherLecturers(response.data.other)
         setLoading(false)
       }
       catch(e){
@@ -64,7 +67,7 @@ export default function StudentView() {
  
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = signedStudents.map((n) => n.id);
+      const newSelecteds = documentLecture.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -104,71 +107,84 @@ export default function StudentView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: signedStudents,
+    inputData: documentLecture,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
-  
-
-  const handleDeleteStudents = (students,resetSelected)=>{
-    setSingedStudents(prev=>prev.filter((student)=>!students.find((id)=>id===student.id)))
-    if(resetSelected){
-      setSelected([])
-    }
+  const handleNewDocument = (newDocuments) => {
+    setDocumentLecture((prevDocuments) => [...prevDocuments, newDocuments]);
   }
+
+  const handleDeleteDocuments = (documents, resetSelected) => {
+    setDocumentLecture((prev) =>
+      prev.filter((document) => !documents.find((id) => id === document.id))
+    );
+    if (resetSelected) {
+      setSelected([]);
+    }
+  };
+  
 
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
-
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h4">Lecturers</Typography>
+        <NewDocument handleNewDocument={handleNewDocument}/>
+      </Stack>
 
       <Card>
-        <StudentTableToolbar
+        <DocumentTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
           selected={selected}
-          handleDeleteStudents={handleDeleteStudents}
+          handleDeleteDocuments={handleDeleteDocuments}
         />
         
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <StudentTableHead
+              <TableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={setSingedStudents.length}
+                rowCount={documentLecture.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'email', label: 'Email' },
-                  { id: '' },
+                  { id: 'subject', label: 'Subject' },
+                  { id: 'description', label: 'Description' },
+                  {id: 'createdAt', label: 'Release Date'},
+                  {id: 'pages', label: 'Pages'},
+                  {id:''}
                 ]}
               />
               <TableBody>
                 {!loading && dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StudentTableRow
+                    <DocumentTableRow
                       key={row.id}
                       id={row.id}
                       name={row.name}
-                      email={row.email}
-                      avatarUrl={row.avatar}
+                      subject={row.subject}
+                      description={row.description}
+                      createdAt={row.createdAt}
+                      pages={row.pages}
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
-                      handleDeleteStudents={handleDeleteStudents}
+                      handleDeleteDocuments={handleDeleteDocuments}
                     />
                   ))}
-                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, setSingedStudents.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, documentLecture.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -180,7 +196,7 @@ export default function StudentView() {
         <TablePagination
           page={page}
           component="div"
-          count={setSingedStudents.length}
+          count={documentLecture.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
