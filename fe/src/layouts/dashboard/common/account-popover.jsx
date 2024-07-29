@@ -42,7 +42,7 @@ export default function AccountPopover() {
   const handleClose = (event,route) => {
     event.stopPropagation();
     setOpen(null);
-    if(route!==undefined){
+    if(route!=='backdropClick'){
       setTimeout(() => 
         navigate(route), 300);
     }
