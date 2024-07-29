@@ -11,13 +11,13 @@ import { useAuth } from 'auth';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import DocumentTableHead from '../documents-table-head';
+import TableHead from 'components/table/table-head';
 import DocumentTableRow from '../documents-table-row';
 import DocumentTableToolbar from '../documents-table-toolbar';
 import NewDocument from '../new-document';
-import TableEmptyRows from '../table-empty-rows';
-import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
+import TableEmptyRows from 'components/table/table-empty-rows';
+import TableNoData from 'components/table/table-no-data';
+import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
 import axios from 'axios';
 
 
@@ -40,7 +40,6 @@ export default function DocumentView() {
 
   const [documentLecture,setDocumentLecture] = useState([]);
 
-  const [otherLecturer,setOtherLecturers] = useState([]);
   const [loading,setLoading] = useState(true);
   
   const handleSort = (event, id) => {
@@ -149,7 +148,7 @@ export default function DocumentView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <DocumentTableHead
+              <TableHead
                 order={order}
                 orderBy={orderBy}
                 rowCount={documentLecture.length}
@@ -182,7 +181,7 @@ export default function DocumentView() {
                       handleDeleteDocuments={handleDeleteDocuments}
                     />
                   ))}
-                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
                 <TableEmptyRows
                   height={77}
                   emptyRows={emptyRows(page, rowsPerPage, documentLecture.length)}

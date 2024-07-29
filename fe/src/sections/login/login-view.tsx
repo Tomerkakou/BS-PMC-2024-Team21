@@ -50,7 +50,9 @@ export default function LoginView() {
       if (error.response) {
         toast.error(error.response.data);
       }
-      toast.error("An error occurred. Please try again later.");
+      else{
+        toast.error("An error occurred. Please try again later.");
+      }
     }
   };
 

@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-
 import LoadingButton from '@mui/lab/LoadingButton';
-import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 import TableCell from '@mui/material/TableCell';

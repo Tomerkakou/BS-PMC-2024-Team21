@@ -13,10 +13,10 @@ import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
 
-import TableHead from '../../../../components/table/table-head';
-import TableEmptyRows from '../../../../components/table/table-empty-rows';
-import TableNoData from '../../../../components/table/table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../../../../components/table/utils';
+import TableHead from 'components/table/table-head';
+import TableEmptyRows from 'components/table/table-empty-rows';
+import TableNoData from 'components/table/table-no-data';
+import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
 import LecturerTableRow from '../lecturer-table-row';
 import LecturerTableToolbar from '../lecturer-table-toolbar';
 import NewLecturer from '../new-lecturer';
@@ -175,7 +175,7 @@ export default function LecturerView() {
                       handleDeleteLecturers={handleDeleteLecturers}
                     />
                   ))}
-                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={3} />}
                 <TableEmptyRows
                   height={77}
                   emptyRows={emptyRows(page, rowsPerPage, signedLecturer.length)}

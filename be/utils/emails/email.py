@@ -24,7 +24,7 @@ def sendEmail(email,subject,templateName,**kwargs):
         html_content=html)
     
     try:
-        sg = SendGridAPIClient(current_app.config('SENDGRID_API_KEY'))
+        sg = SendGridAPIClient(current_app.config['SENDGRID_API_KEY'])
         response = sg.send(message)
         return True
     except Exception as e:

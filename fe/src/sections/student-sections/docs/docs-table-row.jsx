@@ -4,7 +4,7 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Iconify from 'components/iconify';
-import { format } from 'date-fns';
+import { fDate } from 'utils/format-time';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,7 +35,7 @@ export default function DocsTableRow({
 
         <TableCell>{subject}</TableCell>
         <TableCell>{lecturer}</TableCell>
-        <TableCell>{format(new Date(date), 'dd/MM/yyyy')}</TableCell>
+        <TableCell>{fDate(date)}</TableCell>
         <TableCell>{description}</TableCell>
         <TableCell align="right">
           <Button color='success' component="a" href={`http://localhost:5000/api/student/document/${id}`}>

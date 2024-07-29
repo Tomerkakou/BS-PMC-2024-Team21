@@ -36,16 +36,6 @@ const navConfig = {
       icon: icon('ic_analytics'),
     },
     {
-      title: 'product',
-      path: '/products',
-      icon: icon('ic_cart'),
-    },
-    {
-      title: 'blog',
-      path: '/blog',
-      icon: icon('ic_blog'),
-    },
-    {
 
       title: 'students',
       path: '/students',
@@ -74,16 +64,6 @@ const navConfig = {
       title: 'documents',
       path: '/documents',
       icon: icon('ic_documents'),
-    },
-    {
-      title: 'product',
-      path: '/products',
-      icon: icon('ic_cart'),
-    },
-    {
-      title: 'blog',
-      path: '/blog',
-      icon: icon('ic_blog'),
     },
   ],
 };

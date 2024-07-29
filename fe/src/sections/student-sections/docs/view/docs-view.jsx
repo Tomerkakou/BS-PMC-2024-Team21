@@ -15,9 +15,9 @@ import { useEffect, useState } from 'react';
 import DocsTableHead from '../docs-table-head';
 import DocsTableRow from '../docs-table-row';
 import DocsTableToolbar from '../docs-table-toolbar';
-import TableEmptyRows from '../table-empty-rows';
-import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
+import TableEmptyRows from 'components/table/table-empty-rows';
+import TableNoData from 'components/table/table-no-data';
+import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
 
 
 
@@ -127,7 +127,7 @@ export default function DocsView() {
                       description={row.description}
                     />
                   ))}
-                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}
+                {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
                 <TableEmptyRows
                   height={77}
                   emptyRows={emptyRows(page, rowsPerPage, documents.length)}
