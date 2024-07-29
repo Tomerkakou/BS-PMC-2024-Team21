@@ -1,7 +1,10 @@
-from flask import Blueprint, jsonify, request
+import base64
+import io
+from flask import Blueprint, jsonify, request, send_file
 from sqlalchemy import not_
 from be.models import db
 from flask_jwt_extended import  jwt_required, current_user
+from be.models.PdfDocument import PdfDocument
 from be.models.User import Lecturer
 from be.utils.jwt import role
 from be.models.Notification import Notification, NotificationType
@@ -58,3 +61,24 @@ def remove_lecturers():
     db.session.commit()
     
     return 'Lecturers Removed Successfully!', 200
+
+@student_blu.get('/documents')
+@jwt_required()
+@role("Student")
+def get_documents():
+    lecturers= current_user.lecturers
+    documents=[]
+    documents_objects=[]
+    for lecturer in lecturers:
+        documents+=lecturer.pdf_documents
+    for doc in documents:
+        documents_objects.append({'id':doc.id, 'name':doc.docName, 'description':doc.description, 'subject':doc.subject.value ,'date':doc.createdAt, 'lecturer':doc.user.fullName})
+    return jsonify(documents_objects),200
+
+@student_blu.get('/document/<int:doc_id>')
+def download_file(doc_id):
+    doc=PdfDocument.query.get_or_404(doc_id)
+    buffer = io.BytesIO(base64.b64decode(doc.doc.replace('data:application/pdf;base64,', '')))
+
+    return send_file(buffer, as_attachment=True, download_name=f'{doc.docName}.pdf', mimetype='application/pdf')
+
