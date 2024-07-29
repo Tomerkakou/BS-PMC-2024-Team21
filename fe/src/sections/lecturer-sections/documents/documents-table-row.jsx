@@ -14,14 +14,16 @@ import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
-export default function LecturerTableRow({
+export default function DocumentTableRow({
   selected,
   name,
-  avatarUrl,
-  email,
+  description,
+  subject,
+  createdAt,
+  pages,
   handleClick,
   id,
-  handleDeleteLecturers
+  handleDeleteDocuments
 }) {
 
   const [loading,setLoading]=useState(false);
@@ -30,8 +32,8 @@ export default function LecturerTableRow({
     setLoading(true)
     try{
       //delete lecturer
-      const response = await axios.post(`/student/remove-lecturers`,[id])
-      handleDeleteLecturers([id])
+      const response = await axios.post(`/lecturer/remove-documents`,[id])
+      handleDeleteDocuments([id])
       toast.success(response.data)
     }catch(e){
       console.error(e)
@@ -51,18 +53,40 @@ export default function LecturerTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
+            
           </Stack>
         </TableCell>
 
-        <TableCell>{email}</TableCell>
+        <TableCell>
+        <Typography variant="subtitle2" noWrap>
+              {subject}
+            </Typography>
+        </TableCell>
+
+        <TableCell>
+        <Typography variant="subtitle2" noWrap>
+              {description}
+            </Typography>
+        </TableCell>
+
+        <TableCell>
+        <Typography variant="subtitle2" noWrap>
+              {createdAt}
+            </Typography>
+        </TableCell>
+
+        <TableCell>
+        <Typography variant="subtitle2" noWrap>
+              {pages}
+            </Typography>
+        </TableCell>
 
         <TableCell align="right">
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
-            <Iconify icon="eva:person-delete-outline" />
+            <Iconify icon="eva:file-remove-outline" />
           </LoadingButton>
         </TableCell>
 
@@ -73,12 +97,12 @@ export default function LecturerTableRow({
   );
 }
 
-LecturerTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  email: PropTypes.any,
+DocumentTableRow.propTypes = {
+  subject: PropTypes.any,
+  description: PropTypes.any,
   handleClick: PropTypes.func,
   name: PropTypes.any,
   selected: PropTypes.any,
   id: PropTypes.any,
-  handleDeleteLecturers: PropTypes.func
+  handleDeleteDocuments: PropTypes.func
 };

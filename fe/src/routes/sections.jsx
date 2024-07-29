@@ -20,6 +20,7 @@ export const ForgotPasswordPage=lazy(() => import('pages/forgot-password'));
 export const LecturerPage=lazy(() => import('pages/student/lecturer'));
 export const StudentPage =lazy(() => import('pages/lecturer/student'));
 export const DocumentsPage=lazy(() => import('pages/lecturer/documents'));
+export const StudentDocs=lazy(() => import('pages/student/docs'));
 export const NewQuestionPage=lazy(() => import('pages/lecturer/new-question'));
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
@@ -56,7 +57,8 @@ export default function Router() {
       case 'Student':
         return [
           { element: <IndexStudentPage />, index: true },
-          { path: 'lecturers', element: <LecturerPage /> }
+          { path: 'lecturers', element: <LecturerPage /> },
+          { path: 'documents', element: <StudentDocs /> }
         ]
       case 'Lecturer':
         return [
