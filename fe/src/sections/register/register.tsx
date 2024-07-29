@@ -13,7 +13,6 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { register } from "auth/core/_requests";
 import { FileInput, SelectInput, TextInput } from "components/Inputs";
@@ -113,7 +112,8 @@ export const Register = () => {
             Log In
           </Link>
         </Typography>
-        <Stack spacing={3}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
           <TextInput
             control={control}
             label="Email"
@@ -130,6 +130,8 @@ export const Register = () => {
               }
             }}
           />
+          </Grid>
+          <Grid item xs={12} md={6}>
           <TextInput
             control={control}
             label="Password"
@@ -157,6 +159,8 @@ export const Register = () => {
               ),
             }}
           />
+          </Grid>
+          <Grid item xs={12} md={6}>
           <TextInput
             control={control}
             label="Confirm Password"
@@ -165,12 +169,12 @@ export const Register = () => {
               required: "Confirm Password is required!",
               validate: ConfirmPassword,
             }}
-            type={showPassword ? "text" : "password"}
+            type={showCPassword ? "text" : "password"}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    onClick={() => setShowCPassword(!showPassword)}
+                    onClick={() => setShowCPassword(!showCPassword)}
                     edge="end"
                   >
                     <Iconify
@@ -181,6 +185,8 @@ export const Register = () => {
               ),
             }}
           />
+          </Grid>
+          <Grid item xs={12} md={6}>
           <TextInput
             control={control}
             label="First Name"
@@ -193,6 +199,8 @@ export const Register = () => {
               }
             }}
           />
+          </Grid>
+          <Grid item xs={12} md={6}>
           <TextInput
             control={control}
             label="Last Name"
@@ -205,6 +213,8 @@ export const Register = () => {
               }
             }}
           />
+          </Grid>
+          <Grid item xs={12}>
           <SelectInput
             control={control}
             label="Role"
@@ -214,10 +224,13 @@ export const Register = () => {
               required: "Role is required!",
             }}
           />
+          </Grid>
+          <Grid item xs={12}>
           <Tabs
             value={tab}
             onChange={handleChange}
-            aria-label="icon label tabs example"
+            centered
+            sx={{mb:1}}
           >
             <Tab label="Upload image" />
             <Tab label="Choose avatar" />
@@ -277,7 +290,8 @@ export const Register = () => {
               />
             </Box>
           )}
-        </Stack>
+          </Grid>
+        </Grid>
         <CardActions sx={{ mt: 2 }}>
           <LoadingButton
             fullWidth

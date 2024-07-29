@@ -16,6 +16,7 @@ import { useAuth } from "auth/core/Auth";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -131,7 +132,7 @@ export default function LoginView() {
   );
 
   return (
-    <>
+    <Box sx={{maxWidth:420}}>
       <Typography variant="h4">Sign in to LEARNIX</Typography>
       <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
         Don’t have an account?
@@ -183,6 +184,6 @@ export default function LoginView() {
             </Typography>
           </Divider> */}
       {renderForm}
-    </>
+    </Box>
   );
 }

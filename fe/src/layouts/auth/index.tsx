@@ -35,8 +35,8 @@ const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
         <Card
           sx={{
             p: 5,
-            width: 1,
-            maxWidth: 420,
+            maxWidth: 800,
+            minWidth:420,
             maxHeight: 0.75,
             overflow: 'auto',
           }}
