@@ -4,7 +4,7 @@ import { DocumentsView } from 'sections/lecturer-sections/documents/view';
 
 // ----------------------------------------------------------------------
 
-export default function LeturerPage() {
+export default function DocumentsPage() {
   return (
     <>
       <Helmet>

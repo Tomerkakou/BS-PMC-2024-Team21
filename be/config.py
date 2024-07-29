@@ -17,7 +17,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI_TESTING")
+    SQLALCHEMY_DATABASE_URI = 'mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix-test'#os.getenv("SQLALCHEMY_DATABASE_URI_TESTING")
     FRONT_TEST_URL = 'http://bs-react:6749'
 
 class ProductionConfig(Config):

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { StudentView } from 'sections/lecturer-sections/overview/lecturer/view';
+import { StudentView } from 'sections/lecturer-sections/students/view';
 
 // ----------------------------------------------------------------------
 

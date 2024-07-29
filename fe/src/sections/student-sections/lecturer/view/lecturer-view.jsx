@@ -12,13 +12,14 @@ import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import LecturerTableHead from '../lecturer-table-head';
+
+import TableHead from '../../../../components/table/table-head';
+import TableEmptyRows from '../../../../components/table/table-empty-rows';
+import TableNoData from '../../../../components/table/table-no-data';
+import { applyFilter, emptyRows, getComparator } from '../../../../components/table/utils';
 import LecturerTableRow from '../lecturer-table-row';
 import LecturerTableToolbar from '../lecturer-table-toolbar';
 import NewLecturer from '../new-lecturer';
-import TableEmptyRows from '../table-empty-rows';
-import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
 
 
 
@@ -146,7 +147,7 @@ export default function LecturerView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <LecturerTableHead
+              <TableHead
                 order={order}
                 orderBy={orderBy}
                 rowCount={signedLecturer.length}

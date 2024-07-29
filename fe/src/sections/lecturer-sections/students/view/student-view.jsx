@@ -10,12 +10,14 @@ import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import { useEffect, useState } from 'react';
-import StudentTableHead from '../student-table-head';
+import TableHead from '../../../../components/table/table-head';
+import TableEmptyRows from '../../../../components/table/table-empty-rows';
+import TableNoData from '../../../../components/table/table-no-data';
+import { applyFilter, emptyRows, getComparator } from '../../../../components/table/utils';
 import StudentTableRow from '../student-table-row';
 import StudentTableToolbar from '../student-table-toolbar';
-import TableEmptyRows from '../table-empty-rows';
-import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
+
+
 
 
 
@@ -52,10 +54,12 @@ export default function StudentView() {
       try{
         const response=await axios.get("/lecturer/getstudents")
         setSingedStudents(response.data.signed)
-        setLoading(false)
       }
       catch(e){
         console.log(e)
+      }
+      finally{
+        setLoading(false)
       }
     })()
   },[currentUser])
@@ -135,7 +139,7 @@ export default function StudentView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <StudentTableHead
+              <TableHead
                 order={order}
                 orderBy={orderBy}
                 rowCount={setSingedStudents.length}
@@ -177,6 +181,7 @@ export default function StudentView() {
 
         <TablePagination
           page={page}
+
           component="div"
           count={setSingedStudents.length}
           rowsPerPage={rowsPerPage}

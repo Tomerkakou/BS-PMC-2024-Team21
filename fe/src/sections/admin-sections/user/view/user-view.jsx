@@ -13,14 +13,12 @@ import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table'
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import TableEmptyRows from '../table-empty-rows';
-import TableNoData from '../table-no-data';
-import UserTableHead from '../user-table-head';
 import UserTableRow from '../user-table-row';
 import UserTableToolbar from '../user-table-toolbar';
-import { applyFilter, emptyRows, getComparator } from '../utils';
-
-
+import TableHead from '../../../../components/table/table-head';
+import TableEmptyRows from '../../../../components/table/table-empty-rows';
+import TableNoData from '../../../../components/table/table-no-data';
+import { applyFilter, emptyRows, getComparator } from '../../../../components/table/utils';
 
 
 
@@ -183,7 +181,7 @@ export default function UserPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
+              <TableHead
                 order={order}
                 orderBy={orderBy}
                 rowCount={users.length}
