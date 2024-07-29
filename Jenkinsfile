@@ -41,6 +41,8 @@ pipeline {
           sh 'docker ps -a' 
           sh 'docker logs bs-flask || true'
           sh 'docker logs bs-react || true' 
+          sh 'curl -X GET http://localhost:6748'
+          sh 'curl -X GET http://localhost:6749'
         }
       }
     }
