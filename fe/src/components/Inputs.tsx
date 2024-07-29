@@ -376,7 +376,6 @@ const DropBoxInput:React.FC<MuiFileInputProps> = ({
           />
     );
 }
-
   
-export { CheckBoxInput, DateInput, SelectInput, TextInput,FileInput,DropBoxInput };
+export { CheckBoxInput, DateInput, DropBoxInput, FileInput, SelectInput, TextInput };
 

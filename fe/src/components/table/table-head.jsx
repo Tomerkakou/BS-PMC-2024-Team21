@@ -11,7 +11,7 @@ import { visuallyHidden } from './utils';
 
 // ----------------------------------------------------------------------
 
-export default function StudentTableHead({
+export default function TableHead2({
   order,
   orderBy,
   rowCount,
@@ -62,7 +62,7 @@ export default function StudentTableHead({
   );
 }
 
-StudentTableHead.propTypes = {
+TableHead2.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,

@@ -20,6 +20,7 @@ export const ForgotPasswordPage=lazy(() => import('pages/forgot-password'));
 export const LecturerPage=lazy(() => import('pages/student/lecturer'));
 export const StudentPage =lazy(() => import('pages/lecturer/student'));
 export const DocumentsPage=lazy(() => import('pages/lecturer/documents'));
+export const NewQuestionPage=lazy(() => import('pages/lecturer/new-question'));
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
   const { pathname } = useLocation()
@@ -61,7 +62,8 @@ export default function Router() {
         return [
           { element: <IndexLecturerPage />, index: true },
           { path: 'students', element : <StudentPage/> },
-          { path: 'documents', element : <DocumentsPage/> }
+          { path: 'documents', element : <DocumentsPage/> },
+          { path: 'new-question', element : <NewQuestionPage/> }
         ]
       default:
         throw new Error('invalid role')
