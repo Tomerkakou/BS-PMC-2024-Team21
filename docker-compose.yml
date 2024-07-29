@@ -7,9 +7,7 @@ services:
     container_name: bs-react
     ports:
       - "6749:6749"
-    volumes:
-      - ./fe:/fe
-    command:  ["sh", "-c", "pwd && ls -la && npm start"]
+    command:  ["sh", "-c", "npm start"]
     networks:
       - app_network
   bs-flask:
@@ -18,9 +16,7 @@ services:
     container_name: bs-flask
     ports:
       - "6748:6748"
-    volumes:
-      - ./be:/be
-    command:  ["sh", "-c", "pwd && ls -la && cd .. && ls -la && flask run --host 0.0.0.0 --port 6748"]
+    command:  ["sh", "-c", "flask run --host 0.0.0.0 --port 6748"]
     environment:
       FLASK_APP: /be/app.py
       FLASK_ENV: ${FLASK_ENV}

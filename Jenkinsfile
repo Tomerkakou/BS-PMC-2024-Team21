@@ -22,26 +22,25 @@ pipeline {
         script {
             // Build the backend Docker image
             sh 'docker compose build --no-cache'
-            sh 'FLASK_ENV=testing docker compose up -d'
         }
       }
     }
-    stage('Inspect Container File Structure') {
-        steps {
-            script {
-                // Run a temporary container to inspect the file structure
-                sh '''
-                docker run  bs-react ls -la
-                docker run  bs-flask ls -la
-                '''
-            }
-        }
-    }
+    // stage('Inspect Container File Structure') {
+    //     steps {
+    //         script {
+    //             // Run a temporary container to inspect the file structure
+    //             sh '''
+    //             docker run  bs-react ls -la
+    //             docker run  bs-flask ls -la
+    //             '''
+    //         }
+    //     }
+    // }
     
     stage('Run Application') {
       steps {
         script {
-           
+            sh 'FLASK_ENV=testing docker compose up -d'
         }
       }
     }
