@@ -16,3 +16,5 @@ RUN npm ci
 RUN npm run build 
 
 EXPOSE 6749
+
+CMD [ "npm", "run","start-jenkins" ]

@@ -48,12 +48,13 @@ def test_client(app):
 def init_db(app):
     """Initialize the test database."""
     with app.app_context():
-        print("Dropping database tables...")
-        db.drop_all()  # Drop tables
         print("Creating database tables...")
         db.create_all()  # Create tables
 
-        return db  
+        yield db  
+
+        print("Dropping database tables...")
+        db.drop_all()  # Drop tables
         
 
 @pytest.fixture(scope='module',name='admin')
