@@ -1,8 +1,8 @@
 FROM node:16.17.1-alpine3.16 as build
 
-ARG API_BASE_URL=http://localhost:6748/api
+ARG API_BASE_URL=http://bs-flask:6748/api
 ARG PUBLIC_URL=http://localhost:6749
-ARG SOCKET_URL=http://localhost:6748
+ARG SOCKET_URL=http://bs-flask:6748
 
 WORKDIR /fe
 COPY . .
