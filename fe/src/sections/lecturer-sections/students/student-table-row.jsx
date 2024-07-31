@@ -61,6 +61,9 @@ export default function StudentTableRow({
         <TableCell>{email}</TableCell>
 
         <TableCell align="right">
+          <LoadingButton onClick={handleBtnClick} loading={loading}>
+            <Iconify icon="mdi:comment-question" />
+          </LoadingButton>
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
             <Iconify icon="eva:person-delete-outline" />
           </LoadingButton>
