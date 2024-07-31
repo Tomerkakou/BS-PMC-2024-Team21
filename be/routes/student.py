@@ -82,3 +82,5 @@ def download_file(doc_id):
 
     return send_file(buffer, as_attachment=True, download_name=f'{doc.docName}.pdf', mimetype='application/pdf')
 
+
+
