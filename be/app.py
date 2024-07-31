@@ -12,6 +12,8 @@ from be.utils.jwt import jwt
 from be.utils.socketio import socketio
 from be.routes.student import student_blu
 from be.routes.lecturer import lecturer_blu
+from be.routes.question import question_blu
+
 load_dotenv()
 
 def create_app(config_name=None):
@@ -38,6 +40,7 @@ def create_app(config_name=None):
     app.register_blueprint(notify_blu,url_prefix='/api/notification')
     app.register_blueprint(student_blu,url_prefix='/api/student')
     app.register_blueprint(lecturer_blu,url_prefix='/api/lecturer')
+    app.register_blueprint(question_blu,url_prefix='/api/question')
 
     @app.get('/')
     def index():
@@ -57,7 +60,7 @@ if __name__ == '__main__':
 
     with app.app_context():
         print("Creating database tables...")
-        #db.drop_all()
+        db.drop_all()
         db.create_all()
         print("Tables created successfully.")
 

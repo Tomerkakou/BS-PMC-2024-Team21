@@ -5,11 +5,12 @@ class Coding(Question.Question):
 
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
     template = db.Column(db.Text, nullable=False)
+    
+    def to_json(self):
+        json=super().to_json()
+        json['template']=self.template
+        return json
 
     __mapper_args__ = {
         "polymorphic_identity": QuestionType.CODING, 
     }
-
-
-    def validate_answer(self, student_answer):
-        return True #TODO: Implement this method

@@ -1,5 +1,6 @@
 import { Autocomplete, Checkbox, CircularProgress, createFilterOptions, darken, FilterOptionsState, FormControlLabel, InputProps, lighten, styled, SxProps, TextField, TextFieldVariants } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+import { read } from 'fs';
 import { MuiFileInput } from 'mui-file-input';
 import React, { useEffect } from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
@@ -22,7 +23,7 @@ interface TextInputProps {
 }
 
 // TextInput component
-const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName, InputProps, sx, disabled,id, multiline,variant = "outlined", size = "medium",type="text" }) => {
+const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,readonly ,InputProps, sx, disabled,id, multiline,variant = "outlined", size = "medium",type="text" }) => {
     return (
         <Controller
             name={fieldName}
@@ -41,6 +42,9 @@ const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
                     helperText={fieldState.error?.message}
                     InputProps={InputProps}
                     disabled={disabled}
+                    inputProps={{
+                        readOnly:readonly
+                    }}
                     size={size}
                     multiline={Boolean(multiline)}
                     rows={multiline}

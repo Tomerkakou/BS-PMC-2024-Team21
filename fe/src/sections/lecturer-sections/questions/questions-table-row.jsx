@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-
 import LoadingButton from '@mui/lab/LoadingButton';
-import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 import TableCell from '@mui/material/TableCell';
@@ -11,17 +9,24 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import Iconify from 'components/iconify';
 import { toast } from 'react-toastify';
+import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
+
 
 // ----------------------------------------------------------------------
 
-export default function StudentTableRow({
+export default function QuestionsTableRow({
   selected,
   name,
-  avatarUrl,
-  email,
+  subject,
+  type,
+  level,
   handleClick,
   id,
-  handleDeleteStudents
+  handleDeleteQuestions
 }) {
 
   const [loading,setLoading]=useState(false);
@@ -29,9 +34,9 @@ export default function StudentTableRow({
   const handleBtnClick= async ()=>{
     setLoading(true)
     try{
-      //delete student
-      const response = await axios.post(`/lecturer/remove-students`,[id])
-      handleDeleteStudents([id])
+      //delete lecturer
+      const response = await axios.post(`/lecturer/remove-questions`,[id])
+      handleDeleteQuestions([id])
       toast.success(response.data)
     }catch(e){
       console.error(e)
@@ -51,23 +56,43 @@ export default function StudentTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
+            
           </Stack>
         </TableCell>
 
-        <TableCell>{email}</TableCell>
+        <TableCell>
+        <Typography variant="subtitle2" noWrap>
+              {subject}
+            </Typography>
+        </TableCell>
+
+        <TableCell>
+        <Typography variant="subtitle2" noWrap>
+              {type}
+            </Typography>
+        </TableCell>
+
+        <TableCell>
+        <Typography variant="subtitle2" noWrap>
+              {level}
+            </Typography>
+        </TableCell>
 
         <TableCell align="right">
+          <LoadingButton onClick={handleBtnClick} loading={loading} color="success">
+            <Iconify icon="mdi:question-answer" />
+          </LoadingButton>
           <LoadingButton onClick={handleBtnClick} loading={loading}>
-            <Iconify icon="mdi:comment-question" />
+            <Iconify icon="mdi:edit-outline" />
           </LoadingButton>
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
-            <Iconify icon="eva:person-delete-outline" />
+            <Iconify icon="mdi:trash-can-empty" />
           </LoadingButton>
         </TableCell>
+
 
       </TableRow>
        
@@ -76,12 +101,12 @@ export default function StudentTableRow({
   );
 }
 
-StudentTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  email: PropTypes.any,
+QuestionsTableRow.propTypes = {
+  subject: PropTypes.any,
+  description: PropTypes.any,
   handleClick: PropTypes.func,
   name: PropTypes.any,
   selected: PropTypes.any,
   id: PropTypes.any,
-  handleDeleteStudents: PropTypes.func
+  handleDeleteQuestions: PropTypes.func
 };
