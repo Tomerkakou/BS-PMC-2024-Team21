@@ -22,7 +22,9 @@ export const StudentPage =lazy(() => import('pages/lecturer/student'));
 export const DocumentsPage=lazy(() => import('pages/lecturer/documents'));
 export const StudentDocs=lazy(() => import('pages/student/docs'));
 export const NewQuestionPage=lazy(() => import('pages/lecturer/new-question'));
+export const QuestionsPage=lazy(() => import('pages/lecturer/questions'));
 export const QuestionSessionPage=lazy(() => import('pages/student/question-session'));
+
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
   const { pathname } = useLocation()
@@ -67,6 +69,7 @@ export default function Router() {
           { element: <IndexLecturerPage />, index: true },
           { path: 'students', element : <StudentPage/> },
           { path: 'documents', element : <DocumentsPage/> },
+          { path: 'questions', element : <QuestionsPage/> },
           { path: 'new-question', element : <NewQuestionPage/> }
         ]
       default:

@@ -46,6 +46,12 @@ const navConfig = {
       title: 'documents',
       path: '/documents',
       icon: icon('ic_documents'),
+    },
+    {
+
+      title: 'questions',
+      path: '/questions',
+      icon: icon('ic_questions'),
     }
   ],
   Student:[

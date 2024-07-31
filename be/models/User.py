@@ -58,6 +58,7 @@ class Lecturer(User):
     students = db.relationship('Student', secondary = 'student_lecturer', back_populates = 'lecturers')
     questions= db.relationship('Question', backref='user', lazy=True, cascade="all, delete-orphan", passive_deletes=True)
     pdf_documents = db.relationship('PdfDocument', backref='user', lazy=True)
+    questions = db.relationship('Question', backref='user', lazy=True)
     __mapper_args__ = {
         "polymorphic_identity":  RoleEnum.Lecturer,
     }

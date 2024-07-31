@@ -111,4 +111,26 @@ def newQuestion():
 
     return "Question added successfully!", 200
 
+
+@lecturer_blu.get('/questions')
+@jwt_required()
+@role("Lecturer")
+def get_Questions():
+    questions= current_user.questions
+    questions_objects=[]
+    for question in questions:
+        questions_objects.append({'id':question.id, 'name':question.shortDescription,'subject':question.subject.value ,'type':question.qtype.value, 'level':question.level.value})
+    return jsonify(questions_objects),200
     
+@lecturer_blu.post('/remove-questions')
+@jwt_required()
+@role("Lecturer")
+def remove_questions():
+    questions_id = request.get_json()
+    questions_to_delete=[question for question in current_user.questions if question.id in questions_id]
+    for question in questions_to_delete:
+        db.session.delete(question)  
+    db.session.commit()
+    if (questions_to_delete.__len__() >1):
+        return 'Questions Removed Successfully!', 200
+    return 'Question Removed Successfully!', 200
