@@ -56,7 +56,7 @@ class Student(User):
 class Lecturer(User):
     id = db.Column(db.String(50), db.ForeignKey("user.id"), primary_key=True)
     students = db.relationship('Student', secondary = 'student_lecturer', back_populates = 'lecturers')
-    questions= db.relationship('Question', backref='user', lazy=True, cascade="all, delete-orphan", passive_deletes=True)
+    questions= db.relationship('Question', backref='user', lazy=True, cascade="all, delete")
     pdf_documents = db.relationship('PdfDocument', backref='user', lazy=True)
     questions = db.relationship('Question', backref='user', lazy=True)
     __mapper_args__ = {

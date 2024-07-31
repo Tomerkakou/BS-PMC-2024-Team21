@@ -40,7 +40,9 @@ def test_get_docs(client,_db,auth_student,lecturer):
         'Authorization': f'Bearer {auth_student["accessToken"]}'})
         data = response.get_json()
         assert response.status_code == 200
-        assert len(data) == 1        
+        assert len(data) == 1  
+        _db.session.delete(pdf)
+        _db.session.commit()      
 
 def test_remove_student(client,_db,auth_lecturer,lecturer,student):
     data=[student.id]
@@ -58,5 +60,7 @@ def test_remove_lecturer(client,_db,auth_student,lecturer,student):
         'Authorization': f'Bearer {auth_student["accessToken"]}'})
         assert response.status_code == 200
         assert lecturer not in student.lecturers
+
+
 
 

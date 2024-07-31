@@ -1,12 +1,7 @@
-from flask import current_app
-from be.models.PdfDocument import PdfDocument,SubjectsEnum
-from be.models.questions.Coding import Coding
-from be.models.questions.Open import Open
-from be.models.questions.SingleChoice import SingleChoice
 from be.models.questions.Question import Question
 
 
-def test_new_question(client,_db,auth_lecturer):
+def test_new_question(client,auth_lecturer,_db):
     data={
         "qtype":"Open",
         "question": "heelo",
@@ -21,4 +16,7 @@ def test_new_question(client,_db,auth_lecturer):
         question=Question.query.filter_by(shortDescription="dsasdasd").first()
         assert response.status_code == 200
         assert question is not None
+        _db.session.delete(question)
+        _db.session.commit()
+
                
