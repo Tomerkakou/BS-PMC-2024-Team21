@@ -4,7 +4,9 @@ from flask import current_app
 
 assitant_ids={
     "document_summarization": "asst_5RG5BrSxt6vO2LRcKd4vTK6O",
+    "question_validator":"asst_xdKR2Kk2DCZWRxU8vEVRt9aQ"
 }
+
 class Assitant:
     def __init__(self, assistant_name):
         self.assistant_name = assistant_name
