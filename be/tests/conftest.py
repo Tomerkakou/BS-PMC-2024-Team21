@@ -4,7 +4,6 @@ from be.models import db
 from be.models.User import Lecturer, RoleEnum, Student, User
 from be.models.Token import Token, TokenTypeEnum
 from be.models.Notification import Notification, NotificationType
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from chromedriver_py import binary_path

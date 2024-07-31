@@ -1,7 +1,7 @@
 import { CodeiumEditor } from '@codeium/react-code-editor';
 import { Box, CircularProgress } from '@mui/material';
-import React from 'react'
-import { Control, Controller, RegisterOptions } from 'react-hook-form';
+import { read } from 'fs';
+import React from 'react';
 
 const languageMapper:Record<string,string> = {
     'Python':'python',
@@ -19,9 +19,10 @@ interface CodeEditorProps {
     startComment?:string;
     onChange?:any;
     id?:string
+    readOnly?:boolean;
 }
 
-const CodeEditor:React.FC<CodeEditorProps> = ({language,value,onChange,id,theme="vs-dark"}) => {
+const CodeEditor:React.FC<CodeEditorProps> = ({language,value,onChange,readOnly,id,theme="vs-dark"}) => {
 
     const handleRemoveG=() => {
         const elements = document.getElementsByTagName('g');
@@ -39,6 +40,9 @@ const CodeEditor:React.FC<CodeEditorProps> = ({language,value,onChange,id,theme=
         height='100%'
         onChange={onChange}
         onMount={handleRemoveG}
+        options={{
+            readOnly: readOnly,
+        }}
         loading={<Box>
             <svg width={0} height={0}>
               <defs>
@@ -51,30 +55,6 @@ const CodeEditor:React.FC<CodeEditorProps> = ({language,value,onChange,id,theme=
             <CircularProgress sx={{ 'svg circle': { stroke: 'url(#my_gradient)' } }} />
           </Box>
         }
-    />
-  )
-}
-
-interface CodeEditorInputProps extends CodeEditorProps {
-    fieldName:string;
-    control:Control<any>;
-    rules?: RegisterOptions<any>;
-}
-
-const CodeEditorInput:React.FC<CodeEditorInputProps> = (props) => {
-  return (
-    <Controller 
-        name="template"
-        control={props.control}
-        render={({ field, fieldState }) => (
-        <CodeEditor 
-            language={props.language}
-            theme={props.theme}
-            value={field.value}
-            id={props.fieldName}
-            onChange={field.onChange}
-        />
-        )}
     />
   )
 }
@@ -97,4 +77,5 @@ function createComment(comment:string,language:string) {
 }
 
 
-export {CodeEditorInput,CodeEditor,createComment}
+export { CodeEditor, createComment };
+
