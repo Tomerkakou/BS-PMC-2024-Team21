@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { Button, Stack } from "@mui/material";
+import { Alert, Button, Stack } from "@mui/material";
 import axios from "axios";
 import Iconify from "components/iconify";
 import { DropBoxInput, SelectInput, TextInput } from "components/Inputs";
@@ -73,6 +73,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
         ]}
       >
         <Stack spacing={2}>
+          <Alert severity="info">Make sure to upload only PDF files with text inside.<br/>Images will not be summarized.</Alert>
           <TextInput
             label="Document Name"
             control={control}

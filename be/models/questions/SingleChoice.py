@@ -9,10 +9,15 @@ class SingleChoice(Question.Question):
     option3 = db.Column(db.String(100), nullable=False)
     option4 = db.Column(db.String(100), nullable=False)
 
+    def to_json(self):
+        json= super().to_json()
+        json["options"]= [self.option1,self.option2,self.option3,self.option4]
+        return json
+
     __mapper_args__ = {
         "polymorphic_identity": QuestionType.SINGLE_CHOICE, 
     }
 
 
     def validate_answer(self, student_answer):
-        return  (10 if self.answer == student_answer else 0)
+        return  {"score":(10 if self.correct_answer == student_answer else 1),"assessment":"","correct_answer":self.correct_answer}

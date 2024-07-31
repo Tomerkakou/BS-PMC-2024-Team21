@@ -8,7 +8,3 @@ class Open(Question.Question):
     __mapper_args__ = {
         "polymorphic_identity": QuestionType.OPEN, 
     }
-
-
-    def validate_answer(self, student_answer):
-        return True #TODO: Implement this method
