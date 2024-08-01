@@ -19,14 +19,12 @@ subject={
     }
 
 @lecturer_blu.get('/getstudents')
-@jwt_required()
 @role("Lecturer")
 def getlecturer(): 
     signed_list = [{'id': user.id, 'name': f'{user.firstName} {user.lastName}', 'email': user.email, 'avatar': user.avatar} for user in current_user.students if user.active]
     return jsonify({'signed':signed_list}), 200
 
 @lecturer_blu.post('/remove-students')
-@jwt_required()
 @role("Lecturer")
 def remove_students():
     students_id = request.get_json()
@@ -35,7 +33,6 @@ def remove_students():
     return 'Students Removed Successfully!', 200
 
 @lecturer_blu.post('/new-document')
-@jwt_required()
 @role("Lecturer")
 def newPdf():
     data=request.get_json()
@@ -54,14 +51,12 @@ def newPdf():
 
 
 @lecturer_blu.get('/getdocuments')
-@jwt_required()
 @role("Lecturer")
 def getdocuments():
     document_list = [{'id': doc.id, 'name': f'{doc.docName}', 'description': doc.description, 'subject': doc.subject.value, 'createdAt':doc.createdAt, 'pages': doc.pages} for doc in current_user.pdf_documents]
     return jsonify({'documents':document_list}), 200
 
 @lecturer_blu.post('/remove-documents')
-@jwt_required()
 @role("Lecturer")
 def remove_documents():
     docs_id = request.get_json()
@@ -72,7 +67,6 @@ def remove_documents():
     return 'Documents Removed Successfully!', 200
     
 @lecturer_blu.post('/new-question')
-@jwt_required()
 @role("Lecturer")
 def newQuestion():
     data=request.get_json()
@@ -114,7 +108,6 @@ def newQuestion():
 
 
 @lecturer_blu.get('/questions')
-@jwt_required()
 @role("Lecturer")
 def get_Questions():
     questions= current_user.questions
@@ -124,7 +117,6 @@ def get_Questions():
     return jsonify(questions_objects),200
     
 @lecturer_blu.post('/remove-questions')
-@jwt_required()
 @role("Lecturer")
 def remove_questions():
     questions_id = request.get_json()

@@ -14,7 +14,6 @@ from be.routes.notification import generateNotification
 student_blu = Blueprint('student',__name__)
 
 @student_blu.get('/getlecturer')
-@jwt_required()
 @role("Student")
 def getlecturer(): 
     exclude_ids = [lecturer.id for lecturer in current_user.lecturers]
@@ -34,7 +33,6 @@ def getlecturer():
     return jsonify({'signed':signed_list,'other':other_list}), 200
 
 @student_blu.post('/add-lecturers')
-@jwt_required()
 @role("Student")
 def add_lecturers():
     lecturer_ids = request.get_json()
@@ -53,7 +51,6 @@ def add_lecturers():
     return jsonify({'ids':[user.id for user in lecturers], 'msg': 'Request Sent Successfully'}), 200
 
 @student_blu.post('/remove-lecturers')
-@jwt_required()
 @role("Student")
 def remove_lecturers():
     lecturers_id = request.get_json()
@@ -63,7 +60,6 @@ def remove_lecturers():
     return 'Lecturers Removed Successfully!', 200
 
 @student_blu.get('/documents')
-@jwt_required()
 @role("Student")
 def get_documents():
     lecturers= current_user.lecturers

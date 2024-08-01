@@ -7,7 +7,6 @@ from be.utils.jwt import role
 admin_blu = Blueprint('admin',__name__)
 
 @admin_blu.get('/getusers')
-@jwt_required()
 @role('Admin')
 def getusers(): 
     users = User.query.filter(User.id != current_user.id).all()
@@ -23,7 +22,6 @@ def getusers():
 
 
 @admin_blu.post('/deactivate-user')
-@jwt_required()
 @role('Admin')
 def nonActiveUser():
     id_list = request.get_json()
@@ -39,7 +37,6 @@ def nonActiveUser():
 
         
 @admin_blu.post('/activate-user')
-@jwt_required()
 @role('Admin')
 def activeUser():
     id_list = request.get_json()

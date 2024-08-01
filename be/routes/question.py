@@ -10,7 +10,6 @@ from sqlalchemy import select
 question_blu = Blueprint('question',__name__)
 
 @question_blu.post('/')
-@jwt_required()
 @role('Student')
 def get_question():
     data = request.json
@@ -53,7 +52,6 @@ def get_question():
 
 
 @question_blu.post('/validate-answer')
-@jwt_required()
 @role('Student')
 def validate_answer():
     data = request.get_json()

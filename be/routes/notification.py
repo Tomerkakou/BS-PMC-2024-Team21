@@ -14,7 +14,6 @@ notify_blu = Blueprint('notify',__name__)
 
 
 @notify_blu.get('/activateUser')
-@jwt_required()
 @role('Admin')
 def activateUser():
     user_id=request.args.get("id")
@@ -29,7 +28,6 @@ def activateUser():
     return "blahblah",200
 
 @notify_blu.get('/studentApproval')
-@jwt_required()
 @role('Lecturer')
 def studentApproval():
     student_id=request.args.get("id")
