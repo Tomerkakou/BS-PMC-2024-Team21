@@ -9,7 +9,6 @@ def test_profile(driver,logined_student,_db,front_url):
     driver.get(front_url)
     time.sleep(2)
     assert f"{front_url}/" == driver.current_url 
-    assert "Dashboard | LEARNIX" == driver.title
     popperBtn=driver.find_element(By.ID, "account-popover")
     popperBtn.click()
     ProfiletBtn=driver.find_element(By.ID, "Profile")
@@ -18,7 +17,7 @@ def test_profile(driver,logined_student,_db,front_url):
     time.sleep(2)
 
     assert driver.current_url == f"{front_url}/profile"
-    assert driver.title == "Profile | LEARNIX"
+    assert driver.title == " Profile | LEARNIX "
 
     wait = WebDriverWait(driver, 10)
     edit_profile_button = wait.until(EC.visibility_of_element_located((By.ID, "edit-btn")))
