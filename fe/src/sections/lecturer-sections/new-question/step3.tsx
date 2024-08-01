@@ -6,7 +6,7 @@ const Step3 = () => {
   return (
     <Box sx={{minHeight:"300px",display:'flex',justifyContent:'center',alignItems:'center',mt:5}}>
         <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column',mb:5}}>
-            <Box sx={{borderRadius:100,
+            {/* <Box sx={{borderRadius:100,
                 bgcolor:(theme)=>theme.palette.success.light,
                 height:"25vh",
                 width:"25vh",
@@ -14,7 +14,8 @@ const Step3 = () => {
             }}
             >
                 <Iconify icon="mdi:sucess-outline" width="10vh"/>
-            </Box>
+            </Box> */}
+            <Iconify icon="flat-color-icons:approval" width="25vh"/>
             <Box>
                 <Typography variant="h4" align='center' sx={{mt:2}}>
                     Question Saved Successfully!

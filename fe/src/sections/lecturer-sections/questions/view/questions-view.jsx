@@ -19,8 +19,9 @@ import TableEmptyRows from 'components/table/table-empty-rows';
 import TableNoData from 'components/table/table-no-data';
 import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import Iconify from "components/iconify";
+import { toast } from 'react-toastify';
 
 
 
@@ -43,7 +44,17 @@ export default function QuestionsView() {
   const [questions,setQuestions] = useState([]);
 
   const [loading,setLoading] = useState(true);
+  
   const navigate=useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.message) {
+      console.log(location.state.message);
+      toast.error(location.state.message);
+    }
+  }, [location]);
+
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -56,9 +67,7 @@ export default function QuestionsView() {
     (async ()=>{
       try{
         const response=await axios.get("/lecturer/questions")
-        console.log(response.data);
         setQuestions(response.data);
-        // setOtherLecturers(response.data.other)
         setLoading(false)
       }
       catch(e){

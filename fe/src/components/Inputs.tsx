@@ -1,6 +1,5 @@
 import { Autocomplete, Checkbox, CircularProgress, createFilterOptions, darken, FilterOptionsState, FormControlLabel, InputProps, lighten, styled, SxProps, TextField, TextFieldVariants } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { read } from 'fs';
 import { MuiFileInput } from 'mui-file-input';
 import React, { useEffect } from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
@@ -20,10 +19,11 @@ interface TextInputProps {
     type?: string;
     multiline?: number;
     id?:string;
+    helperText?:string;
 }
 
 // TextInput component
-const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,readonly ,InputProps, sx, disabled,id, multiline,variant = "outlined", size = "medium",type="text" }) => {
+const TextInput: React.FC<TextInputProps> = ({ control, helperText,rules, label, fieldName,readonly ,InputProps, sx, disabled,id, multiline,variant = "outlined", size = "medium",type="text" }) => {
     return (
         <Controller
             name={fieldName}
@@ -39,7 +39,7 @@ const TextInput: React.FC<TextInputProps> = ({ control, rules, label, fieldName,
                     id={id}
                     required={Boolean(rules?.required)}
                     error={Boolean(fieldState.error)}
-                    helperText={fieldState.error?.message}
+                    helperText={fieldState.invalid ? fieldState.error?.message : helperText}
                     InputProps={InputProps}
                     disabled={disabled}
                     inputProps={{
@@ -149,9 +149,10 @@ const SelectInput: React.FC<SelectInputProps> = ({
     getOptionKey,
     createable,
     id,
+    helperText,
     readonly,
     variant = "outlined",
-    size = "medium"
+    size = "medium",
 }) => {
 
     useEffect(() => {
@@ -234,7 +235,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
                             variant={variant}
                             size={size}
                             error={Boolean(fieldState.error)}
-                            helperText={fieldState.error?.message}
+                            helperText={fieldState.invalid ? fieldState.error?.message : helperText}
                             InputProps={{
                                 ...params.InputProps,
                                 ...InputProps,

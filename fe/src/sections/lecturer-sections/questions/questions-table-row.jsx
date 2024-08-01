@@ -1,19 +1,17 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import LoadingButton from '@mui/lab/LoadingButton';
 import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import Iconify from 'components/iconify';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-
 
 
 // ----------------------------------------------------------------------
@@ -28,25 +26,29 @@ export default function QuestionsTableRow({
   id,
   handleDeleteQuestions
 }) {
+  const [open, setOpen] = useState(null);
+  const navigate=useNavigate()
 
-  const [loading,setLoading]=useState(false);
+  const handleOpenMenu = (event) => {
+    setOpen(event.currentTarget);
+  };
 
-  const handleBtnClick= async ()=>{
-    setLoading(true)
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
+  const handleDeleteClick= async ()=>{
+    handleCloseMenu()
     try{
-      //delete lecturer
       const response = await axios.post(`/lecturer/remove-questions`,[id])
       handleDeleteQuestions([id])
       toast.success(response.data)
     }catch(e){
       console.error(e)
     }
-    finally{
-      setLoading(false)
-    }
   }
- 
 
+ 
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -82,20 +84,37 @@ export default function QuestionsTableRow({
         </TableCell>
 
         <TableCell align="right">
-          <LoadingButton onClick={handleBtnClick} loading={loading} color="success">
-            <Iconify icon="mdi:question-answer" />
-          </LoadingButton>
-          <LoadingButton onClick={handleBtnClick} loading={loading}>
-            <Iconify icon="mdi:edit-outline" />
-          </LoadingButton>
-          <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
-            <Iconify icon="mdi:trash-can-empty" />
-          </LoadingButton>
+          <IconButton onClick={handleOpenMenu}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
         </TableCell>
-
-
       </TableRow>
-       
+
+      <Popover
+        open={!!open}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: { width: 140 },
+        }}
+      >
+        <MenuItem onClick={handleCloseMenu}>
+          <Iconify icon="mdi:question-answer" sx={{ mr: 2 }} />
+          Answers
+        </MenuItem>
+
+        <MenuItem onClick={()=>navigate(`/edit-question/${id}`)}>
+          <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
+          Edit
+        </MenuItem>
+
+        <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
+          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
+          Delete
+        </MenuItem>
+      </Popover>
   
     </>
   );

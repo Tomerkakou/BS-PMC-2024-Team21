@@ -1,6 +1,5 @@
 import { CodeiumEditor } from '@codeium/react-code-editor';
 import { Box, CircularProgress } from '@mui/material';
-import { read } from 'fs';
 import React from 'react';
 
 const languageMapper:Record<string,string> = {
@@ -18,11 +17,10 @@ interface CodeEditorProps {
     defaultValue?:string;
     startComment?:string;
     onChange?:any;
-    id?:string
     readOnly?:boolean;
 }
 
-const CodeEditor:React.FC<CodeEditorProps> = ({language,value,onChange,readOnly,id,theme="vs-dark"}) => {
+const CodeEditor:React.FC<CodeEditorProps> = ({language,value,onChange,readOnly,theme="vs-dark"}) => {
 
     const handleRemoveG=() => {
         const elements = document.getElementsByTagName('g');

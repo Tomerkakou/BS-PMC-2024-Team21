@@ -12,9 +12,10 @@ interface FormValues {
 
 interface Step1Props {
     saveStep: (data: FormValues) => void;
+    edit: boolean;
 }
 
-const Step1:React.FC<Step1Props> = ({saveStep}) => {
+const Step1:React.FC<Step1Props> = ({saveStep,edit}) => {
     const {getValues}=useFormContext();
     const {control,handleSubmit}=useForm<FormValues>({
         defaultValues:getValues("step1"),
@@ -39,6 +40,8 @@ const Step1:React.FC<Step1Props> = ({saveStep}) => {
             />
             <SelectInput fieldName="qtype" label="Question Type" control={control} options={["Single Choice","Open","Coding"]}
                 rules={{required:'Question Type is required'}}
+                readonly={edit}
+                helperText={edit ? "Question Type cannot be changed after creation" : undefined}
             />
         </Stack>
         <Stack direction='row' spacing={2} sx={{

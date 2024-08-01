@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from be.models import SubjectsEnum, db
 from flask_jwt_extended import  jwt_required, current_user
+from be.models.questions.Question import Question
 from be.utils.jwt import role
 from be.models.PdfDocument import PdfDocument
 from be.models.questions.Coding import Coding
@@ -9,6 +10,13 @@ from be.models.questions.SingleChoice import SingleChoice
 
 lecturer_blu = Blueprint('lecturer',__name__)
 
+subject={
+        "C#": SubjectsEnum.CSHARP,
+        "Java": SubjectsEnum.Java,
+        "Python": SubjectsEnum.Python,
+        "JavaScript": SubjectsEnum.JavaScript,
+        "SQL" : SubjectsEnum.SQL
+    }
 
 @lecturer_blu.get('/getstudents')
 @jwt_required()
@@ -68,13 +76,6 @@ def remove_documents():
 @role("Lecturer")
 def newQuestion():
     data=request.get_json()
-    subject={
-        "C#": SubjectsEnum.CSHARP,
-        "Java": SubjectsEnum.Java,
-        "Python": SubjectsEnum.Python,
-        "JavaScript": SubjectsEnum.JavaScript,
-        "SQL" : SubjectsEnum.SQL
-    }
     if data['qtype']=="Single Choice":
         question = SingleChoice(question=data['question'], 
                                 subject=subject[data['subject']], 
@@ -134,3 +135,67 @@ def remove_questions():
     if (questions_to_delete.__len__() >1):
         return 'Questions Removed Successfully!', 200
     return 'Question Removed Successfully!', 200
+
+
+@lecturer_blu.get('/question/<int:id>')
+@role("Lecturer")
+def get_question(id):
+    question = Question.query.filter_by(id=id, lecturer_id=current_user.id).first()
+    if question is None:
+        return 'Question not found!', 404
+    
+    step1={
+        "shortDescription":question.shortDescription,
+        "level":question.level.value,
+        "subject":question.subject.value,
+        "qtype":question.qtype.value
+    }
+    if question.qtype.value=="Single Choice":
+        step2={
+            "question":question.question,
+            "correct_answer":question.correct_answer,
+            "option1":question.option1,
+            "option2":question.option2,
+            "option3":question.option3,
+            "option4":question.option4
+        }
+    elif question.qtype.value=="Open":
+        step2={
+            "question":question.question,
+            "correct_answer":question.correct_answer
+        }
+    else:
+        step2={
+            "question":question.question,
+            "correct_answer":question.correct_answer,
+            "template":question.template
+        }
+
+    return jsonify({"step1":step1,"step2":step2}), 200
+
+@lecturer_blu.patch('/question/<int:id>')
+@role("Lecturer")
+def patch_question(id):
+    question = Question.query.filter_by(id=id, lecturer_id=current_user.id).first()
+    if question is None:
+        return 'Question not found!', 404
+    
+    data=request.get_json()
+    question.shortDescription=data['shortDescription']
+    question.level=data['level']
+    question.subject=subject[data['subject']]
+    question.question=data['question']
+    question.correct_answer=data['correct_answer']
+
+    if question.qtype.value=="Single Choice":
+        question.option1=data['correct_answer']
+        question.option2=data['option2']
+        question.option3=data['option3']
+        question.option4=data['option4']
+    elif question.qtype.value=="Coding":
+        question.template=data['template']
+
+    db.session.commit()
+    return 'Question updated successfully!', 200
+
+

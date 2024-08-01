@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
     with app.app_context():
         print("Creating database tables...")
-        db.drop_all()
+        #db.drop_all()
         db.create_all()
         print("Tables created successfully.")
 

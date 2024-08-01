@@ -22,6 +22,7 @@ export const StudentPage =lazy(() => import('pages/lecturer/student'));
 export const DocumentsPage=lazy(() => import('pages/lecturer/documents'));
 export const StudentDocs=lazy(() => import('pages/student/docs'));
 export const NewQuestionPage=lazy(() => import('pages/lecturer/new-question'));
+export const EditQuestionPage=lazy(() => import('pages/lecturer/edit-question'));
 export const QuestionsPage=lazy(() => import('pages/lecturer/questions'));
 export const QuestionSessionPage=lazy(() => import('pages/student/question-session'));
 
@@ -70,7 +71,8 @@ export default function Router() {
           { path: 'students', element : <StudentPage/> },
           { path: 'documents', element : <DocumentsPage/> },
           { path: 'questions', element : <QuestionsPage/> },
-          { path: 'new-question', element : <NewQuestionPage/> }
+          { path: 'new-question', element : <NewQuestionPage/> },
+          { path: 'edit-question/:id', element : <EditQuestionPage/>  },
         ]
       default:
         throw new Error('invalid role')
