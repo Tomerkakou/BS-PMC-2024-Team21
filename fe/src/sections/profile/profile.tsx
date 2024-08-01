@@ -19,6 +19,7 @@ import { FileInput, TextInput } from "components/Inputs";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
+import { UserModel } from "auth";
 
 interface FormValues {
   email: string;
@@ -26,14 +27,6 @@ interface FormValues {
   lastName: string;
   avatar: string;
   image: File;
-}
-interface UserModel {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  avatar: string;
-  role: string;
 }
 
 export const Profile = () => {
@@ -83,15 +76,21 @@ export const Profile = () => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{ p: 2 }}>
       <Grid item xs={12} md={8}>
         <Stack spacing={3}>
           <Stack direction="row" spacing={3}>
             <Typography variant="h3">Profile</Typography>
             <IconButton
+              id="edit-btn"
               onClick={() => {
                 setUpadteFlag(!updateFlag);
-                reset();
+                reset({
+                  email: currentUser?.email,
+                  firstName: currentUser?.firstName as string,
+                  lastName: currentUser?.lastName as string,
+                  avatar: currentUser?.avatar,
+                });
               }}
             >
               {updateFlag ? (
@@ -104,6 +103,7 @@ export const Profile = () => {
           {updateFlag && (
             <>
               <TextInput
+                id="email-field"
                 control={control}
                 label="Email"
                 fieldName="email"
@@ -121,6 +121,7 @@ export const Profile = () => {
               />
               <TextInput
                 control={control}
+                id="first-name-field"
                 label="First Name"
                 fieldName="firstName"
                 rules={{
@@ -135,6 +136,7 @@ export const Profile = () => {
                 control={control}
                 label="Last Name"
                 fieldName="lastName"
+                id="last-name-field"
                 rules={{
                   required: "Last Name is required!",
                   maxLength: {
@@ -209,6 +211,7 @@ export const Profile = () => {
               <LoadingButton
                 fullWidth
                 size="large"
+                id="update-profile-btn"
                 type="submit"
                 variant="contained"
                 color="inherit"

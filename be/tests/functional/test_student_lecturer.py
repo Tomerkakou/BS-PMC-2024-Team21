@@ -30,6 +30,14 @@ def test_get_students(client,_db,auth_lecturer,lecturer,student):
         assert len(data) == 1
         assert student in lecturer.students
 
+def test_get_lecturers(client,_db,auth_student,student):
+    with client:
+        response = client.get('/api/student/getlecturer', headers={
+        'Authorization': f'Bearer {auth_student["accessToken"]}'})
+        data=response.get_json()["signed"]
+        assert response.status_code == 200
+        assert len(data)==1
+
 
 def test_get_docs(client,_db,auth_student,lecturer):
     pdf=PdfDocument(subject = SubjectsEnum.JavaScript,docName="nir",description="aaaa",doc="dsfs" ,pages=0,lecturer_id=lecturer.id )
@@ -60,6 +68,7 @@ def test_remove_lecturer(client,_db,auth_student,lecturer,student):
         'Authorization': f'Bearer {auth_student["accessToken"]}'})
         assert response.status_code == 200
         assert lecturer not in student.lecturers
+
 
 
 
