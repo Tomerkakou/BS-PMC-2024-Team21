@@ -56,6 +56,11 @@ export default function NotificationsPopover() {
         });
         break;
       case "Student":
+        socket.on("new-document", (msg) => {
+          if (msg.id === currentUser.id) {
+            setNotifications((prev) => [msg.nft, ...prev]);
+          }
+        });
         break;
       case "Lecturer":
 
@@ -72,9 +77,8 @@ export default function NotificationsPopover() {
     });
     return () => {
       socket.off("verifyUser");
-
       socket.off("VerifyStudent");
-
+      socket.off("new-document");
       socket.off("deleteNotification");
       socket.disconnect();
     };
@@ -265,6 +269,34 @@ function renderContent(notification: NotificationItemProps) {
               }
             >
               <Iconify icon="eva:checkmark-fill" />
+            </IconButton>
+          </Box>
+        </Typography>
+      ),
+    };
+  }
+  if (notification.type === "NewDocument") {
+    return {
+      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_mail.svg" />,
+      title: (
+        <Typography variant="subtitle2">
+          {notification.title}
+          <Typography
+            component="span"
+            variant="body2"
+            sx={{ color: "text.secondary" }}
+          >
+            &nbsp; <br />
+            {notification.message}
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "end" }}>
+            <IconButton
+              color="error"
+              onClick={() =>
+                axios.get("/notification/dismiss?id=" + notification.id)
+              }
+            >
+              <Iconify icon="eva:close-fill" />
             </IconButton>
           </Box>
         </Typography>

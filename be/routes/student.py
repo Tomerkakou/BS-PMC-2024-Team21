@@ -3,13 +3,12 @@ import io
 from flask import Blueprint, jsonify, request, send_file
 from sqlalchemy import not_
 from be.models import db
-from flask_jwt_extended import  jwt_required, current_user
+from flask_jwt_extended import  current_user
 from be.models.PdfDocument import PdfDocument
 from be.models.User import Lecturer
 from be.utils.jwt import role
 from be.models.Notification import Notification, NotificationType
 from be.utils.socketio import socketio
-from be.routes.notification import generateNotification
 
 student_blu = Blueprint('student',__name__)
 
@@ -47,7 +46,7 @@ def add_lecturers():
         )
         db.session.add(nft)
         db.session.commit()
-        socketio.emit('VerifyStudent', {'id':lecture.id, 'nft': generateNotification(nft)})
+        socketio.emit('VerifyStudent', {'id':lecture.id, 'nft': nft.to_json()})
     return jsonify({'ids':[user.id for user in lecturers], 'msg': 'Request Sent Successfully'}), 200
 
 @student_blu.post('/remove-lecturers')

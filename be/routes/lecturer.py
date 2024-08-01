@@ -1,7 +1,9 @@
 from flask import Blueprint, jsonify, request
 from be.models import SubjectsEnum, db
-from flask_jwt_extended import  jwt_required, current_user
+from flask_jwt_extended import current_user
+from be.models.Notification import Notification, NotificationType
 from be.models.questions.Question import Question
+from be.utils.socketio import socketio
 from be.utils.jwt import role
 from be.models.PdfDocument import PdfDocument
 from be.models.questions.Coding import Coding
@@ -42,10 +44,21 @@ def newPdf():
         pdf.init_pages_summarize()
         db.session.add(pdf)
         db.session.commit()
+        for student in current_user.students:
+            notification = Notification(
+                title=f'{current_user.fullName} Uploaded Document!',
+                msg=f'{current_user.fullName} Uploaded a new document called {pdf.docName} in {pdf.subject.value} go and check it out!',
+                users=[student],
+                type=NotificationType.NewDocument,
+            )
+            db.session.add(notification)
+            db.session.commit()
+            socketio.emit('new-document',{"id":student.id,"nft":notification.to_json()})
         return jsonify({"name":pdf.docName,
                         "description":pdf.description,
                         "subject":pdf.subject.value,}), 200
-    except:
+    except Exception as e:
+        print(e)
         db.session.rollback()
         return 'Invalid file please check you file and try again!', 400
 

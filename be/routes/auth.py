@@ -6,7 +6,6 @@ from be.models import db
 from be.models.Notification import Notification, NotificationType
 from be.models.Token import Token, TokenTypeEnum
 from be.models.User import Lecturer, RoleEnum, Student, User
-from be.routes.notification import generateNotification
 from be.utils.socketio import socketio
 from be.utils.emails.email import sendEmail
 
@@ -70,7 +69,7 @@ def verifyEmail():
             )
             db.session.add(nft)
             db.session.commit()
-            socketio.emit('verifyUser', generateNotification(nft))
+            socketio.emit('verifyUser', nft.to_json())
     return redirect(current_app.config['FRONT_URL'])
 
     

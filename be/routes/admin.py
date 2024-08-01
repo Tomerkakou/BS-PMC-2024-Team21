@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from be.models.User import User
 from be.models import db
-from flask_jwt_extended import  jwt_required, current_user
+from flask_jwt_extended import  current_user
 from be.utils.jwt import role
 
 admin_blu = Blueprint('admin',__name__)

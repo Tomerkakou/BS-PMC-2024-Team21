@@ -1,5 +1,3 @@
-
-
 from flask import Blueprint, request, jsonify
 from be.models.Notification import Notification,NotificationType
 from be.models.User import User
@@ -57,18 +55,7 @@ def dismiss_notification():
 @notify_blu.get('/load-all')
 @jwt_required()
 def load_notifications():
-    notifications=[generateNotification(n) for n in current_user.notifications]
+    notifications=[n.to_json() for n in current_user.notifications]
     return jsonify(notifications),200   
 
-
-def generateNotification(nft):
-    return {
-                "title" : nft.title,
-                "message": nft.msg,
-                "type":nft.type.value,
-                "belongTo" : nft.belongTo.id,
-                "id":nft.id,
-                "avatar":nft.belongTo.avatar,
-                "createdAt":nft.createdAt.strftime('%Y-%m-%d %H:%M:%S')
-            }
 
