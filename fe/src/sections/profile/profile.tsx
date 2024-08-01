@@ -19,6 +19,7 @@ import { FileInput, TextInput } from "components/Inputs";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
+import { UserModel } from "auth";
 
 interface FormValues {
   email: string;
@@ -26,14 +27,6 @@ interface FormValues {
   lastName: string;
   avatar: string;
   image: File;
-}
-interface UserModel {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  avatar: string;
-  role: string;
 }
 
 export const Profile = () => {
