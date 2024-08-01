@@ -2,7 +2,6 @@ import random
 from flask import Blueprint, jsonify, request
 from be.models import  db
 from flask_jwt_extended import  jwt_required, current_user
-from be.models.User import Lecturer, Student
 from be.models.questions.Question import Question
 from be.models.questions.StudentQuestion import StudentQuestion
 from be.utils.jwt import role

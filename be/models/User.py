@@ -23,10 +23,10 @@ class User(db.Model):
     verifiedEmail=db.Column(db.Boolean,nullable=False,default=False)
     active = db.Column(db.Boolean,nullable=False,default=False)
     avatar = db.Column(LONGTEXT,nullable=False)
-    tokens = db.relationship('Token', backref='user', lazy=False)
-    _ = db.relationship('Notification', backref='belongTo', lazy=True)
     notifications = db.relationship('Notification', secondary = 'user_notification', back_populates = 'users')
-    
+    tokens = db.relationship('Token', back_populates='user',cascade='all, delete-orphan')
+    _=db.relationship('Notification', back_populates='belongTo',cascade='all, delete-orphan')
+
     __mapper_args__ = {
         "polymorphic_identity": RoleEnum.Admin,
         "polymorphic_on": role,
@@ -47,7 +47,8 @@ class User(db.Model):
 class Student(User):
     id = db.Column(db.String(50), db.ForeignKey("user.id"), primary_key=True)
     lecturers = db.relationship('Lecturer', secondary = 'student_lecturer', back_populates = 'students')
-    students_questions = db.relationship('StudentQuestion', back_populates='student', lazy=True)
+    students_questions = db.relationship('StudentQuestion', back_populates='student',cascade='all, delete-orphan')
+    
     __mapper_args__ = {
         "polymorphic_identity":  RoleEnum.Student,
     }
@@ -56,9 +57,8 @@ class Student(User):
 class Lecturer(User):
     id = db.Column(db.String(50), db.ForeignKey("user.id"), primary_key=True)
     students = db.relationship('Student', secondary = 'student_lecturer', back_populates = 'lecturers')
-    questions= db.relationship('Question', backref='user', lazy=True, cascade="all, delete")
-    pdf_documents = db.relationship('PdfDocument', backref='user', lazy=True)
-    questions = db.relationship('Question', backref='user', lazy=True)
+    questions = db.relationship('Question', back_populates='lecturer',cascade='all, delete-orphan')
+    pdf_documents = db.relationship('PdfDocument', back_populates='lecturer',cascade='all, delete-orphan')
     __mapper_args__ = {
         "polymorphic_identity":  RoleEnum.Lecturer,
     }
@@ -66,6 +66,6 @@ class Lecturer(User):
 
 student_lecturer = db.Table(
   'student_lecturer',
-  db.Column('student_id', db.String(50), db.ForeignKey('student.id')),
-  db.Column('lecturer_id', db.String(50), db.ForeignKey('lecturer.id'))
+  db.Column('student_id', db.String(50), db.ForeignKey('student.id', ondelete='CASCADE')),
+  db.Column('lecturer_id', db.String(50), db.ForeignKey('lecturer.id', ondelete='CASCADE'))
 )

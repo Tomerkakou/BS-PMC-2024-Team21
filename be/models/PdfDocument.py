@@ -4,7 +4,7 @@ from sqlalchemy.dialects.mysql import LONGTEXT
 import base64
 import io
 from pypdf import PdfReader
-
+from sqlalchemy.orm import backref
 from be.utils.chatgpt import Assitant
 
 
@@ -17,8 +17,9 @@ class PdfDocument(db.Model):
     pages=db.Column(db.Integer, nullable=False,default=0)
     doc = db.Column(LONGTEXT, nullable=False)
     lecturer_id = db.Column(db.String(50), db.ForeignKey("lecturer.id", ondelete='CASCADE'), nullable=False)
-    pagesSummarize = db.relationship('PageSummarize', backref='pdf_document', lazy=True, cascade="all, delete-orphan", passive_deletes=True)
-
+    lecturer = db.relationship('Lecturer', back_populates='pdf_documents')
+    pagesSummarize = db.relationship('PageSummarize', back_populates='pdf_document',cascade='all, delete-orphan')
+    
     def init_pages_summarize(self):
         pdf_file = io.BytesIO(base64.b64decode(self.doc.replace('data:application/pdf;base64,', '')))
         reader= PdfReader(pdf_file)  
@@ -38,5 +39,6 @@ class PdfDocument(db.Model):
 class PageSummarize(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pdf_document_id = db.Column(db.Integer, db.ForeignKey("pdf_document.id", ondelete='CASCADE'), nullable=False)
+    pdf_document = db.relationship('PdfDocument', back_populates='pagesSummarize')
     page = db.Column(db.Integer, nullable=False)
     summary = db.Column(db.Text, nullable=False)

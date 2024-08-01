@@ -72,7 +72,7 @@ def get_documents():
     for lecturer in lecturers:
         documents+=lecturer.pdf_documents
     for doc in documents:
-        documents_objects.append({'id':doc.id, 'name':doc.docName, 'description':doc.description, 'subject':doc.subject.value ,'date':doc.createdAt, 'lecturer':doc.user.fullName})
+        documents_objects.append({'id':doc.id, 'name':doc.docName, 'description':doc.description, 'subject':doc.subject.value ,'date':doc.createdAt, 'lecturer':doc.lecturer.fullName})
     return jsonify(documents_objects),200
 
 @student_blu.get('/document/<int:doc_id>')

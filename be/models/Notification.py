@@ -1,7 +1,7 @@
 import enum
 from be.models import db
 from datetime import datetime
-
+from sqlalchemy.orm import backref
 
 class NotificationType(enum.Enum):
     VerifyUser = 'VerifyUser'
@@ -15,6 +15,7 @@ class Notification(db.Model):
     createdAt=db.Column(db.DateTime, default=datetime.now())
     type = db.Column(db.Enum(NotificationType))
     belongToId = db.Column(db.String(50), db.ForeignKey("user.id",ondelete='CASCADE'), nullable=True)
+    belongTo = db.relationship('User', back_populates='_')
     users = db.relationship('User', secondary = 'user_notification', back_populates = 'notifications')
 
 user_notification = db.Table(

@@ -16,7 +16,5 @@ def test_new_question(client,auth_lecturer,_db):
         question=Question.query.filter_by(shortDescription="dsasdasd").first()
         assert response.status_code == 200
         assert question is not None
-        _db.session.delete(question)
-        _db.session.commit()
 
                

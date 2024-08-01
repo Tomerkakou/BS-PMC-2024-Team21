@@ -1,10 +1,9 @@
 from datetime import datetime
-
 from flask import json
 from be.models import SubjectsEnum, db
 from sqlalchemy import Enum
 from be.models.questions import DificultyLevel, QuestionType
-
+from sqlalchemy.orm import backref
 from be.utils.chatgpt import Assitant
 
 class Question(db.Model):
@@ -18,9 +17,8 @@ class Question(db.Model):
     qtype=db.Column(Enum(QuestionType),nullable=False)
     createdAt = db.Column(db.DateTime, nullable=False,default=datetime.now())
     lecturer_id = db.Column(db.String(50), db.ForeignKey("lecturer.id", ondelete='CASCADE'), nullable=False)
-
-    students_questions = db.relationship('StudentQuestion', back_populates='question', lazy=True)
-    
+    lecturer = db.relationship('Lecturer', back_populates='questions')
+    students_questions = db.relationship('StudentQuestion', back_populates='question',cascade='all, delete-orphan')
     __mapper_args__ = {
         "polymorphic_on": qtype,
     }
