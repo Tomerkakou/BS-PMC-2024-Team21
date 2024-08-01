@@ -23,3 +23,4 @@ def test_get_documents(client,_db,auth_lecturer,lecturer,student):
         assert response.status_code == 200        
         data = response.get_json()
         assert len(data) == 1
+
