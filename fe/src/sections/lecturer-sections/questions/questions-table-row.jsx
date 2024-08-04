@@ -100,8 +100,8 @@ export default function QuestionsTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
-          <Iconify icon="mdi:question-answer" sx={{ mr: 2 }} />
+        <MenuItem onClick={()=>navigate(`/questions/assasment?id=${id}&by=question`)}>
+          <Iconify icon="mdi:chat-plus-outline" sx={{ mr: 2 }} />
           Answers
         </MenuItem>
 

@@ -7,6 +7,7 @@ class NotificationType(enum.Enum):
     VerifyUser = 'VerifyUser'
     VerifyStudent = 'VerifyStudent'
     NewDocument = 'NewDocument'
+    Assasment='Assasment'
 
 
 class Notification(db.Model):

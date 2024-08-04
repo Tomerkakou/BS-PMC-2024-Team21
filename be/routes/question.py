@@ -2,8 +2,11 @@ import random
 from flask import Blueprint, jsonify, request
 from be.models import  db
 from flask_jwt_extended import  current_user
+from be.models.Notification import Notification, NotificationType
+from be.models.questions import QuestionType
 from be.models.questions.Question import Question
 from be.models.questions.StudentQuestion import StudentQuestion
+from be.utils.socketio import socketio
 from be.utils.jwt import role
 from sqlalchemy import select
 
@@ -60,10 +63,70 @@ def validate_answer():
     question = Question.query.get_or_404(question_id)
     try:
         result = question.validate_answer(student_answer)
-        student_question = StudentQuestion(student_id=current_user.id,question_id=question_id,score=result["score"],auto_assessment=result["assessment"])
+        student_question = StudentQuestion(student_id=current_user.id,
+                                           question_id=question_id,
+                                           score=result["score"],
+                                           auto_assessment=result["assessment"],
+                                           answer=student_answer)
         db.session.add(student_question)
         db.session.commit()
         return jsonify(result) ,200
     except Exception as e:
         print(e)
         return "An Error Occured Please Try Again Later :(",400
+    
+
+@question_blu.get('/answered')
+@role('Lecturer')
+def answered_questions():
+    query = (select(StudentQuestion)
+                .join(Question,Question.id==StudentQuestion.question_id)
+                .where(Question.lecturer_id==current_user.id)
+                .where(Question.qtype!=QuestionType.SINGLE_CHOICE)
+                .where(StudentQuestion.student_id.in_([s.id for s in current_user.students]))
+            )
+    
+    id = request.args.get('id',None)
+    by= request.args.get('by',None)
+    if(by=="student" and id is not None):
+        query = query.where(StudentQuestion.student_id==id)
+    elif(by=="question" and id is not None):
+        id=int(id)
+        query = query.where(Question.id==id)
+    elif by is not None:
+        return "Invalid Request!",400
+    
+
+    questions = db.session.scalars(query.order_by(StudentQuestion.createdAt.desc())).all()
+
+    return jsonify([{
+        "answer_id":q.id,
+        "student_name":q.student.fullName,
+        "question":q.question.question,
+        "answer":q.answer,
+        "auto_assasment":q.auto_assessment,
+        "score":q.score,
+        "level":q.question.level.value,
+        "subject":q.question.subject.value,
+        "qtype":q.question.qtype.value,
+        "assasment":q.lecturer_assessment or '',
+        "createdAt":q.createdAt
+    } for q in questions]),200
+
+@question_blu.post('/assasment/<int:id>')
+@role('Lecturer')
+def assasment(id):
+    data = request.get_json()
+    student_question = db.session.get(StudentQuestion,id)
+    if student_question is None:
+        return "Question Not Found!",404
+    student_question.lecturer_assessment = data.get('assasment')
+    student_question.score = data.get('score')
+    db.session.commit()
+
+    nft=Notification(title="Assasment Updated",msg=f"Your Assasment For {student_question.question.shortDescription} has been updated by {current_user.fullName}!",type=NotificationType.Assasment,users=[student_question.student])
+    db.session.add(nft)
+    db.session.commit()
+    socketio.emit('new-assasment',{"id":student_question.student.id,"nft":nft.to_json()})
+
+    return "Assasment Updated Successfully!",200

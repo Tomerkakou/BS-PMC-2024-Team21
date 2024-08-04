@@ -61,6 +61,11 @@ export default function NotificationsPopover() {
             setNotifications((prev) => [msg.nft, ...prev]);
           }
         });
+        socket.on("new-assasment", (msg) => {
+          if (msg.id === currentUser.id) {
+            setNotifications((prev) => [msg.nft, ...prev]);
+          }
+        });
         break;
       case "Lecturer":
 
@@ -79,6 +84,7 @@ export default function NotificationsPopover() {
       socket.off("verifyUser");
       socket.off("VerifyStudent");
       socket.off("new-document");
+      socket.off("new-assasment");
       socket.off("deleteNotification");
       socket.disconnect();
     };
@@ -278,6 +284,34 @@ function renderContent(notification: NotificationItemProps) {
   if (notification.type === "NewDocument") {
     return {
       avatar: <img alt={notification.title} src="/assets/icons/ic_notification_mail.svg" />,
+      title: (
+        <Typography variant="subtitle2">
+          {notification.title}
+          <Typography
+            component="span"
+            variant="body2"
+            sx={{ color: "text.secondary" }}
+          >
+            &nbsp; <br />
+            {notification.message}
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "end" }}>
+            <IconButton
+              color="error"
+              onClick={() =>
+                axios.get("/notification/dismiss?id=" + notification.id)
+              }
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          </Box>
+        </Typography>
+      ),
+    };
+  }
+  if (notification.type === "Assasment") {
+    return {
+      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_chat.svg" />,
       title: (
         <Typography variant="subtitle2">
           {notification.title}

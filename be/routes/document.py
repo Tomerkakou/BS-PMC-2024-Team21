@@ -10,7 +10,6 @@ def get_document(doc_id):
     pdf=db.session.get(PdfDocument,doc_id)
     if pdf is None:
         return "Document not found",404
-    print(pdf.lecturer.students,current_user)
     if pdf.lecturer_id!=current_user.id and (current_user not in pdf.lecturer.students):
         return "Permission denied",403
     

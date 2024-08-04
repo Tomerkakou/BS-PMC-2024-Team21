@@ -12,5 +12,6 @@ class StudentQuestion(db.Model):
     score = db.Column(db.Float, nullable=False)
     auto_assessment = db.Column(db.Text, nullable=True)
     lecturer_assessment = db.Column(db.Text, nullable=True)
+    answer = db.Column(db.Text, nullable=False)
     student = db.relationship('Student', back_populates='students_questions')
     question = db.relationship('Question', back_populates='students_questions')

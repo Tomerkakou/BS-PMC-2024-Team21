@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import Iconify from 'components/iconify';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,7 @@ export default function StudentTableRow({
 }) {
 
   const [loading,setLoading]=useState(false);
+  const navigate=useNavigate();
 
   const handleBtnClick= async ()=>{
     setLoading(true)
@@ -61,8 +63,8 @@ export default function StudentTableRow({
         <TableCell>{email}</TableCell>
 
         <TableCell align="right">
-          <LoadingButton onClick={handleBtnClick} loading={loading}>
-            <Iconify icon="mdi:comment-question" />
+          <LoadingButton onClick={()=>navigate(`/questions/assasment?id=${id}&by=student`)} loading={loading}>
+            <Iconify icon="mdi:chat-plus-outline" />
           </LoadingButton>
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
             <Iconify icon="eva:person-delete-outline" />

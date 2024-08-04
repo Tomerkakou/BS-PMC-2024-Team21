@@ -5,6 +5,7 @@ import DashboardLayout from 'layouts/dashboard';
 import AuthLayout from 'layouts/auth';
 import { useAuth } from 'auth';
 
+
 export const IndexAdminPage = lazy(() => import('pages/admin/app'));
 export const IndexLecturerPage = lazy(() => import('pages/lecturer/app'));
 export const IndexStudentPage = lazy(() => import('pages/student/app'));
@@ -26,6 +27,7 @@ export const EditQuestionPage=lazy(() => import('pages/lecturer/edit-question'))
 export const QuestionsPage=lazy(() => import('pages/lecturer/questions'));
 export const QuestionSessionPage=lazy(() => import('pages/student/question-session'));
 export const DocumentPage=lazy(() => import('pages/document'));
+export const QuestionAssasmentPage=lazy(() => import('pages/lecturer/assasment-question'));
 
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
@@ -72,7 +74,10 @@ export default function Router() {
           { element: <IndexLecturerPage />, index: true },
           { path: 'students', element : <StudentPage/> },
           { path: 'documents', element : <DocumentsPage/> },
-          { path: 'questions', element : <QuestionsPage/> },
+          { path: 'questions', children:[
+            {element:<QuestionsPage/>,index:true},
+            {path:'assasment',element:<QuestionAssasmentPage/>}
+          ] },
           { path: 'new-question', element : <NewQuestionPage/> },
           { path: 'edit-question/:id', element : <EditQuestionPage/>  },
           { path: 'document/:id', element: <DocumentPage /> },
