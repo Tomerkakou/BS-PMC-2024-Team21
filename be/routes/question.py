@@ -82,7 +82,6 @@ def answered_questions():
     query = (select(StudentQuestion)
                 .join(Question,Question.id==StudentQuestion.question_id)
                 .where(Question.lecturer_id==current_user.id)
-                .where(Question.qtype!=QuestionType.SINGLE_CHOICE)
                 .where(StudentQuestion.student_id.in_([s.id for s in current_user.students]))
             )
     
@@ -98,7 +97,6 @@ def answered_questions():
     
 
     questions = db.session.scalars(query.order_by(StudentQuestion.createdAt.desc())).all()
-
     return jsonify([{
         "answer_id":q.id,
         "student_name":q.student.fullName,
