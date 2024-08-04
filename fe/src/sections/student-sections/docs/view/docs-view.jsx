@@ -18,7 +18,8 @@ import DocsTableToolbar from '../docs-table-toolbar';
 import TableEmptyRows from 'components/table/table-empty-rows';
 import TableNoData from 'components/table/table-no-data';
 import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
-
+import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 
 // ----------------------------------------------------------------------
@@ -37,7 +38,14 @@ export default function DocsView() {
 
   const [documents, setDocuments] = useState([]);
   const [loading,setLoading] = useState(true);
-  
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.message) {
+      console.log(location.state.message);
+      toast.error(location.state.message);
+    }
+  }, [location]);
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {

@@ -1,16 +1,18 @@
 import { Helmet } from 'react-helmet-async';
+import {DocumentView} from 'sections/document/view';
 
-import { Register } from 'sections/register/register';
+
+
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
+export default function DocumentPage() {
   return (
     <>
       <Helmet>
-        <title> Register | LEARNIX </title>
+        <title> Document | LEARNIX </title>
       </Helmet>
-      <Register />
+      <DocumentView/>
     </>
   );
 }

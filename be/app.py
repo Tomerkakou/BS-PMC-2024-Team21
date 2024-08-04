@@ -13,7 +13,7 @@ from be.utils.socketio import socketio
 from be.routes.student import student_blu
 from be.routes.lecturer import lecturer_blu
 from be.routes.question import question_blu
-
+from be.routes.document import document_blu
 load_dotenv()
 
 def create_app(config_name=None):
@@ -41,6 +41,7 @@ def create_app(config_name=None):
     app.register_blueprint(student_blu,url_prefix='/api/student')
     app.register_blueprint(lecturer_blu,url_prefix='/api/lecturer')
     app.register_blueprint(question_blu,url_prefix='/api/question')
+    app.register_blueprint(document_blu,url_prefix='/api/document')
 
     @app.get('/')
     def index():

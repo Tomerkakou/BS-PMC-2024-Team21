@@ -25,6 +25,7 @@ export const NewQuestionPage=lazy(() => import('pages/lecturer/new-question'));
 export const EditQuestionPage=lazy(() => import('pages/lecturer/edit-question'));
 export const QuestionsPage=lazy(() => import('pages/lecturer/questions'));
 export const QuestionSessionPage=lazy(() => import('pages/student/question-session'));
+export const DocumentPage=lazy(() => import('pages/document'));
 
 // ----------------------------------------------------------------------
 const UnauthorizedErrorHandler = () => {
@@ -63,7 +64,8 @@ export default function Router() {
           { element: <IndexStudentPage />, index: true },
           { path: 'lecturers', element: <LecturerPage /> },
           { path: 'documents', element: <StudentDocs /> },
-          { path: 'question-session', element: <QuestionSessionPage /> }
+          { path: 'question-session', element: <QuestionSessionPage /> },
+          { path: 'document/:id', element: <DocumentPage /> },
         ]
       case 'Lecturer':
         return [
@@ -73,6 +75,7 @@ export default function Router() {
           { path: 'questions', element : <QuestionsPage/> },
           { path: 'new-question', element : <NewQuestionPage/> },
           { path: 'edit-question/:id', element : <EditQuestionPage/>  },
+          { path: 'document/:id', element: <DocumentPage /> },
         ]
       default:
         throw new Error('invalid role')

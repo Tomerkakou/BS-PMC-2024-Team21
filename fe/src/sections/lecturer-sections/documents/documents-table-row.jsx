@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import Iconify from 'components/iconify';
 import { toast } from 'react-toastify';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +25,7 @@ export default function DocumentTableRow({
   id,
   handleDeleteDocuments
 }) {
-
+  const navigate=useNavigate()
   const [loading,setLoading]=useState(false);
 
   const handleBtnClick= async ()=>{
@@ -86,6 +88,9 @@ export default function DocumentTableRow({
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
             <Iconify icon="eva:file-remove-outline" />
           </LoadingButton>
+          <Button onClick={()=>navigate(`/document/${id}`)}>
+            <Iconify icon="mdi:file-document" />
+          </Button>
         </TableCell>
 
       </TableRow>
