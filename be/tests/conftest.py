@@ -167,7 +167,7 @@ def autherized_lecturer(client,lecturer,_db):
         return response.get_json()
     
 @pytest.fixture(scope='module',name='logined_student')    
-def test_login(driver,student,_db,front_url):
+def login_student(driver,student,_db,front_url):
 
     driver.get(f"{front_url}/auth/login")
     time.sleep(2)
@@ -186,6 +186,36 @@ def test_login(driver,student,_db,front_url):
     
     time.sleep(2)
     yield student
+
+    driver.get(front_url)
+    time.sleep(2)
+    popperBtn=driver.find_element(By.ID, "account-popover")
+    popperBtn.click()
+    logoutBtn=driver.find_element(By.ID, "btn-logout")
+    logoutBtn.click()
+
+    time.sleep(2)    
+
+@pytest.fixture(scope='module',name='logined_lecturer')    
+def login_lecturer(driver,lecturer,_db,front_url):
+
+    driver.get(f"{front_url}/auth/login")
+    time.sleep(2)
+    wait = WebDriverWait(driver, 10)
+    email_field = wait.until(EC.visibility_of_element_located((By.ID, "email-login")))
+    password_field = driver.find_element(By.ID, "password-login")
+    
+    email_field.send_keys(lecturer.email)
+    password_field.send_keys(lecturer.password)
+    lecturer.hashPassword()
+    lecturer.verifiedEmail=True
+    lecturer.active=True
+    _db.session.commit()
+    login_button = driver.find_element(By.ID, "btn-login")
+    login_button.click()
+    
+    time.sleep(2)
+    yield lecturer
 
     driver.get(front_url)
     time.sleep(2)

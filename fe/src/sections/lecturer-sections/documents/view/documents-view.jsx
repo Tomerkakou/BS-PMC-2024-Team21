@@ -61,9 +61,7 @@ export default function DocumentView() {
     (async ()=>{
       try{
         const response=await axios.get("/lecturer/getdocuments")
-        console.log(response.data);
         setDocumentLecture(response.data.documents);
-        // setOtherLecturers(response.data.other)
         setLoading(false)
       }
       catch(e){
@@ -168,7 +166,7 @@ export default function DocumentView() {
                   { id: 'description', label: 'Description' },
                   {id: 'createdAt', label: 'Release Date'},
                   {id: 'pages', label: 'Pages'},
-                  {id:''}
+                  {id:'none',label:''}
                 ]}
               />
               <TableBody>

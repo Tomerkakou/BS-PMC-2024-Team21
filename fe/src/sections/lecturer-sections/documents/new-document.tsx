@@ -53,6 +53,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
       <Button
         variant="contained"
         color="inherit"
+        id="new-document-btn"
         startIcon={<Iconify icon="eva:plus-fill" />}
         onClick={() => setOpen(true)}
       >
@@ -67,7 +68,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
           width: 0.4,
         }}
         buttons={[
-          <LoadingButton onClick={handleSubmit(onSubmit)} loading={loading}>
+          <LoadingButton onClick={handleSubmit(onSubmit)} loading={loading} id='new-doc-submit'>
             Save Document
           </LoadingButton>,
         ]}
@@ -78,6 +79,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
             label="Document Name"
             control={control}
             fieldName="docName"
+            id="new-doc-name"
             rules={{
               required: "Document Name is required",
               maxLength: { value: 50, message: "Document Name is too long" },
@@ -87,12 +89,14 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
             label="Subject"
             control={control}
             fieldName="subject"
+            id='new-doc-subject'
             rules={{ required: "Subject is required" }}
             options={["C#", "Java", "Python", "JavaScript", "SQL"]}
           />
           <DropBoxInput
             control={control}
             fieldName="doc"
+            id='new-doc-file'
             placeholder="Drop document here (.pdf)"
             accept=".pdf"
             rules={{ required: "Document is required" }}
