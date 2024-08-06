@@ -16,7 +16,8 @@ import TableNoData from '../../../../components/table/table-no-data';
 import { applyFilter, emptyRows, getComparator } from '../../../../components/table/utils';
 import StudentTableRow from '../student-table-row';
 import StudentTableToolbar from '../student-table-toolbar';
-
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
 
 
@@ -125,7 +126,9 @@ export default function StudentView() {
   return (
     <Container>
 
-
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+              <Typography variant="h4">Students</Typography>
+      </Stack>
       <Card>
         <StudentTableToolbar
           numSelected={selected.length}

@@ -54,9 +54,7 @@ def newPdf():
             db.session.add(notification)
             db.session.commit()
             socketio.emit('new-document',{"id":student.id,"nft":notification.to_json()})
-        return jsonify({"name":pdf.docName,
-                        "description":pdf.description,
-                        "subject":pdf.subject.value,}), 200
+        return jsonify({'id': pdf.id, 'name': f'{pdf.docName}', 'description': pdf.description, 'subject': pdf.subject.value, 'createdAt':pdf.createdAt, 'pages': pdf.pages}), 200
     except Exception as e:
         print(e)
         db.session.rollback()
@@ -74,6 +72,7 @@ def getdocuments():
 def remove_documents():
     docs_id = request.get_json()
     documents_to_delete=[doc for doc in current_user.pdf_documents if doc.id in docs_id]
+    print(docs_id,documents_to_delete)
     for doc in documents_to_delete:
         db.session.delete(doc)  
     db.session.commit()

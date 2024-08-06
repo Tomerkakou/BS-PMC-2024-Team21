@@ -136,7 +136,7 @@ export default function DocumentView() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Lecturers</Typography>
+        <Typography variant="h4">Documents</Typography>
         <NewDocument handleNewDocument={handleNewDocument}/>
       </Stack>
 

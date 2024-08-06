@@ -49,7 +49,7 @@ export default function StudentTableToolbar({ numSelected, filterName, onFilterN
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search lecturer..."
+          placeholder="Search student..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify

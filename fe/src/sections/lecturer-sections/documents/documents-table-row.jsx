@@ -31,7 +31,7 @@ export default function DocumentTableRow({
   const handleBtnClick= async ()=>{
     setLoading(true)
     try{
-      //delete lecturer
+      //delete document
       const response = await axios.post(`/lecturer/remove-documents`,[id])
       handleDeleteDocuments([id])
       toast.success(response.data)
