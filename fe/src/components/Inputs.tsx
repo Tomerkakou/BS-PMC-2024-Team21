@@ -309,6 +309,19 @@ const FileInput:React.FC<MuiFileInputProps> = ({
     id,
     fieldName
 }) => {
+
+    const handleDrop = (e:any, field:any) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files && files[0]) {
+          field.onChange(files[0]);
+        }
+      };
+    
+    const handleDragOver = (e:any) => {
+    e.preventDefault();
+    };
+
     return (
         <Controller
             name={fieldName}
@@ -329,6 +342,8 @@ const FileInput:React.FC<MuiFileInputProps> = ({
                   },
                   startAdornment: icon,
                 }}
+                onDrop={(e) => handleDrop(e, field)}
+                onDragOver={handleDragOver}
               />
             )}
           />
@@ -358,6 +373,18 @@ const DropBoxInput:React.FC<MuiFileInputProps> = ({
     id,
     fieldName
 }) => {
+    const handleDrop = (e:any, field:any) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files && files[0]) {
+          field.onChange(files[0]);
+        }
+      };
+    
+    const handleDragOver = (e:any) => {
+    e.preventDefault();
+    };
+
     return (
         <Controller
             name={fieldName}
@@ -377,6 +404,8 @@ const DropBoxInput:React.FC<MuiFileInputProps> = ({
                   },
                   startAdornment: icon,
                 }}
+                onDrop={(e) => handleDrop(e, field)}
+                onDragOver={handleDragOver}
               />
             )}
           />
