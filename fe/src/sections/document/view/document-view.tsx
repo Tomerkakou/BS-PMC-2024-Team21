@@ -1,9 +1,9 @@
 import { Box, Card, Container, Pagination, Stack, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import PDFViewer from 'components/PDFViewer';
-import LayoutSplashScreen from 'layouts/dashboard/common/LayoutSplashScreen';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Skeleton from '@mui/material/Skeleton';
 
 interface Document{
     id:number;
@@ -18,7 +18,7 @@ const DocumentView = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [doc, setDoc] = useState<Document>();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
@@ -41,36 +41,54 @@ const DocumentView = () => {
             fetchDocument(id);
         }
     }, [id,navigate]);
-
+    const title = doc? `${doc.title} page ${currentPage}` : 'Loading...';
   return (
     <>
-        {loading && <LayoutSplashScreen/>}
-        {!loading && doc && <Container sx={{p:1}}>
+        <Container sx={{p:1}}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h4">{`${doc.title} page ${currentPage}`}</Typography>
+            <Typography variant="h4">{title}</Typography>
             </Stack>
             <Stack direction='row' spacing={2}>
 
-                    <PDFViewer
+                    {!loading && doc && <PDFViewer
                         pdfUrl={doc.content}
                         pageNumber={currentPage}
-                    />
+                    />}
+                    {loading && <Stack direction='column' height={1} width={0.5} spacing={2}>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="rectangular" height={60} />
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="rectangular" height={60} />
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                        <Skeleton variant="text"/>
+                    </Stack>
+                    }
                     <Card sx={{p:2,display:'flex',flexGrow:1,flexDirection:'column'}}>
                         <TextField 
                             label="Summary"
                             multiline
-                            value={doc.pagesSummary[currentPage-1]}
+                            value={doc?.pagesSummary[currentPage-1]}
                             rows={20}
                             variant="outlined"
                             fullWidth
+                            autoFocus
                             inputProps={{readOnly:true}}
                         />
                         <Box sx={{mt:'auto',display:'flex',justifyContent:'center'}}>
-                            <Pagination count={doc.pages} page={currentPage} onChange={(e,page)=>setCurrentPage(page)} variant="outlined" color="secondary" />
+                            <Pagination count={doc?.pages} page={currentPage} onChange={(e,page)=>setCurrentPage(page)} variant="outlined" color="secondary" />
                         </Box>
                     </Card>
             </Stack>
-        </Container>}
+        </Container>
     </>
   )
 }
