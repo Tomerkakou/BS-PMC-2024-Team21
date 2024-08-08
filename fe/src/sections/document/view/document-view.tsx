@@ -4,6 +4,8 @@ import PDFViewer from 'components/PDFViewer';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
+import Iconify from 'components/iconify';
+import { Button } from '@mui/material';
 
 interface Document{
     id:number;
@@ -44,8 +46,15 @@ const DocumentView = () => {
     const title = doc? `${doc.title} page ${currentPage}` : 'Loading...';
   return (
     <>
+        
+
         <Container sx={{p:1}}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        
+        
+            <Stack direction="row" alignItems="center" mb={5} spacing={5}>
+            <Button  onClick={()=> navigate('/documents')} sx={{ color: 'black' }}>
+                <Iconify icon="icon-park-twotone:back" /> 
+            </Button>
             <Typography variant="h4">{title}</Typography>
             </Stack>
             <Stack direction='row' spacing={2}>

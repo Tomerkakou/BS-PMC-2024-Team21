@@ -30,28 +30,26 @@ export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
-;
   const onSubmit = async ({ email, password }: FormValues) => {
     try {
       const response = await login(email, password);
       saveAuth(response.data);
       const { data: user } = await getUserByToken();
-      user.auth=response.data;
+      user.auth = response.data;
       const decodedToken = jwtDecode(user.auth!.accessToken) as any;
-      user.role=decodedToken.role;
+      user.role = decodedToken.role;
       setCurrentUser(user);
       if (state && state.redirectTo) {
         window.history.pushState(null, "", "/");
         navigate(state.redirectTo);
-        return ;
+        return;
       }
       navigate("/");
     } catch (error: any) {
       saveAuth(undefined);
       if (error.response) {
         toast.error(error.response.data);
-      }
-      else{
+      } else {
         toast.error("An error occurred. Please try again later.");
       }
     }
@@ -60,46 +58,53 @@ export default function LoginView() {
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextInput
-          fieldName="email"
-          id="email-login"
-          label="Email address"
-          control={control}
-          rules={{ required: "Email is required!",
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "Invalid Email",
-            },
-            maxLength:{
-              value:50,
-              message:'Maximum length is 50!'
-            }}}
-        />
+        <Stack spacing={1}>
+          <Typography variant="h6">Email</Typography>
+          <TextInput
+            fieldName="email"
+            id="email-login"
+            label=""
+            control={control}
+            rules={{
+              required: "Email is required!",
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Invalid Email",
+              },
+              maxLength: {
+                value: 50,
+                message: "Maximum length is 50!",
+              },
+            }}
+          />
+        </Stack>
 
-        <TextInput
-          fieldName="password"
-          label="Password"
-          id="password-login"
-          control={control}
-          type={showPassword ? "text" : "password"}
-          rules={{ required: "Password is required" }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Stack spacing={1}>
+          <Typography variant="h6">Password</Typography>
+          <TextInput
+            fieldName="password"
+            label=""
+            id="password-login"
+            control={control}
+            type={showPassword ? "text" : "password"}
+            rules={{ required: "Password is required" }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify
+                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
       </Stack>
-
       <Stack
         direction="row"
         alignItems="center"
@@ -132,7 +137,7 @@ export default function LoginView() {
   );
 
   return (
-    <Box sx={{maxWidth:420}}>
+    <Box sx={{ maxWidth: 420 }}>
       <Typography variant="h4">Sign in to LEARNIX</Typography>
       <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
         Don’t have an account?

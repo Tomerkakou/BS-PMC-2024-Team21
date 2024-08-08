@@ -81,7 +81,14 @@ const navConfig = {
       title: 'question-session',
       path: '/question-session',
       icon: icon('ic_question_session'),
+    },
+
+    {
+      title: 'questions',
+      path: '/question',
+      icon: icon('ic_chat'),
     }
+
   ],
 };
 

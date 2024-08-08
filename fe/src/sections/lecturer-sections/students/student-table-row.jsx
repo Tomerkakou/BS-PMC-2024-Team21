@@ -69,7 +69,7 @@ export default function StudentTableRow({
 
         <TableCell align="right">
           <LoadingButton onClick={()=>navigate(`/questions/assasment?id=${id}&by=student`)} loading={loading}>
-            <Iconify icon="mdi:chat-plus-outline" />
+            <Iconify icon="mdi:document-sign" />
           </LoadingButton>
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
             <Iconify icon="eva:person-delete-outline" />
