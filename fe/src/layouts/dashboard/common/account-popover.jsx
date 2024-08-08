@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import Avatar from '@mui/material/Avatar';
+
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -10,6 +10,7 @@ import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useAuth } from 'auth';
 import { useNavigate } from 'react-router-dom';
+import Iconify from 'components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -21,10 +22,6 @@ const MENU_OPTIONS = [
   {
     label: 'Profile',
     route:'/profile',
-  },
-  {
-    label: 'Settings',
-    route:'/settings',
   },
 ];
 
@@ -68,17 +65,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar
-          src={currentUser.avatar}
-          alt={displayName}
-          sx={{
-            width: 36,
-            height: 36,
-            border: (theme) => `solid 2px ${theme.palette.background.default}`,
-          }}
-        >
-          {displayName.charAt(0).toUpperCase()}
-        </Avatar>
+        <Iconify icon="eva:menu-outline" />
       </IconButton>
 
       <Popover
