@@ -47,6 +47,15 @@ def test_file_upalod(driver,logined_lecturer,_db,front_url):
         assert summary.summary is not None and summary.summary!=""
         assert summary.page in [1,2]
 
+    driver.get(f"{front_url}/document/{pdf.id}")
+    time.sleep(2)
+    
+    driver.find_element(By.ID,"doc-back-btn").click()
+    time.sleep(2)
+    
+    assert driver.current_url == f"{front_url}/documents" 
+
+
 
 
 

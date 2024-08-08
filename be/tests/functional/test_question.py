@@ -28,6 +28,8 @@ def test_get_questions(client, auth_lecturer, _db, lecturer):
         assert response.status_code == 200
         data = json.loads(response.data)
         assert len(data) == 1
+        assert "using_ai" in data[0]
+        assert data[0]["using_ai"]==False
 
 def test_get_question(client, auth_lecturer, _db,):
     with client:

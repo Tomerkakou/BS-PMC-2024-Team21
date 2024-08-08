@@ -6,7 +6,9 @@ import time
 
 
 def test_profile(driver,logined_student,_db,front_url):
-    driver.get(f"{front_url}/profile")
+    driver.get(f"{front_url}/")
+    time.sleep(2)
+    driver.find_element(By.ID,"profile-link").click()
 
     time.sleep(2)
 

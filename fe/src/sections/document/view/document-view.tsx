@@ -52,7 +52,7 @@ const DocumentView = () => {
         
         
             <Stack direction="row" alignItems="center" mb={5} spacing={5}>
-            <Button  onClick={()=> navigate('/documents')} sx={{ color: 'black' }}>
+            <Button  onClick={()=> navigate('/documents')} sx={{ color: 'black' }} id="doc-back-btn">
                 <Iconify icon="icon-park-twotone:back" /> 
             </Button>
             <Typography variant="h4">{title}</Typography>
