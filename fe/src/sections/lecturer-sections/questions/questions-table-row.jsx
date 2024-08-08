@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import Label from 'components/label';
 
 // ----------------------------------------------------------------------
 
