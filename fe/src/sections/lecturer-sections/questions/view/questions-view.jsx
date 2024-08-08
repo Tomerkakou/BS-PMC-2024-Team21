@@ -175,6 +175,7 @@ export default function QuestionsView() {
                   { id: 'subject', label: 'Subject' },
                   { id: 'qtype', label: 'Type' },
                   { id: 'level', label: 'Level' },
+                  { id: 'using_ai',label: 'AI'},
                   {id:''}
                 ]}
               />
@@ -192,6 +193,7 @@ export default function QuestionsView() {
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
                       handleDeleteQuestions={handleDeleteQuestions}
+                      ai={row.using_ai}
                     />
                   ))}
                 {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}

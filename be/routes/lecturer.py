@@ -129,7 +129,7 @@ def get_Questions():
     questions= current_user.questions
     questions_objects=[]
     for question in questions:
-        questions_objects.append({'id':question.id, 'name':question.shortDescription,'subject':question.subject.value ,'type':question.qtype.value, 'level':question.level.value})
+        questions_objects.append({'id':question.id, 'name':question.shortDescription,'subject':question.subject.value ,'type':question.qtype.value, 'level':question.level.value,"using_ai":question.using_ai})
     return jsonify(questions_objects),200
     
 @lecturer_blu.post('/remove-questions')
