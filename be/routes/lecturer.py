@@ -72,7 +72,6 @@ def getdocuments():
 def remove_documents():
     docs_id = request.get_json()
     documents_to_delete=[doc for doc in current_user.pdf_documents if doc.id in docs_id]
-    print(docs_id,documents_to_delete)
     for doc in documents_to_delete:
         db.session.delete(doc)  
     db.session.commit()

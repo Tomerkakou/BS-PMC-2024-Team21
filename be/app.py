@@ -3,6 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from be.models import db
 from dotenv import load_dotenv
+from be.models.TokenCounter import TokenCounter
 from be.models.User import bcrypt
 from be.routes.auth import auth_blu
 from be.routes.statistics import stats_blu
@@ -64,5 +65,9 @@ if __name__ == '__main__':
         #db.drop_all()
         db.create_all()
         print("Tables created successfully.")
+        if db.session.query(TokenCounter).count() == 0:
+            db.session.add(TokenCounter())
+            db.session.commit()
+
 
     app.run(debug=True)

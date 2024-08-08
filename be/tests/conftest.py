@@ -1,6 +1,7 @@
 import pytest
 from be.app import create_app
 from be.models import db
+from be.models.TokenCounter import TokenCounter
 from be.models.User import Lecturer, RoleEnum, Student, User
 from be.models.Token import Token, TokenTypeEnum
 from be.models.Notification import Notification, NotificationType
@@ -53,7 +54,10 @@ def init_db(app):
     with app.app_context():
         print("Creating database tables...")
         db.create_all()  # Create tables
-
+        if db.session.query(TokenCounter).count() == 0:
+            db.session.add(TokenCounter())
+            db.session.commit()
+            
         yield db  
 
         print("Dropping database tables...")

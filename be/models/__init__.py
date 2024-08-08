@@ -22,3 +22,4 @@ from be.models.questions.SingleChoice import SingleChoice
 from be.models.questions.Open import Open
 from be.models.PdfDocument import PdfDocument,PageSummarize
 from be.models.questions.StudentQuestion import StudentQuestion
+from be.models.TokenCounter import TokenCounter

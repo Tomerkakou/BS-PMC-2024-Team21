@@ -4,6 +4,7 @@ import enum
 from be.models import db
 from flask_bcrypt import Bcrypt
 import uuid
+from datetime import datetime
 
 bcrypt = Bcrypt()
 
@@ -23,6 +24,7 @@ class User(db.Model):
     verifiedEmail=db.Column(db.Boolean,nullable=False,default=False)
     active = db.Column(db.Boolean,nullable=False,default=False)
     avatar = db.Column(LONGTEXT,nullable=False)
+    createdAt=db.Column(db.DateTime,nullable=False,default=datetime.now())
     notifications = db.relationship('Notification', secondary = 'user_notification', back_populates = 'users')
     tokens = db.relationship('Token', back_populates='user',cascade='all, delete-orphan')
     _=db.relationship('Notification', back_populates='belongTo',cascade='all, delete-orphan')

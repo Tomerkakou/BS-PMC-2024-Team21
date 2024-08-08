@@ -16,6 +16,7 @@ class Question(db.Model):
     subject = db.Column(Enum(SubjectsEnum), nullable=False)
     qtype=db.Column(Enum(QuestionType),nullable=False)
     createdAt = db.Column(db.DateTime, nullable=False,default=datetime.now())
+    using_ai=db.Column(db.Boolean,nullable=False,default=False)
     lecturer_id = db.Column(db.String(50), db.ForeignKey("lecturer.id", ondelete='CASCADE'), nullable=False)
     lecturer = db.relationship('Lecturer', back_populates='questions')
     students_questions = db.relationship('StudentQuestion', back_populates='question',cascade='all, delete-orphan')

@@ -1,6 +1,8 @@
 import time
 from openai import OpenAI
 from flask import current_app
+from be.models import db
+from be.models.TokenCounter import TokenCounter
 
 assitant_ids={
     "document_summarization": "asst_5RG5BrSxt6vO2LRcKd4vTK6O",
@@ -33,6 +35,11 @@ class Assitant:
                 run_id=run.id,
             )
             time.sleep(0.1)
+        
+        counter=db.session.query(TokenCounter).first()
+        if counter:
+            counter.tokens+=run.usage.total_tokens
+            db.session.commit()
 
         messages = self._client.beta.threads.messages.list(
             thread_id=self._thread.id
