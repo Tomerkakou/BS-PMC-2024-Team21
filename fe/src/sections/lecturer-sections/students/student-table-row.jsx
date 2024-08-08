@@ -12,6 +12,7 @@ import axios from 'axios';
 import Iconify from 'components/iconify';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import Label from 'components/label';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +23,8 @@ export default function StudentTableRow({
   email,
   handleClick,
   id,
-  handleDeleteStudents
+  handleDeleteStudents,
+  answers
 }) {
 
   const [loading,setLoading]=useState(false);
@@ -61,6 +63,9 @@ export default function StudentTableRow({
         </TableCell>
 
         <TableCell>{email}</TableCell>
+        <TableCell>
+          <Label color={answers ?  'success'  : "error"}>{answers ?  'Yes'  : "No"}</Label>
+        </TableCell>
 
         <TableCell align="right">
           <LoadingButton onClick={()=>navigate(`/questions/assasment?id=${id}&by=student`)} loading={loading}>
@@ -85,5 +90,6 @@ StudentTableRow.propTypes = {
   name: PropTypes.any,
   selected: PropTypes.any,
   id: PropTypes.any,
-  handleDeleteStudents: PropTypes.func
+  handleDeleteStudents: PropTypes.func,
+  answers: PropTypes.any,
 };

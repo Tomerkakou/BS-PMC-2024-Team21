@@ -23,7 +23,12 @@ subject={
 @lecturer_blu.get('/getstudents')
 @role("Lecturer")
 def getlecturer(): 
-    signed_list = [{'id': user.id, 'name': f'{user.firstName} {user.lastName}', 'email': user.email, 'avatar': user.avatar} for user in current_user.students if user.active]
+    signed_list = [{'id': user.id,
+                    'name': user.fullName,
+                    'email': user.email, 
+                    'avatar': user.avatar,
+                    'answers': (len(list(filter(lambda x: x.question.lecturer_id==current_user.id,user.students_questions))) > 0),
+                } for user in current_user.students if user.active]
     return jsonify({'signed':signed_list}), 200
 
 @lecturer_blu.post('/remove-students')
