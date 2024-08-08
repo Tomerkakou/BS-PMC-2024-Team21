@@ -19,10 +19,6 @@ const MENU_OPTIONS = [
     label: 'Home',
     route:'/'
   },
-  {
-    label: 'Profile',
-    route:'/profile',
-  },
 ];
 
 // ----------------------------------------------------------------------
