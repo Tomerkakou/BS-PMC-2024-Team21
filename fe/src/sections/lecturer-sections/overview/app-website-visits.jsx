@@ -1,31 +1,25 @@
 
 import Card from '@mui/material/Card';
-import { Button} from "@mui/material";
 import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import Typography from '@mui/material/Typography';
-import { useAuth } from 'auth';
+import axios from 'axios';
 import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
-import { useEffect, useState } from 'react';
-import TableHead from 'components/table/table-head';
 import TableEmptyRows from 'components/table/table-empty-rows';
 import TableNoData from 'components/table/table-no-data';
-import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
-import axios from 'axios';
-import StudentsTableHead from './app-website-visits-head.jsx'
-import StudentsTableRow from './app-website-visits-row'
+import { emptyRows } from 'components/table/utils';
+import { useEffect, useState } from 'react';
+import StudentsTableHead from './app-website-visits-head.jsx';
+import StudentsTableRow from './app-website-visits-row';
 
 
 
 // ----------------------------------------------------------------------
 
 export default function StudentsTableView() {
-  const {currentUser}=useAuth();
   const [students, setStudents] = useState([]);
   const [loading,setLoading] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -65,10 +59,6 @@ export default function StudentsTableView() {
   const handleChangeRowsPerPage = (event) => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
-  };
-  const handleFilterByName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
   };
   const notFound = !students.length && !!filterName;
   return (

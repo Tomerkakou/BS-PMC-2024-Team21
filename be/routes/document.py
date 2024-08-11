@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from flask_jwt_extended import current_user, jwt_required
 from be.models import db
 from be.models.PdfDocument import PdfDocument

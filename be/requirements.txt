@@ -13,5 +13,6 @@ flask-socketio==5.3.6
 chromedriver-py==127.0.6533.72
 pypdf==4.3.1
 openai==1.37.1
+xhtml2pdf==0.2.16
 
 

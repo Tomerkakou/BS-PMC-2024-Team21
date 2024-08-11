@@ -2,7 +2,7 @@ import base64
 
 import io
 from flask import Blueprint, current_app, jsonify, request, send_file
-from sqlalchemy import func, not_
+from sqlalchemy import not_
 from be.models import db
 from flask_jwt_extended import  current_user
 from be.models.PdfDocument import PdfDocument
@@ -14,11 +14,10 @@ from be.utils.socketio import socketio
 from be.models.questions.StudentQuestion import StudentQuestion
 from flask import send_file
 from io import BytesIO
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 from xhtml2pdf import pisa
 from datetime import datetime, timedelta
 from be.models import StudentQuestion, Question, SubjectsEnum
+from flask import render_template, make_response
 
 student_blu = Blueprint('student',__name__)
 
@@ -99,8 +98,7 @@ def get_Questions():
   
     return jsonify(questions_objects),200
     
-from flask import render_template, make_response
-import pdfkit
+
 
 # Define a mapping for user-friendly names
 SUBJECT_NAME_MAP = {
@@ -253,5 +251,3 @@ def get_student_subject_averages():
     subject_avg_dict = {subject.name: round(avg, 2) for subject, avg in subject_averages}
     return jsonify(subject_avg_dict)
 
-if __name__ == '__main__':
-    app.run(debug=True)

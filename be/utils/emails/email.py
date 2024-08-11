@@ -1,4 +1,3 @@
-import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from be.utils.emails import verifyAccount,resetPassword

@@ -1,22 +1,18 @@
 import {
   Box,
-  Button,
   Card,
   Container,
   Grid,
-  Icon,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
-import axios from "axios";
 import Skeleton from "@mui/material/Skeleton";
+import axios from "axios";
 import { useEffect, useState } from "react";
-import { QuestionAnswer } from "../QuestionAnswer";
-import QuestionAnswerView from "../QuestionAnswer";
 import { useSearchParams } from "react-router-dom";
+import QuestionAnswerView, { QuestionAnswer } from "../QuestionAnswer";
 import QuestionSort from "../QuestionSort";
 
-const API_URL = process.env.REACT_APP_API_BASE_URL ?? "";
 
 const QuestionsView = () => {
   const [loading, setLoading] = useState(true);

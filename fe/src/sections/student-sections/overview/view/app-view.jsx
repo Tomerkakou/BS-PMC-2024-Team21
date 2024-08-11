@@ -92,15 +92,15 @@ export default function AppView() {
     })();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get("/student/subject-averages");
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const response = await axios.get("/student/subject-averages");
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   })();
+  // }, []);
   
   return (
     <Container maxWidth="xl">

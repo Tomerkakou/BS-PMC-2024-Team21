@@ -1,9 +1,8 @@
 import random
 from flask import Blueprint, jsonify, request
-from be.models import  SubjectsEnum, db
+from be.models import  db
 from flask_jwt_extended import  current_user
 from be.models.Notification import Notification, NotificationType
-from be.models.questions import DificultyLevel, QuestionType
 from be.models.questions.Open import Open
 from be.models.questions.Coding import Coding
 from be.models.questions.Question import Question

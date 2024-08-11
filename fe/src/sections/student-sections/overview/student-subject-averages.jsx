@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 
-import { fNumber } from 'utils/format-number';
 
 import Chart, { useChart } from 'components/chart';
 

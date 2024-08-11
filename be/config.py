@@ -1,5 +1,3 @@
-import os
-
 class Config:
     SQLALCHEMY_DATABASE_URI = 'mysql://learnix:TomerKakou.123@213.8.44.35:3309/learnix'
     SECRET_KEY = 'ASASLKGHASLKDHGASKLHGASKLDGALSAD'
