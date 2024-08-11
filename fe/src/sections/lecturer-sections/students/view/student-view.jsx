@@ -152,6 +152,7 @@ export default function StudentView() {
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },
+                  { id: 'answers', label: 'Answers' },
                   { id: '' },
                 ]}
               />
@@ -168,6 +169,7 @@ export default function StudentView() {
                       selected={(selected.indexOf(row.id) !== -1)}
                       handleClick={(event) => handleClick(event, row.id)}
                       handleDeleteStudents={handleDeleteStudents}
+                      answers={row.answers}
                     />
                   ))}
                 {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={4} />}

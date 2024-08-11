@@ -9,6 +9,9 @@ from be.models.PdfDocument import PdfDocument
 from be.models.questions.Coding import Coding
 from be.models.questions.Open import Open
 from be.models.questions.SingleChoice import SingleChoice
+from be.models import StudentQuestion, Lecturer
+
+
 
 lecturer_blu = Blueprint('lecturer',__name__)
 
@@ -23,7 +26,12 @@ subject={
 @lecturer_blu.get('/getstudents')
 @role("Lecturer")
 def getlecturer(): 
-    signed_list = [{'id': user.id, 'name': f'{user.firstName} {user.lastName}', 'email': user.email, 'avatar': user.avatar} for user in current_user.students if user.active]
+    signed_list = [{'id': user.id,
+                    'name': user.fullName,
+                    'email': user.email, 
+                    'avatar': user.avatar,
+                    'answers': (len(list(filter(lambda x: x.question.lecturer_id==current_user.id,user.students_questions))) > 0),
+                } for user in current_user.students if user.active]
     return jsonify({'signed':signed_list}), 200
 
 @lecturer_blu.post('/remove-students')
@@ -91,6 +99,7 @@ def newQuestion():
                                 option2=data['option2'],
                                 option3=data['option3'],
                                 option4=data['option4'],
+                                using_ai=data['using_ai'],
                                 lecturer_id=current_user.id)
     elif data['qtype']=="Open":
         question = Open(question=data['question'], 
@@ -98,6 +107,7 @@ def newQuestion():
                         shortDescription=data['shortDescription'],
                         level=data['level'],
                         correct_answer=data['correct_answer'],
+                        using_ai=data['using_ai'],
                         lecturer_id=current_user.id)
     
     elif data['qtype']=="Coding":
@@ -107,6 +117,7 @@ def newQuestion():
                           level=data['level'],
                           correct_answer=data['correct_answer'],
                           template=data['template'],
+                          using_ai=data['using_ai'],
                           lecturer_id=current_user.id)
         
     else:
@@ -124,7 +135,7 @@ def get_Questions():
     questions= current_user.questions
     questions_objects=[]
     for question in questions:
-        questions_objects.append({'id':question.id, 'name':question.shortDescription,'subject':question.subject.value ,'type':question.qtype.value, 'level':question.level.value})
+        questions_objects.append({'id':question.id, 'name':question.shortDescription,'subject':question.subject.value ,'type':question.qtype.value, 'level':question.level.value,"using_ai":question.using_ai})
     return jsonify(questions_objects),200
     
 @lecturer_blu.post('/remove-questions')
@@ -202,3 +213,103 @@ def patch_question(id):
     return 'Question updated successfully!', 200
 
 
+@lecturer_blu.get('/student-averages')
+@role("Lecturer")
+def get_students_avg_grades():
+    lecturer_id = current_user.id
+
+    # Get the current lecturer
+    lecturer = db.session.query(Lecturer).filter_by(id=lecturer_id).first()
+
+    if not lecturer:
+        return jsonify({"error": "Lecturer not found"}), 404
+
+    # Get the subjects the current lecturer has questions in
+    subjects_taught = db.session.query(Question.subject).filter_by(lecturer_id=lecturer_id).distinct().all()
+    subjects_taught = [subject for subject, in subjects_taught]  # Flatten the result
+
+    student_avg_grades = []
+
+    for student in lecturer.students:
+        # Calculate average grade for each student in the subjects the lecturer has questions in
+        total_score = 0
+        total_questions = 0
+
+        for subject in subjects_taught:
+            student_questions = (
+                db.session.query(StudentQuestion)
+                .join(Question, StudentQuestion.question_id == Question.id)
+                .filter(StudentQuestion.student_id == student.id, Question.subject == subject)
+                .all()
+            )
+            
+            subject_score = sum([sq.score for sq in student_questions])
+            subject_questions_count = len(student_questions)
+
+            total_score += subject_score
+            total_questions += subject_questions_count
+
+        # Calculate average
+        avg_grade = total_score / total_questions if total_questions > 0 else 0
+
+        student_avg_grades.append({
+            'student_name': student.fullName,
+            'average_grade': round(avg_grade, 2)
+        })
+
+    return jsonify(student_avg_grades)
+
+
+@lecturer_blu.get('/student-subject-averages')
+@role("Lecturer")
+def get_student_subject_averages():
+    lecturer_id = current_user.id
+
+    # Get the current lecturer
+    lecturer = db.session.query(Lecturer).filter_by(id=lecturer_id).first()
+
+    if not lecturer:
+        return jsonify({"error": "Lecturer not found"}), 404
+
+    subjects_taught = db.session.query(Question.subject).filter_by(lecturer_id=lecturer_id).distinct().all()
+
+    subjects_taught = [subject for subject, in subjects_taught]  # Flatten the result
+    student_subject_averages = []
+
+    for student in lecturer.students:
+        student_data = {'student_name': student.fullName, 'subjects': {}}
+
+        for subject in subjects_taught:
+            student_questions = (
+                db.session.query(StudentQuestion)
+                .join(Question, StudentQuestion.question_id == Question.id)
+                .filter(StudentQuestion.student_id == student.id, Question.subject == subject)
+                .all()
+            )
+            
+            if student_questions:
+                subject_score = sum([sq.score for sq in student_questions])
+                subject_questions_count = len(student_questions)
+                avg_grade = subject_score / subject_questions_count if subject_questions_count > 0 else 0
+                student_data['subjects'][subject.name] = round(avg_grade, 2)
+            else:
+                student_data['subjects'][subject.name] = 0 
+
+        student_subject_averages.append(student_data)
+
+    return jsonify(student_subject_averages)
+
+@lecturer_blu.get('/subject-question-counts')
+@role("Lecturer")
+def get_subject_question_counts():
+    lecturer_id = current_user.id
+
+    subject_counts = (
+        db.session.query(Question.subject, db.func.count(Question.id))
+        .filter(Question.lecturer_id == lecturer_id)
+        .group_by(Question.subject)
+        .all()
+    )
+    subject_counts_dict = {subject.name: count for subject, count in subject_counts}
+
+    return jsonify(subject_counts_dict)

@@ -1,7 +1,7 @@
 import { Box, Button, Stack } from '@mui/material';
 import { SelectInput, TextInput } from 'components/Inputs';
-import React from 'react';
-import { useForm, useFormContext } from 'react-hook-form';
+import React, { useLayoutEffect } from 'react';
+import { useForm, useFormContext, useWatch } from 'react-hook-form';
 
 interface FormValues {
     shortDescription: string;
@@ -16,10 +16,16 @@ interface Step1Props {
 }
 
 const Step1:React.FC<Step1Props> = ({saveStep,edit}) => {
-    const {getValues}=useFormContext();
-    const {control,handleSubmit}=useForm<FormValues>({
-        defaultValues:getValues("step1"),
+    const methods=useFormContext();
+    const {control,handleSubmit,reset}=useForm<FormValues>({
+        defaultValues:methods.getValues("step1"),
     })
+    const step1=useWatch({name:'step1',control:methods.control});
+    useLayoutEffect(() => {
+        if(step1){
+            reset(methods.getValues("step1"));
+        }
+    },[methods,reset,step1])
 
   return (
     <Box sx={{

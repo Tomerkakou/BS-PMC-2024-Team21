@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import Label from 'components/label';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,8 @@ export default function QuestionsTableRow({
   level,
   handleClick,
   id,
-  handleDeleteQuestions
+  handleDeleteQuestions,
+  ai
 }) {
   const [open, setOpen] = useState(null);
   const navigate=useNavigate()
@@ -82,6 +83,9 @@ export default function QuestionsTableRow({
               {level}
             </Typography>
         </TableCell>
+        <TableCell>
+          <Label color={ai ?  'success'  : "error"}>{ai ?  'Yes'  : "No"}</Label>
+        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -127,5 +131,6 @@ QuestionsTableRow.propTypes = {
   name: PropTypes.any,
   selected: PropTypes.any,
   id: PropTypes.any,
-  handleDeleteQuestions: PropTypes.func
+  handleDeleteQuestions: PropTypes.func,
+  ai:PropTypes.any
 };

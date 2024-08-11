@@ -3,7 +3,6 @@ from flask import json
 from be.models import SubjectsEnum, db
 from sqlalchemy import Enum
 from be.models.questions import DificultyLevel, QuestionType
-from sqlalchemy.orm import backref
 from be.utils.chatgpt import Assitant
 
 class Question(db.Model):

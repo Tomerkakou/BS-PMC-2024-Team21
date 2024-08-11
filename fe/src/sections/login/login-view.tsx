@@ -59,7 +59,9 @@ export default function LoginView() {
     <>
       <Stack spacing={3}>
         <Stack spacing={1}>
-          <Typography variant="h6">Email</Typography>
+          
+        <Typography variant="h6">Email</Typography>
+        
           <TextInput
             fieldName="email"
             id="email-login"
@@ -80,7 +82,9 @@ export default function LoginView() {
         </Stack>
 
         <Stack spacing={1}>
+          
           <Typography variant="h6">Password</Typography>
+
           <TextInput
             fieldName="password"
             label=""

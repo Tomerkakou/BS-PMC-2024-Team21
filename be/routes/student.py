@@ -17,7 +17,8 @@ from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from xhtml2pdf import pisa
-from datetime import datetime
+from datetime import datetime, timedelta
+from be.models import StudentQuestion, Question, SubjectsEnum
 
 student_blu = Blueprint('student',__name__)
 
@@ -158,3 +159,99 @@ def get_grades():
     response.headers['Content-Disposition'] = 'inline; attachment; filename=report.pdf'
     return response
 
+
+
+
+
+@student_blu.get('/student-progress')
+@role("Student")
+def get_student_grades_by_subject():
+    student_id = current_user.id
+     # Calculate the date 30 days ago from today
+    start_date = datetime.now() - timedelta(days=30)
+    
+    # Generate date ranges (brackets of 3 days) for the last 30 days
+    date_ranges = [(start_date + timedelta(days=i*3)).strftime('%d/%m/%Y') for i in range(1, 11)]
+    
+    # Initialize dictionary to hold cumulative averages for each subject
+    grades_by_subject = {subject.value: [0]*10 for subject in SubjectsEnum}
+
+    # Query the student's answers to all questions within the last 30 days
+    student_questions = (
+        db.session.query(StudentQuestion)
+        .join(Question)
+        .filter(
+            StudentQuestion.student_id == student_id,
+            StudentQuestion.createdAt >= start_date
+        )
+        .order_by(StudentQuestion.createdAt)
+        .all()
+    )
+    
+    # Accumulate scores for each date range
+    for i in range(10):
+        current_end_date = start_date + timedelta(days=(i+1)*3)
+        
+        for sq in student_questions:
+            if sq.createdAt <= current_end_date:
+                subject = sq.question.subject.value
+                grades_by_subject[subject][i] += sq.score
+
+        # Calculate the average for each subject at the current date range
+        for subject in grades_by_subject:
+            count = sum(1 for sq in student_questions if sq.question.subject.value == subject and sq.createdAt <= current_end_date)
+            if count > 0:
+                grades_by_subject[subject][i] /= count
+    
+   # Format the date ranges in 'YYYY-MM-DD' format
+    date_labels = [
+        (start_date + timedelta(days=(i+1)*3)).strftime('%Y-%m-%d')
+        for i in range(10)
+    ]
+    
+    # Prepare the response data
+    response_data = {
+        'date_ranges': date_labels,
+        'grades_by_subject': grades_by_subject
+    }
+    
+    return jsonify(response_data)
+
+@student_blu.get('/student-answer-count')
+@role("Student")
+def get_subject_answer_count():
+    # Get the current student's ID
+    student_id = current_user.id
+
+    # Query to count answers per subject
+    answer_counts = (
+        db.session.query(Question.subject, db.func.count(StudentQuestion.id))
+        .join(StudentQuestion, StudentQuestion.question_id == Question.id)
+        .filter(StudentQuestion.student_id == student_id)
+        .group_by(Question.subject)
+        .all()
+    )
+
+    # Convert the query result into a dictionary
+    subject_counts = {subject.value: count for subject, count in answer_counts}
+    return jsonify(subject_counts)
+
+@student_blu.get('/subject-averages')
+@role("Student")
+def get_student_subject_averages():
+    student_id = current_user.id
+    subject_averages = (
+        db.session.query(
+            Question.subject, 
+            db.func.avg(StudentQuestion.score).label('average_score')
+        )
+        .join(Question, StudentQuestion.question_id == Question.id)
+        .filter(StudentQuestion.student_id == student_id)
+        .group_by(Question.subject)
+        .all()
+    )
+    subject_avg_dict = {subject.name: round(avg, 2) for subject, avg in subject_averages}
+    return jsonify(subject_avg_dict)
+
+if __name__ == '__main__':
+    app.run(debug=True)
