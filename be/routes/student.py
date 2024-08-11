@@ -149,8 +149,8 @@ def get_grades():
 
     result = BytesIO()
     date = datetime.now()
-    date_str = date.strftime('%Y-%m-%d %H:%M:%S')
-    rendered = render_template('grades.html', name=student_name,grades=results,total_avg=total_avg_score,front_url=current_app.config['FRONT_URL'],date=date_str)
+    date_str = date.strftime('%d/%m/%Y')
+    rendered = render_template('grades.html', name=student_name,grades=results,total_avg=total_avg_score,front_url=current_app.config['FRONT_URL'],date=date_str,ranges=range(5-len(results)))
     pdf = pisa.pisaDocument(BytesIO(rendered.encode("ISO-8859-1")), result)
     response = make_response(result.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
