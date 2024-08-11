@@ -1,6 +1,7 @@
 from be.models.questions.Question import Question
 import json
-
+import PyPDF2
+from io import BytesIO
 
 
 def test_new_question(client,auth_lecturer,_db):
@@ -39,6 +40,72 @@ def test_get_question(client, auth_lecturer, _db,):
         })
         assert response.status_code == 200
         
+        
+def test_validate_answer(client,_db,auth_student):
+    data={
+        "question_id":"1",
+        "answer": "heelo"
+    }
+    with client:
+        response = client.post('/api/question/validate-answer' ,json=data, headers={
+            'Authorization': f'Bearer {auth_student["accessToken"]}'
+        })
+        assert response.status_code == 200
+
+def test_get_validate_questions_student(client,_db,auth_student):
+
+    with client:
+        response = client.get('/api/student/get-questions', headers={
+            'Authorization': f'Bearer {auth_student["accessToken"]}'
+        })
+        assert response.status_code == 200
+        data = json.loads(response.data)
+        assert len(data) == 1
+
+def test_get_answered_questions_lecturer(client,_db,auth_lecturer):
+
+    with client:
+        response = client.get('/api/question/answered', headers={
+            'Authorization': f'Bearer {auth_lecturer["accessToken"]}'
+        })
+        assert response.status_code == 200
+
+def test_get_assasment_lecturer(client,_db,auth_lecturer):
+
+    data={
+        "assasment":"food",
+        "score": "9"
+    }
+    with client:
+        response = client.post('/api/question/assasment/1',json=data, headers={
+            'Authorization': f'Bearer {auth_lecturer["accessToken"]}'
+        })
+        assert response.status_code == 200
+
+def test_get_grades(client, _db, auth_student):
+    with client:
+        response = client.get('/api/student/get-grades', headers={
+            'Authorization': f'Bearer {auth_student["accessToken"]}'
+        })
+        
+     
+        assert response.status_code == 200
+        
+       
+        assert response.headers['Content-Type'] == 'application/pdf'
+        
+
+        assert response.data[:4] == b'%PDF'
+
+   
+        pdf_reader = PyPDF2.PdfReader(BytesIO(response.data))
+        pdf_text = ""
+        for page in range(len(pdf_reader.pages)):
+            pdf_text += pdf_reader.pages[page].extract_text()
+
+        assert "Total Average: 9.0" in pdf_text
+
+
 
 
 

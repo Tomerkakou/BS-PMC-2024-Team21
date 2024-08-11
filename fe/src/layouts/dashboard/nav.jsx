@@ -21,6 +21,8 @@ import Scrollbar from 'components/scrollbar';
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
 import { useAuth } from 'auth';
+import SvgColor from 'components/svg-color';
+import axios from "axios";
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +70,34 @@ export default function Nav({ openNav, onCloseNav }) {
       {navlinks.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
+      {currentUser.role==="Student" && 
+      <ListItemButton
+      onClick = {async () => {
+        try {
+          const response = await axios.get("/student/get-grades", {
+            responseType: "blob",
+          });
+          const fileURL = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+          window.open(fileURL);
+        } catch (error) {
+          console.error("Error downloading the PDF:", error);
+        }
+      }}
+      sx={{
+        minHeight: 44,
+        borderRadius: 0.75,
+        typography: 'body2',
+        color: 'text.secondary',
+        textTransform: 'capitalize',
+        fontWeight: 'fontWeightMedium',
+      }}
+    >
+      <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+      <SvgColor src={`/assets/icons/navbar/ic_student_grade_report.svg`} sx={{ width: 1, height: 1 }} />
+      </Box>
+      <Box component="span">grades report</Box>
+    </ListItemButton>
+}
     </Stack>
   );
 
