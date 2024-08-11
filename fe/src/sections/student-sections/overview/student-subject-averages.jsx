@@ -10,7 +10,7 @@ import Chart, { useChart } from 'components/chart';
 
 // ----------------------------------------------------------------------
 
-export default function AppConversionRates({ title, subheader, chart, ...other }) {
+export default function StudentSubjectAverages({ title, subheader, chart, ...other }) {
   const { colors, series, options } = chart;
 
   const chartSeries = series.map((i) => i.value);
@@ -20,7 +20,7 @@ export default function AppConversionRates({ title, subheader, chart, ...other }
     tooltip: {
       marker: { show: false },
       y: {
-        formatter: (value) => fNumber(value),
+        formatter: (value) => value.toFixed(2),
         title: {
           formatter: () => '',
         },
@@ -35,6 +35,11 @@ export default function AppConversionRates({ title, subheader, chart, ...other }
     },
     xaxis: {
       categories: series.map((i) => i.label),
+    },
+    yaxis: {
+      labels: {
+        formatter: (value) => value.toFixed(2),
+      }
     },
     ...options,
   });
@@ -57,7 +62,7 @@ export default function AppConversionRates({ title, subheader, chart, ...other }
   );
 }
 
-AppConversionRates.propTypes = {
+StudentSubjectAverages.propTypes = {
   chart: PropTypes.object,
   subheader: PropTypes.string,
   title: PropTypes.string,
