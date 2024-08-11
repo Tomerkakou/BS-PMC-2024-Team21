@@ -27,9 +27,10 @@ def test_get_students(client,_db,auth_lecturer,lecturer,student):
         'Authorization': f'Bearer {auth_lecturer["accessToken"]}'})
         assert response.status_code == 200
         data = response.get_json()
-        assert len(data) == 1
-        assert "answer" in data[0] 
-        assert data[0]["answer"]==False
+        students=data["signed"]
+        assert len(students) == 1
+        assert "answers" in students[0] 
+        assert students[0]["answers"]==False
         assert student in lecturer.students
 
 def test_get_lecturers(client,_db,auth_student,student):
