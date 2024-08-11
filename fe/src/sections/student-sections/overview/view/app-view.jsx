@@ -62,15 +62,6 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Users"
-            total={usercount}
-            color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <AppWidgetSummary
             title="Item Orders"
             total={1723315}
             color="warning"
@@ -114,7 +105,7 @@ export default function AppView() {
                 },
                 {
                   name: 'Team B',
-                  type: 'area',
+                  type: 'column',
                   fill: 'gradient',
                   data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
                 },
