@@ -10,7 +10,8 @@ def test_new_question(client,auth_lecturer,_db):
         "subject" : "Java",
         "shortDescription" : "dsasdasd",
         'level' : "Easy",
-        "correct_answer": "yes"
+        "correct_answer": "yes",
+        "using_ai": False
     }
     with client:
         response = client.post('/api/lecturer/new-question',json=data,headers={

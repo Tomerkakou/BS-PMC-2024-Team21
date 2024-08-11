@@ -1,8 +1,8 @@
-import { Box, Link, Typography } from '@mui/material'
+import { Box, Link, Stack, Typography } from '@mui/material'
 import Iconify from 'components/iconify'
 import { RouterLink } from 'routes/components'
 
-const Step3 = () => {
+const Step3 = ({reset}:{reset:()=>void}) => {
   return (
     <Box sx={{minHeight:"300px",display:'flex',justifyContent:'center',alignItems:'center',mt:5}}>
         <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column',mb:5}}>
@@ -21,7 +21,7 @@ const Step3 = () => {
                     Question Saved Successfully!
                 </Typography>
             </Box>
-            <Box>
+            <Stack direction="row" spacing={1}>
                     <Link
                     variant="subtitle2"
                     component={RouterLink}
@@ -29,7 +29,14 @@ const Step3 = () => {
                     >
                     Go back to Question management
                     </Link>
-            </Box>
+                    <Typography variant='subtitle1'>Or</Typography>
+                    <Link
+                    variant="subtitle2"
+                    onClick={reset}
+                    >
+                    Create another question
+                    </Link>
+            </Stack>
         </Box>
     </Box>
   )

@@ -96,6 +96,7 @@ def newQuestion():
                                 option2=data['option2'],
                                 option3=data['option3'],
                                 option4=data['option4'],
+                                using_ai=data['using_ai'],
                                 lecturer_id=current_user.id)
     elif data['qtype']=="Open":
         question = Open(question=data['question'], 
@@ -103,6 +104,7 @@ def newQuestion():
                         shortDescription=data['shortDescription'],
                         level=data['level'],
                         correct_answer=data['correct_answer'],
+                        using_ai=data['using_ai'],
                         lecturer_id=current_user.id)
     
     elif data['qtype']=="Coding":
@@ -112,6 +114,7 @@ def newQuestion():
                           level=data['level'],
                           correct_answer=data['correct_answer'],
                           template=data['template'],
+                          using_ai=data['using_ai'],
                           lecturer_id=current_user.id)
         
     else:

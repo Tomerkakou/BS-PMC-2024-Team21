@@ -14,3 +14,13 @@ class Coding(Question.Question):
     __mapper_args__ = {
         "polymorphic_identity": QuestionType.CODING, 
     }
+
+    ai_schema="""
+    { 
+       short_description: (max 100 characters)
+       question: 
+       correct_answer: 
+       template : (optional code to kick start answer)
+    }
+    this question type supposed to be question that the answer will be a valid code in the subject 
+"""

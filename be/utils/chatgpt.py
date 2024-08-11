@@ -6,7 +6,8 @@ from be.models.TokenCounter import TokenCounter
 
 assitant_ids={
     "document_summarization": "asst_5RG5BrSxt6vO2LRcKd4vTK6O",
-    "question_validator":"asst_xdKR2Kk2DCZWRxU8vEVRt9aQ"
+    "question_validator":"asst_xdKR2Kk2DCZWRxU8vEVRt9aQ",
+    "question_generator":"asst_a4JAORRqSpxXaq2n3Umi3fiZ",
 }
 
 class Assitant:

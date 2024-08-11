@@ -1,14 +1,19 @@
 import random
 from flask import Blueprint, jsonify, request
-from be.models import  db
+from be.models import  SubjectsEnum, db
 from flask_jwt_extended import  current_user
 from be.models.Notification import Notification, NotificationType
-from be.models.questions import QuestionType
+from be.models.questions import DificultyLevel, QuestionType
+from be.models.questions.Open import Open
+from be.models.questions.Coding import Coding
 from be.models.questions.Question import Question
+from be.models.questions.SingleChoice import SingleChoice
 from be.models.questions.StudentQuestion import StudentQuestion
+from be.utils.chatgpt import Assitant
 from be.utils.socketio import socketio
 from be.utils.jwt import role
 from sqlalchemy import select
+from flask import json
 
 question_blu = Blueprint('question',__name__)
 
@@ -128,3 +133,82 @@ def assasment(id):
     socketio.emit('new-assasment',{"id":student_question.student.id,"nft":nft.to_json()})
 
     return "Assasment Updated Successfully!",200
+
+@question_blu.get('/generate')
+@role('Lecturer')
+def generate_ai_question():
+    subject= ["C#",'Python','Java','JavaScript','SQL'][random.randint(0,4)]
+    level=["Easy",'Medium','Hard'][random.randint(0,2)]
+    qtype=["Single Choice","Open","Coding"][random.randint(0,2)]
+
+    old_questions = Question.query.filter_by(qtype=qtype,level=level,subject=subject).all()
+    old_questions="\n".join([f"{index}. {q.question}" for index,q in enumerate(old_questions)])
+    query_msg=f"""
+        old questions:
+        {old_questions}
+
+        New Question Data:
+
+        Subject: {subject}
+        Level: {level}
+        Question Type: {qtype}
+
+        please make sure to stick with the below schema in your json response
+        schema : 
+
+    """
+    assistant=Assitant("question_generator")
+    try:
+        if qtype == "Open":
+            json_txt=assistant.send_question(query_msg+Open.ai_schema)
+            result=json.loads(json_txt)
+            result={
+                "step1":{
+                    "shortDescription":result["short_description"],
+                    "qtype":qtype,
+                    "level":level,
+                    "subject":subject,
+                },
+                "step2":{
+                    "question":result["question"],
+                    "correct_answer":result["correct_answer"]
+                }
+            }
+        elif qtype == "Coding":
+            json_txt=assistant.send_question(query_msg+Coding.ai_schema)
+            result=json.loads(json_txt)
+            result={
+                "step1":{
+                    "shortDescription":result["short_description"],
+                    "qtype":qtype,
+                    "level":level,
+                    "subject":subject,
+                },
+                "step2":{
+                    "question":result["question"],
+                    "correct_answer":result["correct_answer"],
+                    "template":result["template"]
+                }
+            }
+        elif qtype == "Single Choice":
+            json_txt=assistant.send_question(query_msg+SingleChoice.ai_schema)
+            result=json.loads(json_txt)
+            result={
+                "step1":{
+                    "shortDescription":result["short_description"],
+                    "qtype":qtype,
+                    "level":level,
+                    "subject":subject,
+                },
+                "step2":{
+                    "question":result["question"],
+                    "correct_answer":result["correct_answer"],
+                    "option2":result["option2"],
+                    "option3":result["option3"],
+                    "option4":result["option4"]
+                }
+            }
+        
+        return jsonify(result),200
+    except:
+        return "An Error Occured Please Try Again Later :(",400
