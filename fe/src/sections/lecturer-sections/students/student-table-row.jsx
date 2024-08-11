@@ -13,7 +13,7 @@ import Iconify from 'components/iconify';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Label from 'components/label';
-
+import { Button } from '@mui/material';
 // ----------------------------------------------------------------------
 
 export default function StudentTableRow({
@@ -68,9 +68,9 @@ export default function StudentTableRow({
         </TableCell>
 
         <TableCell align="right">
-          <LoadingButton onClick={()=>navigate(`/questions/assasment?id=${id}&by=student`)} loading={loading}>
-            <Iconify icon="mdi:document-sign" />
-          </LoadingButton>
+          <Button onClick={()=>navigate(`/questions/assasment?id=${id}&by=student`)}>
+            <Iconify icon="mdi:chat-plus-outline" />
+          </Button>
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
             <Iconify icon="eva:person-delete-outline" />
           </LoadingButton>

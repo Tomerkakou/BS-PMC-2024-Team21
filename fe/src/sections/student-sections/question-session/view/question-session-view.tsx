@@ -10,12 +10,18 @@ import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Score from '../score';
+import styled from '@emotion/styled';
+import { yellow,grey } from '@mui/material/colors';
+import Iconify from 'components/iconify';
+import MainModal from 'components/MainModal';
 
 const QuestionSessionView = () => {
   const [session, setSession] = useState<SessionValues>();
   const [question, setQuestion] = useState<Question | Coding | SingleChoice>();
   const [evaluation, setEvaluation] = useState<Evaluation>();
   const [loading, setLoading] = useState(false);
+  const [hintloading, setHintLoading] = useState(false);
+  const [hint,setHint]=useState<string>();
 
   const methods=useForm<{answer:string}>();
   const fetchQuestion = async ({level,subject,qtype}:SessionValues) => {
@@ -66,6 +72,21 @@ const QuestionSessionView = () => {
     setLoading(false);
   }
 
+  const GenerateHint=async ()=>{
+    setHintLoading(true);
+    try{
+      const answer=methods.getValues("answer");
+      const response = await axios.post<string>('/question/hint',{question_id:question?.id,answer});
+      setHint(response.data);
+    }
+    catch(err){
+      toast.error("Failed To Generate Hint! :(");
+    }
+    finally{
+      setHintLoading(false);
+    }
+  }
+
   return (
     <>
       {!session && <StartSession handleStartSession={handleStartSession} />}
@@ -73,6 +94,14 @@ const QuestionSessionView = () => {
         <Container sx={{p:1}}>
           {question && <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4">{`${question.qtype} Question!`}</Typography>
+            <HintBtn 
+              startIcon={<Iconify icon="mdi:stars-outline" sx={{mr:1}}/>} 
+              sx={{mr:2}}
+              onClick={GenerateHint}
+              loading={hintloading}
+            >
+              Generate Hint
+            </HintBtn>
           </Stack>}
           <Card sx={{p:2,display:'flex',flexGrow:1,flexDirection:'column'}}>
             {question && <>
@@ -111,8 +140,27 @@ const QuestionSessionView = () => {
           </Card>
         </Container>
       }
+      <MainModal open={Boolean(hint)} 
+        handleClose={()=>setHint(undefined)} 
+        title="Hint" 
+        xBtn
+        sx={{width:0.6}}
+      >
+        <Typography variant="subtitle1">{hint}</Typography>
+      </MainModal>
     </>
   )
 }
+
+const HintBtn = styled(LoadingButton)(({ theme }) => ({
+  backgroundColor: 'black',
+  color: 'white',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    color: yellow[400],
+    transform: 'scale(1.2)',
+    backgroundColor:  grey[500],
+  },
+}));
 
 export default QuestionSessionView

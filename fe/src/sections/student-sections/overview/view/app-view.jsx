@@ -9,12 +9,12 @@ import Iconify from 'components/iconify';
 import AppTasks from '../app-tasks';
 import AppNewsUpdate from '../app-news-update';
 import AppOrderTimeline from '../app-order-timeline';
-import AppCurrentVisits from '../app-current-visits';
-import AppWebsiteVisits from '../app-website-visits';
+import SubjectAnswerCount from '../subject-answer-count';
+import StudentProgress from '../student-progress';
 import AppWidgetSummary from '../app-widget-summary';
 import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
-import AppConversionRates from '../app-conversion-rates';
+import StudentSubjectAverages from '../student-subject-averages';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from 'auth';
@@ -26,24 +26,82 @@ import { useAuth } from 'auth';
 
 
 export default function AppView() {
-  const [usercount,setUserCount]=useState(0);
   const {currentUser } = useAuth();
-  useEffect(()=>{
-    (async ()=>{
-      try{
-        const response=await axios.get("/statistics/usercount")
-        setUserCount(response.data.count)
+
+  const [chartData, setChartData] = useState({
+    labels: [],
+    series: []
+  });
+  const [pizzaChartData, setPizzaChartData] = useState([]);
+  const [subjectAvgData, setSubjectAvgData] = useState([]); 
+ 
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get("/student/student-progress");
+        const { date_ranges, grades_by_subject } = response.data;
+  
+        const labels = date_ranges; 
+
+        const series = Object.keys(grades_by_subject).map(subject => ({
+          name: subject,
+          type: 'line', 
+          fill: 'solid', 
+          data: grades_by_subject[subject]
+        }));
+  
+        setChartData({ labels, series });
+      } catch (e) {
+        console.log(e);
       }
-      catch(e){
-        console.log(e)
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get("/student/student-answer-count");
+        const data = response.data;
+        const series = Object.keys(data).map(subject => ({
+          label: subject,
+          value: data[subject],
+        }));
+
+        setPizzaChartData(series); 
+      } catch (e) {
+        console.log(e);
       }
+    })();
+  }, []);
 
-    })()
-  },[])
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get("/student/subject-averages");
+        const data = response.data;
+        const series = Object.keys(data).map(subject => ({
+          label: subject,
+          value: data[subject],
+        }));
 
+        setSubjectAvgData(series); 
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, []);
 
-
-
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get("/student/subject-averages");
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, []);
+  
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -57,6 +115,14 @@ export default function AppView() {
             total={714000}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Users"
+            color="info"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
         </Grid>
 
@@ -79,81 +145,61 @@ export default function AppView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>
-          <AppWebsiteVisits
-            title="Website Visits"
-            subheader="(+43%) than last year"
-            chart={{
-              labels: [
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
-              ],
-              series: [
-                {
-                  name: 'Team A',
-                  type: 'column',
-                  fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                {
-                  name: 'Team B',
-                  type: 'column',
-                  fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: 'Team C',
-                  type: 'line',
-                  fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                },
-              ],
-            }}
-          />
-        </Grid>
+  <StudentProgress
+    title="Student Progress"
+    subheader="Progress over the last 30 days"
+    chart={{
+      ...chartData, 
+      options: {
+        yaxis: {
+          min: 0,
+          max: 10,
+          labels: {
+            formatter: function (value) {
+              return value.toFixed(0); // Display whole numbers only (0 decimal places)
+            }
+          }
+        },
+        tooltip: {
+          y: {
+            formatter: function (value) {
+              return value.toFixed(1) + " Average"; // Show one decimal place in tooltip
+            }
+          }
+        }
+      }
+    }}
+  />
+</Grid>
+
 
         <Grid xs={12} md={6} lg={4}>
-          <AppCurrentVisits
-            title="Current Visits"
+          <SubjectAnswerCount
+            title="Subject Answer Count"
             chart={{
-              series: [
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ],
+              series: pizzaChartData,
             }}
           />
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>
-          <AppConversionRates
-            title="Conversion Rates"
-            subheader="(+43%) than last year"
-            chart={{
-              series: [
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
-              ],
-            }}
-          />
-        </Grid>
+      <StudentSubjectAverages
+        title="Student Subject Averages"
+        subheader="Average grades per subject"
+        chart={{
+          series: subjectAvgData, // Use the dynamic data from subjectAvgData
+          options: {
+            xaxis: {
+              categories: subjectAvgData.map(item => item.label), // Set x-axis categories to subject names
+            },
+            yaxis: {
+              min: 0,  // Set the minimum value of the y-axis
+              max: 10, // Set the maximum value of the y-axis to 10
+            }
+          }
+        }}
+      />
+    </Grid>
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentSubject

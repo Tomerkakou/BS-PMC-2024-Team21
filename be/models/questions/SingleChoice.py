@@ -21,3 +21,14 @@ class SingleChoice(Question.Question):
 
     def validate_answer(self, student_answer):
         return  {"score":(10 if self.correct_answer == student_answer else 1),"assessment":"","correct_answer":self.correct_answer}
+    
+    ai_schema="""
+    { 
+       short_description: (max 100 characters)
+       question: 
+       correct_answer: 
+       option2 : 
+       option3: 
+       option4: 
+    }
+"""
