@@ -17,7 +17,7 @@ export default function StudentsTableRow({
     <>
       <TableRow hover tabIndex={-1} role="checkbox" >
 
-        <TableCell component="th" scope="row" padding="none">
+        <TableCell component="th" scope="row" padding="normal">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
               {name}

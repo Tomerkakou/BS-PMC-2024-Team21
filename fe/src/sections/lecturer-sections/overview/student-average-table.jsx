@@ -12,8 +12,8 @@ import TableEmptyRows from 'components/table/table-empty-rows';
 import TableNoData from 'components/table/table-no-data';
 import { emptyRows } from 'components/table/utils';
 import { useEffect, useState } from 'react';
-import StudentsTableHead from './app-website-visits-head.jsx';
-import StudentsTableRow from './app-website-visits-row';
+import StudentsTableHead from './student-average-table-head.jsx';
+import StudentsTableRow from './student-average-table-row.jsx';
 
 
 
