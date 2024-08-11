@@ -18,7 +18,6 @@ import AppConversionRates from '../app-conversion-rates';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from 'auth';
-
 // ----------------------------------------------------------------------
 
 
@@ -40,6 +39,20 @@ export default function AppView() {
 
     })()
   },[])
+  const [tokenscount,setTokensCount]=useState(0);
+  useEffect(()=>{
+    (async ()=>{
+      try{
+        const response=await axios.get("/statistics/tokenscount")
+        setTokensCount(response.data.count)
+      }
+      catch(e){
+        console.log(e)
+      }
+
+    })()
+  },[])
+
 
 
 
@@ -53,10 +66,10 @@ export default function AppView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Weekly Sales"
-            total={714000}
+            title="Open AI Tokens"
+            total={tokenscount}
             color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+            icon ={<Iconify icon="tabler:brand-openai" sx={{color:"success.main"}} width={60} height={60}/>}
           />
         </Grid>
 
@@ -89,7 +102,7 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppWebsiteVisits
-            title="Website Visits"
+            title="Study By Subject"
             subheader="(+43%) than last year"
             chart={{
               labels: [
@@ -114,13 +127,13 @@ export default function AppView() {
                 },
                 {
                   name: 'Team B',
-                  type: 'area',
-                  fill: 'gradient',
+                  type: 'column',
+                  fill: 'solid',
                   data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
                 },
                 {
-                  name: 'Team C',
-                  type: 'line',
+                  name: 'Team xcxC',
+                  type: 'column',
                   fill: 'solid',
                   data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
                 },
