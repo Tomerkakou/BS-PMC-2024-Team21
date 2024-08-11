@@ -134,6 +134,26 @@ def assasment(id):
 
     return "Assasment Updated Successfully!",200
 
+@question_blu.post('/hint')
+@role('Student')
+def get_hint():
+    data = request.get_json()
+    question_id = data.get('question_id')
+    question = Question.query.get(question_id)
+    if question is None:
+        return "Question Not Found!",404
+    assistant=Assitant("question_hint")
+    hint_format=f"""
+    subject: {question.subject.value}
+    question: {question.question}
+    correct answer: {question.correct_answer}
+    student current answer: {data.get('answer','')}
+
+    please responde only with the hint as text
+"""
+    hint=assistant.send_question(hint_format)
+    return jsonify(hint),200
+
 @question_blu.get('/generate')
 @role('Lecturer')
 def generate_ai_question():
