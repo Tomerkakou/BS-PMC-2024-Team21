@@ -1,6 +1,5 @@
 
 import Card from '@mui/material/Card';
-import Container from '@mui/material/Container';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -10,7 +9,7 @@ import Scrollbar from 'components/scrollbar';
 import TableRowsLoader from 'components/table';
 import TableEmptyRows from 'components/table/table-empty-rows';
 import TableNoData from 'components/table/table-no-data';
-import { emptyRows } from 'components/table/utils';
+import { applyFilter, emptyRows, getComparator } from 'components/table/utils';
 import { useEffect, useState } from 'react';
 import StudentsTableHead from './student-average-table-head.jsx';
 import StudentsTableRow from './student-average-table-row.jsx';
@@ -24,7 +23,6 @@ export default function StudentsTableView() {
   const [loading,setLoading] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
-  const [filterName, setFilterName] = useState('');
   const [orderBy, setOrderBy] = useState('name');
   const [order, setOrder] = useState('asc');
 
@@ -60,44 +58,51 @@ export default function StudentsTableView() {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
-  const notFound = !students.length && !!filterName;
+
+  const dataSorted = applyFilter({
+    inputData: students,
+    comparator: getComparator(order, orderBy),
+    filterName:'',
+  });
+
+  const notFound = !students.length;
   return (
-    <Container>
-
       <Card>
-
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <StudentsTableHead
+                order={order}
+                orderBy={orderBy}
                 onRequestSort={handleSort}
                 rowCount={students.length}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'C#', label: 'C#' },
+                  { id: 'student_name', label: 'Name' },
+                  { id: 'CSHARP', label: 'C#' },
+                  { id: 'Java', label: 'Java' },
+                  { id: 'JavaScript', label: 'JavaScript' },
                   { id: 'Python', label: 'Python' },
                   { id: 'SQL', label: 'SQL' },
-                  {id:''}
                 ]}
               />
               <TableBody>
-                {!loading && students
+                {!loading && dataSorted
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <StudentsTableRow
                       key={row.student_name}
                       name={row.student_name}
-                      subjects={Object.values(row.subjects)}
+                      subjects={[row.CSHARP, row.Java, row.JavaScript, row.Python, row.SQL]}
 
                     />
                   ))}
                 {loading && <TableRowsLoader rowsNum={rowsPerPage} cellNum={6} />}
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, students.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, dataSorted.length)}
                 />
 
-                {notFound && <TableNoData query={filterName} />}
+                {notFound && <TableNoData />}
               </TableBody>
             </Table>
           </TableContainer>
@@ -113,6 +118,5 @@ export default function StudentsTableView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
-    </Container>
   );
 }

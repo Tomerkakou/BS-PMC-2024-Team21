@@ -271,9 +271,7 @@ def get_student_subject_averages():
     if not lecturer:
         return jsonify({"error": "Lecturer not found"}), 404
 
-    subjects_taught = db.session.query(Question.subject).filter_by(lecturer_id=lecturer_id).distinct().all()
-
-    subjects_taught = [subject for subject, in subjects_taught]  # Flatten the result
+    subjects_taught = [subject for subject in SubjectsEnum]  # Flatten the result
     student_subject_averages = []
 
     for student in lecturer.students:
@@ -291,9 +289,9 @@ def get_student_subject_averages():
                 subject_score = sum([sq.score for sq in student_questions])
                 subject_questions_count = len(student_questions)
                 avg_grade = subject_score / subject_questions_count if subject_questions_count > 0 else 0
-                student_data['subjects'][subject.name] = round(avg_grade, 2)
+                student_data[subject.name] = round(avg_grade, 2)
             else:
-                student_data['subjects'][subject.name] = 0 
+                student_data[subject.name] = 0 
 
         student_subject_averages.append(student_data)
 
