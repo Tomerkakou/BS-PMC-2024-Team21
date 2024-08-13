@@ -1,8 +1,6 @@
-
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-
 
 import { useAuth } from 'auth';
 import axios from 'axios';
@@ -14,139 +12,109 @@ import SubjectAnswerCount from '../subject-answer-count';
 
 // ----------------------------------------------------------------------
 
-
-
-
-
 export default function AppView() {
-  const {currentUser } = useAuth();
+  const { currentUser } = useAuth();  // Get the current user information from the authentication context
 
+  // State to store data for the student's progress chart
   const [chartData, setChartData] = useState({
     labels: [],
     series: []
   });
-  const [pizzaChartData, setPizzaChartData] = useState([]);
-  const [subjectAvgData, setSubjectAvgData] = useState([]); 
- 
 
+  // State to store data for the subject answer count pie chart
+  const [pizzaChartData, setPizzaChartData] = useState([]);
+
+  // State to store data for the subject average grades chart
+  const [subjectAvgData, setSubjectAvgData] = useState([]);
+
+  // useEffect to fetch and set data for the student's progress over time
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("/student/student-progress");
+        const response = await axios.get("/student/student-progress");  // Fetch student's progress data
         const { date_ranges, grades_by_subject } = response.data;
-  
-        const labels = date_ranges; 
 
+        const labels = date_ranges;  // Set labels to date ranges
+
+        // Transform the grades by subject into a series format suitable for the chart
         const series = Object.keys(grades_by_subject).map(subject => ({
           name: subject,
-          type: 'line', 
-          fill: 'solid', 
+          type: 'line',  // Define the type of chart
+          fill: 'solid',  // Define the fill type
           data: grades_by_subject[subject]
         }));
-  
-        setChartData({ labels, series });
+
+        setChartData({ labels, series });  // Update the chart data state
       } catch (e) {
-        console.log(e);
+        console.log(e);  // Log any errors
       }
     })();
   }, []);
 
+  // useEffect to fetch and set data for the subject answer count chart
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("/student/student-answer-count");
+        const response = await axios.get("/student/student-answer-count");  // Fetch student's answer count data by subject
         const data = response.data;
         const series = Object.keys(data).map(subject => ({
           label: subject,
           value: data[subject],
         }));
 
-        setPizzaChartData(series); 
+        setPizzaChartData(series);  // Update the pizza (pie) chart data state
       } catch (e) {
-        console.log(e);
+        console.log(e);  // Log any errors
       }
     })();
   }, []);
 
+  // useEffect to fetch and set data for the subject average grades chart
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("/student/subject-averages");
+        const response = await axios.get("/student/subject-averages");  // Fetch student's average grades data by subject
         const data = response.data;
         const series = Object.keys(data).map(subject => ({
           label: subject,
           value: data[subject],
         }));
 
-        setSubjectAvgData(series); 
+        setSubjectAvgData(series);  // Update the subject averages data state
       } catch (e) {
-        console.log(e);
+        console.log(e);  // Log any errors
       }
     })();
   }, []);
   
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl">  {/* Container to manage the layout width */}
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi {currentUser.firstName}, Welcome back 👋
+        Hi {currentUser.firstName}, Welcome back 👋  {/* Display a welcome message with the user's first name */}
       </Typography>
 
       <Grid container spacing={3}>
-        <Grid xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Weekly Sales"
-            total={714000}
-            color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Users"
-            color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Item Orders"
-            total={1723315}
-            color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Bug Reports"
-            total={234}
-            color="error"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
-          />
-        </Grid>
-
+        {/* Grid item for the Student Progress chart */}
         <Grid xs={12} md={6} lg={8}>
           <StudentProgress
             title="Student Progress"
             subheader="Progress over the last 30 days"
             chart={{
-              ...chartData, 
+              ...chartData,  // Pass the dynamic chart data
               options: {
                 yaxis: {
                   min: 0,
                   max: 10,
                   labels: {
                     formatter: function (value) {
-                      return value.toFixed(0); // Display whole numbers only (0 decimal places)
+                      return value.toFixed(0);  // Display whole numbers only (0 decimal places)
                     }
                   }
                 },
                 tooltip: {
                   y: {
                     formatter: function (value) {
-                      return value.toFixed(1) + " Average"; // Show one decimal place in tooltip
+                      return value.toFixed(1) + " Average";  // Show one decimal place in tooltip
                     }
                   }
                 }
@@ -154,23 +122,27 @@ export default function AppView() {
             }}
           />
         </Grid>
+
+        {/* Grid item for the Subject Answer Count chart */}
         <Grid xs={12} md={6} lg={4}>
           <SubjectAnswerCount
             title="Subject Answer Count"
             chart={{
-              series: pizzaChartData,
+              series: pizzaChartData,  // Pass the dynamic pizza chart data
             }}
           />
         </Grid>
+
+        {/* Grid item for the Student Subject Averages chart */}
         <Grid xs={12}>
           <StudentSubjectAverages
             title="Student Subject Averages"
             subheader="Average grades per subject"
             chart={{
-              series: subjectAvgData, // Use the dynamic data from subjectAvgData
+              series: subjectAvgData,  // Pass the dynamic subject averages data
               options: {
                 xaxis: {
-                  categories: subjectAvgData.map(item => item.label), // Set x-axis categories to subject names
+                  categories: subjectAvgData.map(item => item.label),  // Set x-axis categories to subject names
                 },
                 yaxis: {
                   min: 0,  // Set the minimum value of the y-axis
