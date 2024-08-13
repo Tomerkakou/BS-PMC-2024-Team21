@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Label from 'components/label';
 import { Button } from '@mui/material';
+
 // ----------------------------------------------------------------------
 
 export default function StudentTableRow({
@@ -27,32 +28,42 @@ export default function StudentTableRow({
   answers
 }) {
 
-  const [loading,setLoading]=useState(false);
-  const navigate=useNavigate();
+  // State to manage loading status for the delete button
+  const [loading, setLoading] = useState(false);
 
-  const handleBtnClick= async ()=>{
-    setLoading(true)
-    try{
-      //delete student
-      const response = await axios.post(`/lecturer/remove-students`,[id])
-      handleDeleteStudents([id])
-      toast.success(response.data)
-    }catch(e){
-      console.error(e)
-    }
-    finally{
-      setLoading(false)
+  // Hook to navigate programmatically
+  const navigate = useNavigate();
+
+  // Function to handle the delete button click
+  const handleBtnClick = async () => {
+    setLoading(true);  // Set loading state to true
+    try {
+      // Make an API call to delete the student by their ID
+      const response = await axios.post(`/lecturer/remove-students`, [id]);
+
+      // Call the provided function to update the list of students
+      handleDeleteStudents([id]);
+
+      // Show a success toast notification with the response data
+      toast.success(response.data);
+    } catch (e) {
+      // Log any errors to the console
+      console.error(e);
+    } finally {
+      // Ensure the loading state is reset to false after the operation
+      setLoading(false);
     }
   }
- 
 
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
+        {/* Checkbox to select the student row */}
         <TableCell padding="checkbox">
-          {<Checkbox disableRipple checked={selected} onChange={handleClick} />}
+          <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
+        {/* Cell displaying the student's avatar and name */}
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar alt={name} src={avatarUrl} />
@@ -62,27 +73,32 @@ export default function StudentTableRow({
           </Stack>
         </TableCell>
 
+        {/* Cell displaying the student's email */}
         <TableCell>{email}</TableCell>
+
+        {/* Cell displaying if the student has answered or not */}
         <TableCell>
-          <Label color={answers ?  'success'  : "error"}>{answers ?  'Yes'  : "No"}</Label>
+          <Label color={answers ? 'success' : "error"}>{answers ? 'Yes' : "No"}</Label>
         </TableCell>
 
+        {/* Action buttons: one for viewing the student's assessment and another for deleting the student */}
         <TableCell align="right">
-          <Button onClick={()=>navigate(`/questions/assasment?id=${id}&by=student`)}>
-            <Iconify icon="mdi:chat-plus-outline" />
+          {/* Button to navigate to the student's assessment page */}
+          <Button onClick={() => navigate(`/questions/assasment?id=${id}&by=student`)}>
+            <Iconify icon="mdi:file-sign" />
           </Button>
+
+          {/* Loading button to delete the student, with loading indicator */}
           <LoadingButton onClick={handleBtnClick} loading={loading} color="error">
             <Iconify icon="eva:person-delete-outline" />
           </LoadingButton>
         </TableCell>
-
       </TableRow>
-       
-  
     </>
   );
 }
 
+// PropTypes to define the expected types and required props
 StudentTableRow.propTypes = {
   avatarUrl: PropTypes.any,
   email: PropTypes.any,
