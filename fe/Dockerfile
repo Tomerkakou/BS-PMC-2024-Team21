@@ -14,6 +14,7 @@ ENV REACT_APP_SOCKET_URL=$SOCKET_URL
 RUN npm ci
 
 COPY ./overrides/index.js.map ./node_modules/@codeium/react-code-editor/dist/esm/index.js.map
+COPY ./overrides/index.js ./node_modules/@codeium/react-code-editor/dist/esm/index.js
 
 RUN npm run build 
 
