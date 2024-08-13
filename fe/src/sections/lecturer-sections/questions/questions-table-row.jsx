@@ -27,66 +27,86 @@ export default function QuestionsTableRow({
   handleDeleteQuestions,
   ai
 }) {
+  // State to manage the popover menu open/close status
   const [open, setOpen] = useState(null);
-  const navigate=useNavigate()
 
+  // Hook to navigate programmatically
+  const navigate = useNavigate();
+
+  // Function to handle opening the menu when the "more options" button is clicked
   const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+    setOpen(event.currentTarget);  // Set the current target (button) as the anchor for the popover
   };
 
+  // Function to close the popover menu
   const handleCloseMenu = () => {
-    setOpen(null);
+    setOpen(null);  // Reset the anchor to close the popover
   };
 
-  const handleDeleteClick= async ()=>{
-    handleCloseMenu()
-    try{
-      const response = await axios.post(`/lecturer/remove-questions`,[id])
-      handleDeleteQuestions([id])
-      toast.success(response.data)
-    }catch(e){
-      console.error(e)
+  // Function to handle the deletion of a question
+  const handleDeleteClick = async () => {
+    handleCloseMenu();  // Close the menu after clicking delete
+    try {
+      // Make an API call to delete the question by its ID
+      const response = await axios.post(`/lecturer/remove-questions`, [id]);
+
+      // Update the list of questions after deletion
+      handleDeleteQuestions([id]);
+
+      // Show a success toast notification with the response data
+      toast.success(response.data);
+    } catch (e) {
+      // Log any errors to the console
+      console.error(e);
     }
   }
 
- 
   return (
     <>
+      {/* TableRow representing a single question in the list */}
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
+        
+        {/* Checkbox to select the question row */}
         <TableCell padding="checkbox">
-          {<Checkbox disableRipple checked={selected} onChange={handleClick} />}
+          <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
+        {/* Cell displaying the question's name */}
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
-            
           </Stack>
         </TableCell>
 
+        {/* Cell displaying the question's subject */}
         <TableCell>
-        <Typography variant="subtitle2" noWrap>
-              {subject}
-            </Typography>
+          <Typography variant="subtitle2" noWrap>
+            {subject}
+          </Typography>
         </TableCell>
 
+        {/* Cell displaying the question's type */}
         <TableCell>
-        <Typography variant="subtitle2" noWrap>
-              {type}
-            </Typography>
+          <Typography variant="subtitle2" noWrap>
+            {type}
+          </Typography>
         </TableCell>
 
+        {/* Cell displaying the question's difficulty level */}
         <TableCell>
-        <Typography variant="subtitle2" noWrap>
-              {level}
-            </Typography>
-        </TableCell>
-        <TableCell>
-          <Label color={ai ?  'success'  : "error"}>{ai ?  'Yes'  : "No"}</Label>
+          <Typography variant="subtitle2" noWrap>
+            {level}
+          </Typography>
         </TableCell>
 
+        {/* Cell displaying whether the question is AI-generated */}
+        <TableCell>
+          <Label color={ai ? 'success' : 'error'}>{ai ? 'Yes' : 'No'}</Label>
+        </TableCell>
+
+        {/* Cell containing the "more options" button */}
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -94,36 +114,40 @@ export default function QuestionsTableRow({
         </TableCell>
       </TableRow>
 
+      {/* Popover menu with options for the question (view answers, edit, delete) */}
       <Popover
-        open={!!open}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={!!open}  // Popover is open if `open` is not null
+        anchorEl={open}  // Anchor element for positioning the popover
+        onClose={handleCloseMenu}  // Close handler
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}  // Positioning of the popover
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}  // Positioning of the popover
         PaperProps={{
-          sx: { width: 140 },
+          sx: { width: 140 },  // Style for the popover's paper component
         }}
       >
-        <MenuItem onClick={()=>navigate(`/questions/assasment?id=${id}&by=question`)}>
-          <Iconify icon="mdi:chat-plus-outline" sx={{ mr: 2 }} />
+        {/* Menu item to view answers associated with the question */}
+        <MenuItem onClick={() => navigate(`/questions/assasment?id=${id}&by=question`)}>
+          <Iconify icon="mdi:file-sign" sx={{ mr: 2 }} />
           Answers
         </MenuItem>
 
-        <MenuItem onClick={()=>navigate(`/edit-question/${id}`)}>
+        {/* Menu item to edit the question */}
+        <MenuItem onClick={() => navigate(`/edit-question/${id}`)}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
+        {/* Menu item to delete the question */}
         <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
       </Popover>
-  
     </>
   );
 }
 
+// PropTypes to define the expected types and required props for validation
 QuestionsTableRow.propTypes = {
   subject: PropTypes.any,
   description: PropTypes.any,
@@ -132,5 +156,5 @@ QuestionsTableRow.propTypes = {
   selected: PropTypes.any,
   id: PropTypes.any,
   handleDeleteQuestions: PropTypes.func,
-  ai:PropTypes.any
+  ai: PropTypes.any,
 };
