@@ -1,23 +1,16 @@
-import { faker } from '@faker-js/faker';
 
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import Iconify from 'components/iconify';
 
-import AppTasks from '../app-tasks';
-import AppNewsUpdate from '../app-news-update';
-import AppOrderTimeline from '../app-order-timeline';
-import AppCurrentVisits from '../app-current-visits';
-import AppWebsiteVisits from '../app-website-visits';
-import AppWidgetSummary from '../app-widget-summary';
-import AppTrafficBySite from '../app-traffic-by-site';
-import AppCurrentSubject from '../app-current-subject';
-import AppConversionRates from '../app-conversion-rates';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useAuth } from 'auth';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import AppConversionRates from '../app-conversion-rates';
+import AppWidgetSummary from '../app-widget-summary';
+import AvgUsage from '../Avg-usage';
 // ----------------------------------------------------------------------
 
 
@@ -29,6 +22,12 @@ export default function AppView() {
   const [tokenscount,setTokensCount]=useState(0);
   const [usercount,setUserCount]=useState(0);
   const {currentUser } = useAuth();
+  const [avgUsage,setAvgUsage]=useState({
+    docs:[],
+    questions:[],
+    answers:[],
+    days:[]
+  });
   useEffect(()=>{
     (async ()=>{
       try{
@@ -46,6 +45,18 @@ export default function AppView() {
       try{
         const response=await axios.get("/statistics/tokenscount")
         setTokensCount(response.data.count)
+      }
+      catch(e){
+        console.log(e)
+      }
+
+    })()
+  },[])
+  useEffect(()=>{
+    (async ()=>{
+      try{
+        const response=await axios.get("/statistics/avg-usage")
+        setAvgUsage(response.data)
       }
       catch(e){
         console.log(e)
@@ -94,48 +105,35 @@ export default function AppView() {
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
         </Grid>
-        <Grid xs={12} md={6} lg={8}>
-          <AppWebsiteVisits
-            title="Study By Subject"
-            subheader="(+43%) than last year"
+        <Grid xs={12}>
+          <AvgUsage
+            title="Average usage per day"
             chart={{
-              labels: [
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
-              ],
+              labels:  avgUsage.days,
               series: [
                 {
-                  name: 'Team A',
+                  name: 'New Documents',
                   type: 'column',
                   fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
+                  data: avgUsage.docs,
                 },
                 {
-                  name: 'Team B',
+                  name: 'New Questions',
                   type: 'column',
                   fill: 'solid',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
+                  data: avgUsage.questions,
                 },
                 {
-                  name: 'Team xcxC',
+                  name: 'New Answers',
                   type: 'column',
                   fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+                  data: avgUsage.answers,
                 },
               ],
             }}
           />
         </Grid>
-        <Grid xs={12} md={6} lg={8}>
+        <Grid xs={12}>
           <AppConversionRates
             title="New users per week"
             chart={{
