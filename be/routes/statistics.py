@@ -1,5 +1,8 @@
 from flask import Blueprint,jsonify
+from be.models.PdfDocument import PdfDocument
 from be.models.User import User
+from be.models.questions.Question import Question
+from be.models.questions.StudentQuestion import StudentQuestion
 from be.utils.jwt import role
 from be.models.TokenCounter import TokenCounter
 from datetime import datetime,timedelta,time
@@ -33,3 +36,29 @@ def countNewUsers():
         userMonth.append({'label':first.strftime('%d/%m')+'-'+last.strftime('%d/%m'),'value':count})
     
     return jsonify(userMonth),200
+
+
+@stats_blu.get("/avg-usage")
+@role('Admin')
+def avgUsage():
+    dates=[]
+    today= datetime.combine(datetime.today().date(),time(0, 0, 0))
+    for i in range(0,7):
+        dates.append([today-timedelta(days=i+1),today-timedelta(days=i,seconds=1)])
+    dates[0][1]=datetime.today()
+    dates=dates[::-1]
+    docs=[]
+    questions=[]
+    answers=[]
+    days=[]
+    for start,end in dates:
+        days.append(start.strftime("%a"))
+        count = db.session.query(db.func.count(PdfDocument.createdAt)).filter(PdfDocument.createdAt > start, PdfDocument.createdAt < end).scalar()
+        docs.append(count)
+        count = db.session.query(db.func.count(Question.createdAt)).filter(Question.createdAt > start, Question.createdAt < end).scalar()
+        questions.append(count)
+        count = db.session.query(db.func.count(StudentQuestion.createdAt)).filter(StudentQuestion.createdAt > start, StudentQuestion.createdAt < end).scalar()
+        answers.append(count)
+
+    return jsonify({'docs':docs,'questions':questions, 'answers':answers, 'days':days}), 200
+    
