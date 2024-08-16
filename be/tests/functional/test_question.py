@@ -2,6 +2,7 @@ from be.models.questions.Question import Question
 import json
 import PyPDF2
 from io import BytesIO
+from datetime import datetime
 
 
 def test_new_question(client,auth_lecturer,_db):
@@ -105,7 +106,29 @@ def test_get_grades(client, _db, auth_student):
 
         assert "Total Average: 9.0" in pdf_text
 
+def test_student_progress(client, auth_student):
+    with client:
+        response = client.get('/api/student/student-progress', headers={
+            'Authorization': f'Bearer {auth_student["accessToken"]}'
+        })
 
+        assert response.status_code == 200
+        response_data = json.loads(response.data.decode('utf-8'))
+
+        grades_by_subject = response_data['grades_by_subject']
+        for grades in grades_by_subject.items():
+            assert len(grades[1]) == 10
+        
+        date_ranges = response_data['date_ranges']
+        assert len(date_ranges) == 10
+ 
+        date_format = "%Y-%m-%d"  # Adjust this format if needed
+        dates = [datetime.strptime(date_str, date_format) for date_str in date_ranges]
+        
+        # Check if the difference between consecutive dates is 3 days
+        for i in range(1, len(dates)):
+            date_diff = dates[i] - dates[i - 1]
+            assert date_diff.days == 3
 
 
 
