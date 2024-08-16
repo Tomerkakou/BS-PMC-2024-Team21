@@ -130,6 +130,17 @@ def test_student_progress(client, auth_student):
             date_diff = dates[i] - dates[i - 1]
             assert date_diff.days == 3
 
+def test_student_avgs(client, auth_student):
+    with client:
+        response = client.get('/api/student/subject-averages', headers={
+            'Authorization': f'Bearer {auth_student["accessToken"]}'
+        })
+
+        assert response.status_code == 200
+        response_data = json.loads(response.data.decode('utf-8'))
+        assert len(response_data) == 1
+        assert response_data['Java'] == 9.0
+        
 
 
 def test_change_question(client,auth_lecturer,_db):
