@@ -157,10 +157,6 @@ def get_grades():
     response.headers['Content-Disposition'] = 'inline; attachment; filename=report.pdf'
     return response
 
-
-
-
-
 @student_blu.get('/student-progress')
 @role("Student")
 def get_student_grades_by_subject():

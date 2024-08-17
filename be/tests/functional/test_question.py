@@ -42,11 +42,13 @@ def test_get_question(client, auth_lecturer, _db,):
         assert response.status_code == 200
         
         
-def test_validate_answer(client,_db,auth_student):
+def test_validate_answer(client,_db,auth_student, student, lecturer):
     data={
         "question_id":"1",
         "answer": "heelo"
     }
+    lecturer.students.append(student)
+    _db.session.commit()
     with client:
         response = client.post('/api/question/validate-answer' ,json=data, headers={
             'Authorization': f'Bearer {auth_student["accessToken"]}'
@@ -63,7 +65,7 @@ def test_get_validate_questions_student(client,_db,auth_student):
         data = json.loads(response.data)
         assert len(data) == 1
 
-def test_get_answered_questions_lecturer(client,_db,auth_lecturer):
+def test_get_answered_questions_lecturer(client,auth_lecturer):
 
     with client:
         response = client.get('/api/question/answered', headers={
@@ -71,7 +73,7 @@ def test_get_answered_questions_lecturer(client,_db,auth_lecturer):
         })
         assert response.status_code == 200
 
-def test_get_assasment_lecturer(client,_db,auth_lecturer):
+def test_assasment_lecturer(client,auth_lecturer):
 
     data={
         "assasment":"food",
@@ -83,6 +85,47 @@ def test_get_assasment_lecturer(client,_db,auth_lecturer):
         })
         assert response.status_code == 200
 
+def test_get_assasment_student(client, auth_student):
+    with client:
+        response = client.get('/api/student/get-questions', headers={
+            'Authorization': f'Bearer {auth_student["accessToken"]}'
+        })
+
+        assert response.status_code == 200
+        assert len(response.json) == 1
+        assert response.json[0]['assessment'] == "food"
+
+
+def test_lecturer_get_students_avgs(client, auth_lecturer):
+    with client:
+        response = client.get('/api/lecturer/student-averages', headers={
+            'Authorization': f'Bearer {auth_lecturer["accessToken"]}'
+        })
+
+        assert response.status_code == 200
+        assert response.json[0]['average_grade'] == 9.0
+
+
+def test_lecturer_get_students_avgs_subject(client, auth_lecturer):
+    with client:
+        response = client.get('/api/lecturer/student-subject-averages', headers={
+            'Authorization': f'Bearer {auth_lecturer["accessToken"]}'
+        })
+
+        assert response.status_code == 200
+        assert response.json[0]['Java'] == 9.0
+
+
+def test_lecturer_get_question_counts(client, auth_lecturer):
+    with client:
+        response = client.get('/api/lecturer/subject-question-counts', headers={
+            'Authorization': f'Bearer {auth_lecturer["accessToken"]}'
+        })
+
+        assert response.status_code == 200
+        assert response.json['Java'] == 1
+
+
 def test_get_grades(client, _db, auth_student):
     with client:
         response = client.get('/api/student/get-grades', headers={
@@ -90,15 +133,10 @@ def test_get_grades(client, _db, auth_student):
         })
         
      
-        assert response.status_code == 200
-        
-       
+        assert response.status_code == 200    
         assert response.headers['Content-Type'] == 'application/pdf'
-        
-
         assert response.data[:4] == b'%PDF'
 
-   
         pdf_reader = PyPDF2.PdfReader(BytesIO(response.data))
         pdf_text = ""
         for page in range(len(pdf_reader.pages)):
@@ -140,7 +178,9 @@ def test_student_avgs(client, auth_student):
         response_data = json.loads(response.data.decode('utf-8'))
         assert len(response_data) == 1
         assert response_data['Java'] == 9.0
-        
+
+
+
 def test_student_ans_count(client, auth_student):
     with client:
         response = client.get('/api/student/student-answer-count', headers={
@@ -152,6 +192,17 @@ def test_student_ans_count(client, auth_student):
         assert len(response_data) == 1
         assert response_data['Java'] == 1
 
+
+def test_question_hint(client, auth_student):
+    data={
+       "question_id" : "1"
+    }
+    with client:
+        response = client.post('/api/question/hint',json=data, headers={
+            'Authorization': f'Bearer {auth_student["accessToken"]}'
+        })
+
+        assert response.status_code == 200
 
 def test_change_question(client,auth_lecturer,_db):
     data={
