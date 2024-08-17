@@ -57,7 +57,7 @@ export default function DocsView() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/student/documents")
+        const response=await axios.get("/document/get-student")
         setDocuments(response.data)
         setLoading(false)
       }

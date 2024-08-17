@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 // ----------------------------------------------------------------------
+const API_URL = process.env.REACT_APP_API_BASE_URL
 
 export default function DocsTableRow({
   name,
@@ -38,7 +39,7 @@ export default function DocsTableRow({
         <TableCell>{fDate(date)}</TableCell>
         <TableCell>{description}</TableCell>
         <TableCell align="right">
-          <Button color='success' component="a" href={`http://localhost:5000/api/student/document/${id}`}>
+          <Button color='success' component="a" href={`${API_URL}/document/download/${id}`}>
             <Iconify icon="mdi:file-download-outline"/> 
           </Button>
           <Button onClick={()=>navigate(`/document/${id}`)}>

@@ -60,7 +60,7 @@ export default function DocumentView() {
   useEffect(()=>{
     (async ()=>{
       try{
-        const response=await axios.get("/lecturer/getdocuments")
+        const response=await axios.get("/document/get-lecturer")
         setDocumentLecture(response.data.documents);
         setLoading(false)
       }

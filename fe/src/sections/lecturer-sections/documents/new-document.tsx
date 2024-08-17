@@ -32,7 +32,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
     setLoading(true);
     try {
       const doc = await fileToBase64(data.doc);
-      const response = await axios.post("/lecturer/new-document", {
+      const response = await axios.post("/document/new", {
         ...data,
         doc: doc,
       });

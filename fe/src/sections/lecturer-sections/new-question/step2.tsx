@@ -52,7 +52,7 @@ const Step2:React.FC<Step1Props> = ({questionType,saveStep,back,language}) => {
             <Button onClick={back}>
                 Back
             </Button>
-            <LoadingButton onClick={methods.handleSubmit(saveStep)} loading={methods.formState.isSubmitting}>
+            <LoadingButton id='save-question-btn' onClick={methods.handleSubmit(saveStep)} loading={methods.formState.isSubmitting}>
                 Save Question
             </LoadingButton>
         </Stack>

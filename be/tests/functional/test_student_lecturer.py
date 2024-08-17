@@ -53,7 +53,9 @@ def test_get_docs(client,_db,auth_student,lecturer):
         assert response.status_code == 200
         assert len(data) == 1  
         _db.session.delete(pdf)
-        _db.session.commit()      
+        _db.session.commit()     
+
+ 
 
 def test_remove_student(client,_db,auth_lecturer,lecturer,student):
     data=[student.id]

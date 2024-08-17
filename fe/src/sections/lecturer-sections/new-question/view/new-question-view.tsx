@@ -136,7 +136,7 @@ const NewQuestion = () => {
     <Container sx={{p:1}}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">{title}</Typography>
-        {!id && step===0 && <HintBtn loading={loading} onClick={generateWithAI}> 
+        {!id && step===0 && <HintBtn id="generate-btn" loading={loading} onClick={generateWithAI}> 
           Generate With AI
         </HintBtn>}
       </Stack>

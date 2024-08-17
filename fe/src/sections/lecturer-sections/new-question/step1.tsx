@@ -57,7 +57,7 @@ const Step1:React.FC<Step1Props> = ({saveStep,edit}) => {
             <Button disabled>
                 Back
             </Button>
-            <Button onClick={handleSubmit(saveStep)}>
+            <Button id="next-step-btn" onClick={handleSubmit(saveStep)}>
                 Next Step
             </Button>
         </Stack>

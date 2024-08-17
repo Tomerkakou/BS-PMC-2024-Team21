@@ -32,7 +32,7 @@ export default function DocumentTableRow({
     setLoading(true)
     try{
       //delete document
-      const response = await axios.post(`/lecturer/remove-documents`,[id])
+      const response = await axios.post(`/document/remove`,[id])
       handleDeleteDocuments([id])
       toast.success(response.data)
     }catch(e){
