@@ -71,7 +71,8 @@ export default function Nav({ openNav, onCloseNav }) {
         <NavItem key={item.title} item={item} />
       ))}
       {currentUser.role==="Student" && 
-      <ListItemButton
+      <ListItemButton 
+      id= "grades-report-btn"
       onClick = {async () => {
         try {
           const response = await axios.get("/student/get-grades", {
