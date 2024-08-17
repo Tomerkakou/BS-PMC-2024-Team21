@@ -19,7 +19,7 @@ export default function DocumentTableToolbar({ numSelected, filterName, onFilter
   const deleteAllSelected=async (event)=>{
     setLoading(true);
     try{
-      const response=await axios.post("/lecturer/remove-documents",selected)
+      const response=await axios.post("/document/remove",selected)
       handleDeleteDocuments(selected,true)
       toast.success(response.data)
     }catch(e){
