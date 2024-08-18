@@ -48,7 +48,15 @@ pipeline {
     stage('Running Tests inside Container') {
       steps {
         script {
-            sh 'docker exec bs-flask pytest -v  /be'
+            sh 'docker exec bs-flask coverage run -m pytest -v  /be'
+        }
+      }
+    }
+
+    stage('Coverage Report') {
+      steps {
+        script {
+            sh 'docker exec bs-flask coverage report'
         }
       }
     }
