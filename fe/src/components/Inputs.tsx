@@ -332,8 +332,8 @@ const FileInput:React.FC<MuiFileInputProps> = ({
               <MuiFileInput
                 {...field}
                 placeholder={placeholder}
-                helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                error={fieldState.invalid}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.invalid ? fieldState.error?.message : ""}
                 fullWidth
                 id={id}
                 InputProps={{

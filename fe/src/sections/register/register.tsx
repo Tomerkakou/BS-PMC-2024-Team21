@@ -1,3 +1,4 @@
+import { da } from "@faker-js/faker";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Avatar,
@@ -37,7 +38,7 @@ export const Register = () => {
   const [succes, setSucces] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
-  const { handleSubmit, control, getValues, formState } = useForm<FormValues>({
+  const { handleSubmit, control, getValues, formState, setError } = useForm<FormValues>({
     defaultValues: {
       role: "Student",
       avatar: "/assets/images/avatars/avatar_1.jpg",
@@ -242,6 +243,15 @@ export const Register = () => {
               fieldName="image"
               accept="image/*"
               icon={<Iconify icon="eva:cloud-upload-outline" />}
+              rules={{
+                validate: async (file) => {
+                  if (file) {
+                    const base64String = await fileToBase64(file) as string;
+                    return base64String.startsWith("data:image") || "Chosen file is not a valid image";
+                  }
+                  return true; 
+                }
+              }}
             />
           )}
           {tab === 1 && (
