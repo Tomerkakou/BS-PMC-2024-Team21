@@ -9,11 +9,9 @@ import { useAuth } from 'auth';
 export const IndexAdminPage = lazy(() => import('pages/admin/app'));
 export const IndexLecturerPage = lazy(() => import('pages/lecturer/app'));
 export const IndexStudentPage = lazy(() => import('pages/student/app'));
-export const BlogPage = lazy(() => import('pages/blog'));
 export const UserPage = lazy(() => import('pages/admin/user'));
 export const LoginPage = lazy(() => import('pages/login'));
 export const RegisterPage = lazy(() => import('pages/register'));
-export const ProductsPage = lazy(() => import('pages/products'));
 export const Page404 = lazy(() => import('pages/page-not-found'));
 export const ProfiilePage=lazy(() => import('pages/profile'));
 export const ResetPasswordPage=lazy(() => import('pages/reset-password'));
@@ -100,8 +98,6 @@ export default function Router() {
       ),
       children: [
         ...roleRoutes,
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
         { path:'profile',element:<ProfiilePage/> },
       ],
     },
