@@ -84,7 +84,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
             rules={{
               required: "Document Name is required",
               maxLength: { value: 50, message: "Document Name is too long" },
-              pattern: {value: /^(?!.[<>:"/\|?\x00-\x1F]).[^.].[^<>:"/\|?\x00-\x1F]+$/, message: "Invalid Document Name"}
+              pattern: {value: /([<>:"/\\|?*]+|^\s|\s$|^\.+$)/, message: "Invalid Document Name"}
             }}
           />
           <SelectInput

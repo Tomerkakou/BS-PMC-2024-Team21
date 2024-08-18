@@ -1,4 +1,3 @@
-import { da } from "@faker-js/faker";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Avatar,
@@ -38,7 +37,7 @@ export const Register = () => {
   const [succes, setSucces] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
-  const { handleSubmit, control, getValues, formState, setError } = useForm<FormValues>({
+  const { handleSubmit, control, getValues, formState } = useForm<FormValues>({
     defaultValues: {
       role: "Student",
       avatar: "/assets/images/avatars/avatar_1.jpg",
