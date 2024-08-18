@@ -3,7 +3,7 @@ from sendgrid.helpers.mail import Mail
 from be.utils.emails import verifyAccount,resetPassword
 from flask import current_app
 
-LOGO_IMAGE = "https://ibb.co/wNLW38T" 
+LOGO_IMAGE = "https://i.ibb.co/1vfq37z/logo.png" 
 
 templates={
     "verifyAccount":verifyAccount.template,
