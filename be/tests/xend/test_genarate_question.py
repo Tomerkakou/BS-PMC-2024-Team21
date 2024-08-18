@@ -1,11 +1,6 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-import os
-
-from be.models.PdfDocument import PdfDocument
 
 
 def test_genarate_question(driver,logined_lecturer,_db,front_url):

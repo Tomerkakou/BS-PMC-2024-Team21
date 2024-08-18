@@ -1,9 +1,6 @@
 from be.models.PdfDocument import PdfDocument,SubjectsEnum
 from flask import current_app
 from be.models.PdfDocument import PdfDocument
-from be.models.questions.Coding import Coding
-from be.models.questions.Open import Open
-from be.models.questions.SingleChoice import SingleChoice
 from io import BytesIO
 
 

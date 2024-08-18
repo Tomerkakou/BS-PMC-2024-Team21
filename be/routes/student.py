@@ -1,5 +1,4 @@
 import base64
-
 import io
 from flask import Blueprint, current_app, jsonify, request, send_file
 from sqlalchemy import not_

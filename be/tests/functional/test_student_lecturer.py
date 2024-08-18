@@ -1,6 +1,4 @@
 from flask import current_app
-from be.models.Token import  TokenTypeEnum
-from be.models.User import User,Lecturer
 from be.models.PdfDocument import PdfDocument,SubjectsEnum
 
 

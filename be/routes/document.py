@@ -3,14 +3,9 @@ from flask import Blueprint, jsonify, request, send_file
 from be.models import SubjectsEnum, db
 from flask_jwt_extended import current_user, jwt_required
 from be.models.Notification import Notification, NotificationType
-from be.models.questions.Question import Question
 from be.utils.socketio import socketio
 from be.utils.jwt import role
 from be.models.PdfDocument import PdfDocument
-from be.models.questions.Coding import Coding
-from be.models.questions.Open import Open
-from be.models.questions.SingleChoice import SingleChoice
-from be.models import StudentQuestion, Lecturer
 from io import BytesIO
 
 document_blu = Blueprint('document',__name__)
