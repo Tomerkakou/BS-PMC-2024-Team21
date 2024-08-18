@@ -4,41 +4,38 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 
-
 import Chart, { useChart } from 'components/chart';
 
 // ----------------------------------------------------------------------
 
-export default function StudentSubjectAverages({ title, subheader, chart, ...other }) {
-  const { colors, series, options } = chart;
-
-  const chartSeries = series.map((i) => i.value);
+export default function LineGraph({ title, subheader, chart, xaxis, ...other }) {
+  const { labels, colors, series, options } = chart;
 
   const chartOptions = useChart({
     colors,
-    tooltip: {
-      marker: { show: false },
-      y: {
-        formatter: (value) => value.toFixed(2),
-        title: {
-          formatter: () => '',
-        },
-      },
-    },
     plotOptions: {
       bar: {
-        horizontal: true,
-        barHeight: '28%',
-        borderRadius: 2,
+        columnWidth: '16%',
       },
     },
-    xaxis: {
-      categories: series.map((i) => i.label),
+    fill: {
+      type: series.map((i) => i.fill),
     },
-    yaxis: {
-      labels: {
-        formatter: (value) => value.toFixed(2),
-      }
+    labels,
+    xaxis: {
+      type: xaxis??'datetime',
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (value) => {
+          if (typeof value !== 'undefined') {
+            return `${value.toFixed(0)} visits`;
+          }
+          return value;
+        },
+      },
     },
     ...options,
   });
@@ -47,11 +44,11 @@ export default function StudentSubjectAverages({ title, subheader, chart, ...oth
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
 
-      <Box sx={{ mx: 3 }}>
+      <Box sx={{ p: 3, pb: 1 }}>
         <Chart
           dir="ltr"
-          type="bar"
-          series={[{ data: chartSeries }]}
+          type="line"
+          series={series}
           options={chartOptions}
           width="100%"
           height={364}
@@ -61,8 +58,9 @@ export default function StudentSubjectAverages({ title, subheader, chart, ...oth
   );
 }
 
-StudentSubjectAverages.propTypes = {
+LineGraph.propTypes = {
   chart: PropTypes.object,
   subheader: PropTypes.string,
   title: PropTypes.string,
+  xaxis: PropTypes.any,
 };

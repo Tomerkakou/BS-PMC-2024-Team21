@@ -5,10 +5,10 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useAuth } from 'auth';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import AppWidgetSummary from '../app-widget-summary';
-import StudentProgress from '../student-progress';
-import StudentSubjectAverages from '../student-subject-averages';
-import SubjectAnswerCount from '../subject-answer-count';
+
+import LineGraph from 'components/chart/components/line-graph';
+import BarGraph from 'components/chart/components/bar-graph';
+import PizzaGraph from 'components/chart/components/pizza-graph';
 
 // ----------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ export default function AppView() {
       <Grid container spacing={3}>
         {/* Grid item for the Student Progress chart */}
         <Grid xs={12} md={6} lg={8}>
-          <StudentProgress
+          <LineGraph
             title="Student Progress"
             subheader="Progress over the last 30 days"
             chart={{
@@ -125,7 +125,7 @@ export default function AppView() {
 
         {/* Grid item for the Subject Answer Count chart */}
         <Grid xs={12} md={6} lg={4}>
-          <SubjectAnswerCount
+          <PizzaGraph
             title="Subject Answer Count"
             chart={{
               series: pizzaChartData,  // Pass the dynamic pizza chart data
@@ -135,7 +135,7 @@ export default function AppView() {
 
         {/* Grid item for the Student Subject Averages chart */}
         <Grid xs={12}>
-          <StudentSubjectAverages
+          <BarGraph
             title="Student Subject Averages"
             subheader="Average grades per subject"
             chart={{
