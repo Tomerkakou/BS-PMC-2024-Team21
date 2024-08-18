@@ -1,7 +1,8 @@
-import { useEffect,useMemo } from 'react';
+import { useEffect,useMemo,useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Avatar from '@mui/material/Avatar';
@@ -23,6 +24,10 @@ import navConfig from './config-navigation';
 import { useAuth } from 'auth';
 import SvgColor from 'components/svg-color';
 import axios from "axios";
+import MainModal from 'components/MainModal';
+import { toast } from 'react-toastify';
+import { LoadingButton } from '@mui/lab';
+import Iconify from 'components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +35,8 @@ export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
   const {currentUser}=useAuth();
   const upLg = useResponsive('up', 'lg');
+  const [open,setOpen]=useState(false);
+  const [loading,setLoading]=useState(false);
 
   const navlinks=useMemo(()=>navConfig[currentUser?.role],[currentUser])
 
@@ -71,33 +78,94 @@ export default function Nav({ openNav, onCloseNav }) {
         <NavItem key={item.title} item={item} />
       ))}
       {currentUser.role==="Student" && 
-      <ListItemButton 
-      id= "grades-report-btn"
-      onClick = {async () => {
-        try {
-          const response = await axios.get("/student/get-grades", {
-            responseType: "blob",
-          });
-          const fileURL = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
-          window.open(fileURL);
-        } catch (error) {
-          console.error("Error downloading the PDF:", error);
-        }
-      }}
-      sx={{
-        minHeight: 44,
-        borderRadius: 0.75,
-        typography: 'body2',
-        color: 'text.secondary',
-        textTransform: 'capitalize',
-        fontWeight: 'fontWeightMedium',
-      }}
-    >
-      <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
-      <SvgColor src={`/assets/icons/navbar/ic_student_grade_report.svg`} sx={{ width: 1, height: 1 }} />
-      </Box>
-      <Box component="span">grades report</Box>
-    </ListItemButton>
+      <>
+          <ListItemButton 
+          id= "grades-report-btn"
+          onClick = {()=>setOpen(true)}
+          sx={{
+            minHeight: 44,
+            borderRadius: 0.75,
+            typography: 'body2',
+            color: 'text.secondary',
+            textTransform: 'capitalize',
+            fontWeight: 'fontWeightMedium',
+          }}
+        >
+          <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+          <SvgColor src={`/assets/icons/navbar/ic_student_grade_report.svg`} sx={{ width: 1, height: 1 }} />
+          </Box>
+          <Box component="span">grades report</Box>
+        </ListItemButton>
+        <MainModal open={open} 
+          handleClose={()=>setOpen(false)}
+          title='Export Grades Report'
+          xBtn
+        >
+          <Stack spacing={3}>
+            <Button onClick={async () => {
+              try {
+                const response = await axios.get("/student/get-grades", {
+                  responseType: "blob",
+                });
+                const fileURL = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+                window.open(fileURL);
+              } catch (error) {
+                console.error("Error openning the PDF:", error);
+              }
+              finally{
+                setOpen(false);
+              }
+            }}
+            endIcon={<Iconify icon="eva:external-link-outline"/>}
+            id="view-report"
+            >
+              View
+            </Button>
+            <Button onClick={async () => {
+              try {
+                const response = await axios.get("/student/get-grades", {
+                  responseType: "blob",
+                });
+                const fileURL = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+                const link = document.createElement('a');
+                link.href = fileURL;
+                link.download = 'grades.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(fileURL);
+              } catch (error) {
+                console.error("Error downloading the PDF:", error);
+              }
+              finally{
+                setOpen(false);
+              }
+            }}
+            endIcon={<Iconify icon="eva:save-outline"/>}
+            >
+              Download
+            </Button>
+            <LoadingButton onClick={async () => {
+                setLoading(true);
+                try {
+                  await axios.get("/student/get-grades?email=True");
+                  toast.success('Email with grades report sent successfuly!')
+                } catch (error) {
+                  console.error("Error sending the PDF:", error);
+                }
+                finally{
+                  setOpen(false);
+                  setLoading(false);
+                }
+              }} 
+              loading={loading}
+              endIcon={<Iconify icon="eva:paper-plane-outline"/>}
+            >
+              Send to Email
+            </LoadingButton>
+          </Stack>
+        </MainModal>
+      </>
 }
     </Stack>
   );

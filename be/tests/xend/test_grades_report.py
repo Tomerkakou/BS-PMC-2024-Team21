@@ -15,9 +15,20 @@ def test_grades_report(driver,logined_student,_db,front_url):
     button = driver.find_element(By.ID, "grades-report-btn")
     button.click()
 
-    time.sleep(2)  # Adjust the sleep time as needed
+    time.sleep(1)
+
+    button = driver.find_element(By.ID,'view-report')
+    button.click()
+
+    time.sleep(4)  # Adjust the sleep time as needed
 
     handles = driver.window_handles
     driver.switch_to.window(handles[1])
 
     assert driver.current_url.startswith("blob") == True
+
+    driver.close()
+
+    # Switch back to the original tab
+    driver.switch_to.window(handles[0])
+

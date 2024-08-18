@@ -7,6 +7,7 @@ from flask_jwt_extended import  current_user
 from be.models.PdfDocument import PdfDocument
 from be.models.User import Lecturer
 from be.models.questions.Question import Question
+from be.utils.emails.email import sendEmail
 from be.utils.jwt import role
 from be.models.Notification import Notification, NotificationType
 from be.utils.socketio import socketio
@@ -17,6 +18,7 @@ from xhtml2pdf import pisa
 from datetime import datetime, timedelta
 from be.models import StudentQuestion, Question, SubjectsEnum
 from flask import render_template, make_response
+from sendgrid.helpers.mail import Attachment, FileContent, FileName, FileType, Disposition
 
 student_blu = Blueprint('student',__name__)
 
@@ -111,6 +113,7 @@ SUBJECT_NAME_MAP = {
 @student_blu.get('/get-grades')
 @role("Student")
 def get_grades():
+    email=request.args.get('email',type=bool)
     student_name = f'{current_user.firstName} {current_user.lastName}'
 
     questions = StudentQuestion.query.filter_by(student_id=current_user.id).all()
@@ -151,6 +154,18 @@ def get_grades():
     date_str = date.strftime('%d/%m/%Y')
     rendered = render_template('grades.html', name=student_name,grades=results,total_avg=total_avg_score,front_url=current_app.config['FRONT_URL'],date=date_str,ranges=range(5-len(results)))
     pdf = pisa.pisaDocument(BytesIO(rendered.encode("ISO-8859-1")), result)
+    if email:
+        encoded_file=base64.b64encode(result.getbuffer()).decode()
+        attachedFile = Attachment(
+            FileContent(encoded_file),
+            FileName('report.pdf'),
+            FileType('application/pdf'),
+            Disposition('attachment')
+        )
+        if not current_app.config['TESTING']:
+            sendEmail(current_user.email,'Grades report LEARNIX','grades_report',attachedFile,name=current_user.fullName)
+        return "sended" , 200
+    
     response = make_response(result.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'inline; attachment; filename=report.pdf'
