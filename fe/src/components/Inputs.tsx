@@ -332,8 +332,8 @@ const FileInput:React.FC<MuiFileInputProps> = ({
               <MuiFileInput
                 {...field}
                 placeholder={placeholder}
-                helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                error={fieldState.invalid}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.invalid ? fieldState.error?.message : ""}
                 fullWidth
                 id={id}
                 InputProps={{
@@ -398,6 +398,7 @@ const DropBoxInput:React.FC<MuiFileInputProps> = ({
                 helperText={fieldState.invalid ? fieldState.error?.message : ''}
                 error={fieldState.invalid}
                 id={id}
+                sx={{'& > div:first-of-type': {borderColor: theme => fieldState.invalid? theme.palette.error.light: theme.palette.primary.light}}}
                 InputProps={{
                   inputProps: {
                     accept: accept,

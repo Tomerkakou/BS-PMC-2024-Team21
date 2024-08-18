@@ -8,8 +8,8 @@ import { useAuth } from 'auth';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import StudentsTableView from '../student-average-table';
-import StudentAverageGrades from '../student-average-grades';
-import SubjectQuestionCounts from '../subject-question-counts';
+import PizzaGraph from 'components/chart/components/pizza-graph';
+import BarGraph from 'components/chart/components/bar-graph';
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ export default function AppView() {
           <StudentsTableView/>
         </Grid>
         <Grid xs={12} md={6} lg={8}>
-          <StudentAverageGrades
+          <BarGraph
             title="Student Average Grades"
             subheader="Current average grades for your students"
             chart={{
@@ -87,7 +87,7 @@ export default function AppView() {
           />
         </Grid>
         <Grid xs={12} md={6} lg={4}>
-          <SubjectQuestionCounts   
+          <PizzaGraph   
             title="Subject Question Counts"
             chart={{
               series: pizzaChartData, 

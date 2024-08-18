@@ -8,14 +8,10 @@ import Iconify from 'components/iconify';
 import { useAuth } from 'auth';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import AppConversionRates from '../app-conversion-rates';
-import AppWidgetSummary from '../app-widget-summary';
-import AvgUsage from '../Avg-usage';
+import BarGraph from 'components/chart/components/bar-graph';
+import AppWidgetSummary from 'components/chart/components/app-widget-summary';
+import LineGraph from 'components/chart/components/line-graph';
 // ----------------------------------------------------------------------
-
-
-
-
 
 export default function AppView() {
   const [usersmonth,setUserMonth]=useState([]);
@@ -69,6 +65,7 @@ export default function AppView() {
     (async ()=>{
       try{
         const response=await axios.get("/statistics/users-week")
+        console.log(response.data);
         setUserMonth(response.data)
       }
       catch(e){
@@ -106,8 +103,9 @@ export default function AppView() {
           />
         </Grid>
         <Grid xs={12}>
-          <AvgUsage
+          <LineGraph
             title="Average usage per day"
+            xaxis={"string"}
             chart={{
               labels:  avgUsage.days,
               series: [
@@ -134,7 +132,7 @@ export default function AppView() {
           />
         </Grid>
         <Grid xs={12}>
-          <AppConversionRates
+          <BarGraph
             title="New users per week"
             chart={{
               series: usersmonth

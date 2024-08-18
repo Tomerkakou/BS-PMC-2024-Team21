@@ -28,7 +28,7 @@ const StyledChart = styled(Chart)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function SubjectAnswerCount({ title, subheader, chart, ...other }) {
+export default function PizzaGraph({ title, subheader, chart, ...other }) {
   const theme = useTheme();
 
   const { colors, series, options } = chart;
@@ -94,7 +94,7 @@ export default function SubjectAnswerCount({ title, subheader, chart, ...other }
   );
 }
 
-SubjectAnswerCount.propTypes = {
+PizzaGraph.propTypes = {
   chart: PropTypes.object,
   subheader: PropTypes.string,
   title: PropTypes.string,
