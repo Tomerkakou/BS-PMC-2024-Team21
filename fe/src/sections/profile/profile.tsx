@@ -160,6 +160,15 @@ export const Profile = () => {
                   fieldName="image"
                   accept="image/*"
                   icon={<Iconify icon="eva:cloud-upload-outline" />}
+                  rules={{
+                    validate: async (file) => {
+                      if (file) {
+                        const base64String = await fileToBase64(file) as string;
+                        return base64String.startsWith("data:image") || "Chosen file is not a valid image";
+                      }
+                      return true; 
+                    }
+                  }}
                 />
               )}
               {tab === 1 && (
