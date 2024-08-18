@@ -32,6 +32,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
     setLoading(true);
     try {
       const doc = await fileToBase64(data.doc);
+      data.docName = data.docName.replace(".pdf", "");
       const response = await axios.post("/document/new", {
         ...data,
         doc: doc,
@@ -83,6 +84,7 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
             rules={{
               required: "Document Name is required",
               maxLength: { value: 50, message: "Document Name is too long" },
+              pattern: {value: /^(?!.[<>:"/\|?\x00-\x1F]).[^.].[^<>:"/\|?\x00-\x1F]+$/, message: "Invalid Document Name"}
             }}
           />
           <SelectInput
@@ -99,7 +101,16 @@ const NewDocument: React.FC<NewDocumentProps> = ({ handleNewDocument }) => {
             id='new-doc-file'
             placeholder="Drop document here (.pdf)"
             accept=".pdf"
-            rules={{ required: "Document is required" }}
+            rules={{ 
+              required: "Document is required" ,
+              validate: async (file) => {
+                if (file) {
+                  const base64String = await fileToBase64(file) as string;
+                  return base64String.startsWith("data:application/pdf") || "Chosen file is not a valid PDF";
+                }
+                return true; 
+              }
+            }}
             icon={<Iconify icon="mdi:file-upload-outline" />}
           />
           <TextInput
