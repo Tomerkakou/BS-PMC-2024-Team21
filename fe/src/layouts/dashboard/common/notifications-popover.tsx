@@ -20,8 +20,6 @@ import Iconify from "components/iconify";
 import Scrollbar from "components/scrollbar";
 import io from "socket.io-client";
 
-
-const socket = io(process.env.REACT_APP_SOCKET_URL ?? "");
 // ----------------------------------------------------------------------
 interface NotificationItemProps {
   title: string;
@@ -48,7 +46,9 @@ export default function NotificationsPopover() {
       }
     })();
   }, []);
+
   useEffect(() => {
+    const socket = io(process.env.REACT_APP_SOCKET_URL ?? "");
     switch (currentUser?.role) {
       case "Admin":
         socket.on("verifyUser", (msg) => {

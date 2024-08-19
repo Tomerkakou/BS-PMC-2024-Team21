@@ -59,10 +59,12 @@ const DocumentView = () => {
             </Stack>
             <Stack direction='row' spacing={2}>
 
-                    {!loading && doc && <PDFViewer
+                    {!loading && doc &&<Box sx={{width:'45vw'}}> 
+                        <PDFViewer
                         pdfUrl={doc.content}
                         pageNumber={currentPage}
-                    />}
+                    />
+                    </Box>}
                     {loading && <Stack direction='column' height={1} width={0.5} spacing={2}>
                         <Skeleton variant="text"/>
                         <Skeleton variant="text"/>

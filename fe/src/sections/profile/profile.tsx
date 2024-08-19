@@ -180,7 +180,7 @@ export const Profile = () => {
                       <RadioGroup {...field}>
                         <Grid container spacing={1}>
                           {Array.from({ length: 25 }).map((_, index) => (
-                            <Grid item xs={4} key={index}>
+                            <Grid item md={3}  xs={4} lg={2} key={index} sx={{mb:1}}>
                               <FormControlLabel
                                 value={`/assets/images/avatars/avatar_${
                                   index + 1

@@ -91,7 +91,7 @@ def download_file(doc_id):
 @student_blu.get('/get-questions')
 @role("Student")
 def get_Questions():
-    questions = StudentQuestion.query.filter_by(student_id=current_user.id).all()
+    questions = StudentQuestion.query.filter_by(student_id=current_user.id).order_by(StudentQuestion.createdAt.desc()).all()
     print(questions)
     questions_objects=[]
     for question in questions:
