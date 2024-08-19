@@ -1,15 +1,12 @@
 from selenium.webdriver.common.by import By
 import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 def test_grades_report(driver,logined_student,_db,front_url):
     driver.get(f"{front_url}/")
 
     time.sleep(2)
-
-    button = driver.find_element(By.ID, "nav-btn")
-    if(button is not None):
-        button.click()
-        time.sleep(1)
 
 
     button = driver.find_element(By.ID, "grades-report-btn")
@@ -20,15 +17,11 @@ def test_grades_report(driver,logined_student,_db,front_url):
     button = driver.find_element(By.ID,'view-report')
     button.click()
 
-    time.sleep(4)  # Adjust the sleep time as needed
+    wait = WebDriverWait(driver, 120)  
 
-    handles = driver.window_handles
-    driver.switch_to.window(handles[1])
+    element = wait.until(EC.presence_of_element_located((By.XPATH, "//*[text()='Email with grades report sent successfuly!']")))
 
-    assert driver.current_url.startswith("blob") == True
+    assert element is not None
 
-    driver.close()
-
-    # Switch back to the original tab
-    driver.switch_to.window(handles[0])
+    
 

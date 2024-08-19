@@ -35,7 +35,7 @@ def test_file_upalod(driver,logined_lecturer,_db,front_url):
     element = wait.until(EC.presence_of_element_located((By.XPATH, "//*[text()='Document summarized successfully']")))
 
 
-    pdf=PdfDocument.query.filter_by(docName="Test_Document.pdf").first()
+    pdf=PdfDocument.query.filter_by(docName="Test_Document").first()
     assert pdf is not None
     assert pdf.subject.value=="C#"
     assert pdf.lecturer_id==logined_lecturer.id

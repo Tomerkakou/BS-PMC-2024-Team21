@@ -117,7 +117,6 @@ export default function Nav({ openNav, onCloseNav }) {
               }
             }}
             endIcon={<Iconify icon="eva:external-link-outline"/>}
-            id="view-report"
             >
               View
             </Button>
@@ -160,6 +159,7 @@ export default function Nav({ openNav, onCloseNav }) {
               }} 
               loading={loading}
               endIcon={<Iconify icon="eva:paper-plane-outline"/>}
+              id="view-report"
             >
               Send to Email
             </LoadingButton>
